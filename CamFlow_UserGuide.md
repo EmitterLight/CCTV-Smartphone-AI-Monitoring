@@ -32,7 +32,7 @@
   - [2.4. Usage Steps](#sec24)
 
 - [3. FAQ](#sec3)
-  - [Known upload issue](#known-issues)
+  - [Network quality and troubleshooting](#network-quality)
 
 - [4. Developer Documentation](#sec4)
   - [4.1. Architecture Overview](#sec41)
@@ -167,13 +167,13 @@ CamFlow provides the following core functionalities:
 
 ### 1.3. Installation [⌃](#top)
 
-Use CamFlow v1.1.2 with Sentinel v1.1.4. Older v1.1.0 / v1.1.1 clients cannot upload to the authenticated server. Review [known issues](#known-issues) before deployment.
+Use CamFlow v1.1.2 with Sentinel v1.1.4. Older v1.1.0 / v1.1.1 clients cannot upload to the authenticated server. Review [network quality and troubleshooting](#network-quality) before deployment.
 
 #### 1.3.1. Standard User Installation (APK Package)
 
 > Intended for end users / deployment operators.
 
-1. Use the bundled pre-release `CamFlow-v1.1.2.apk` (debug-signed, build 9). If downloading from the project's **Releases** page, check the version and known issues; historical APKs are not compatible with the new server.
+1. Use the bundled `CamFlow-v1.1.2.apk` (debug-signed, build 9). If downloading from the project's **Releases** page, check the version and compatibility notes; historical APKs are not compatible with the new server.
 2. Install and open CamFlow on your Android device.
 3. On first launch, grant camera permission when prompted.
 
@@ -349,9 +349,9 @@ Enable **Show debug info** in Settings and return to the camera screen.
 | `connecting` / `sending image` / `waiting response` | Observed client-side phase, not proof of packet delivery or the root cause |
 | `Server processing` | Server-side duration returned in response headers; `unknown` is not zero |
 
-Connect timeout is 3 seconds, read/write timeouts are 4 seconds and the whole-call limit is 5 seconds; failed frames are not automatically replayed. These limits bound waiting but do not fix the underlying failure.
+Connect timeout is 3 seconds, read/write timeouts are 4 seconds and the whole-call limit is 5 seconds; failed frames are not automatically replayed. These limits bound waiting but cannot compensate for a poor network connection.
 
-Match a request ID with `upload begin/end` lines in the PC's `log/server.log`. Share only relevant lines, never tokens, authentication databases or full configuration files. If a paired phone still times out with Ingest enabled, see [known issues](#known-issues).
+Match a request ID with `upload begin/end` lines in the PC's `log/server.log`. Share only relevant lines, never tokens, authentication databases or full configuration files. If a paired phone times out with Ingest enabled, see [network quality and troubleshooting](#network-quality).
 
 ---
 
@@ -378,7 +378,7 @@ Before using CamFlow, ensure the following conditions are met:
 4. Enter the device name and code in phone Settings; tap **Pair / Re-pair**, then **Save**.
 5. The administrator clicks **Enable Ingest**; keep the phone camera running.
 6. Check that the phone's `ok` count grows and Dashboard Live View / Last frame age keep updating. Connected alone does not mean upload succeeded.
-7. If this fails, use [upload diagnostics](#upload-diagnostics) to inspect pairing, Ingest, request phases and [known issues](#known-issues).
+7. If this fails, use [upload diagnostics](#upload-diagnostics) to inspect pairing, Ingest and request phases, and check [network quality](#network-quality).
 
 ---
 
@@ -387,8 +387,9 @@ Before using CamFlow, ensure the following conditions are met:
 ## 3. FAQ [⌃](#top)
 
 <a id="known-issues"></a>
+<a id="network-quality"></a>
 
-**Known issue:** real-device uploads still intermittently time out during connection or response handling, which may leave the web image unchanged for extended periods. The cause is unconfirmed; do not rely on the current build for uninterrupted monitoring. Lower settings do not guarantee recovery. See [upload diagnostics](#upload-diagnostics).
+**Network quality and troubleshooting:** The connection/response timeouts and prolonged web-image stalls reported during Sentinel v1.1.4 / CamFlow v1.1.2 testing were confirmed by the maintainer to have been caused by poor Wi-Fi signal in the test environment, not an unresolved software defect. Keep the phone and PC on a stable, trusted LAN. If similar symptoms occur, check signal and connection quality first, then follow [upload diagnostics](#upload-diagnostics); a timeout alone does not identify its cause. Lower upload settings can reduce load but cannot replace a stable network connection.
 
 
 <details>
@@ -452,7 +453,7 @@ Before using CamFlow, ensure the following conditions are met:
 
 1. Check whether `/upload` requests are received on the PC server;
 2. Refresh the Dashboard page and verify **Ingest** status;
-3. Inspect the status code and request phase using [upload diagnostics](#upload-diagnostics). Lower upload settings can reduce load but do not guarantee recovery from the [known timeout issue](#known-issues).
+3. Inspect the status code and request phase using [upload diagnostics](#upload-diagnostics), and check [network quality](#network-quality). Lower upload settings can reduce load but cannot replace a stable connection.
 
 ### Solutions
 
@@ -749,7 +750,7 @@ Current version information:
 
 ### 5.2. Test Environment [⌃](#top)
 
-Local validation passed 19 Android unit tests and main/instrumentation APK builds; Android CI also passed. Build 9 completed a basic real-device retest. Keystore instrumentation tests have not run on a device, and sustained/background operation has not completed separate acceptance. The [upload issue](#known-issues) remains unresolved.
+Local validation passed 19 Android unit tests and main/instrumentation APK builds; Android CI also passed. Build 9 completed a basic real-device retest. Keystore instrumentation tests have not run on a device, and sustained/background operation has not completed separate acceptance. The earlier upload report was traced to test-environment Wi-Fi quality; see [network quality and troubleshooting](#network-quality).
 
 The following environments are historical test records, not a complete current-release test matrix:
 

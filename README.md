@@ -81,7 +81,7 @@ This project can be used both as a lightweight local monitoring system and as an
   - [5.2. Test Environment](#sec52)
   - [5.3. Roadmap](#sec53)
   - [5.4. Usage & License](#sec54)
-  - [5.5. Known Issues](#known-issues)
+  - [5.5. Network Quality and Troubleshooting](#network-quality)
 
 ---
 
@@ -589,7 +589,7 @@ volcenginesdkarkruntime        # AI module dependency
 
 ### 3.4. Android-side Deployment [⌃](#top)
 
-**Compatibility:** use CamFlow v1.1.2 with this authenticated server; v1.1.0 / v1.1.1 cannot upload anonymously. Before deployment, review [known issues](#known-issues).
+**Compatibility:** use CamFlow v1.1.2 with this authenticated server; v1.1.0 / v1.1.1 cannot upload anonymously. Before deployment, review [network quality and troubleshooting](#network-quality).
 
 The Android application CamFlow is responsible for camera capture and image upload.  
 The application source code is located in the repository path:
@@ -1673,7 +1673,7 @@ All runtime versions are defined once in the root `version.properties`. The PC l
 
 All 69 Python tests and 19 Android unit tests passed. CI also passed Python 3.9 / 3.12 on Windows / Linux and Android unit tests plus APK builds. Coverage includes permissions, CSRF, pairing/session expiry, device revocation, recording retention/low disk, video read/write, and AI state transitions/key rotation.
 
-CamFlow build 9 completed a basic real-device retest. Keystore instrumentation tests were compiled but have not run on a device; background behavior and sustained operation have not completed separate acceptance. See [known issues](#known-issues).
+CamFlow build 9 completed a basic real-device retest. Keystore instrumentation tests were compiled but have not run on a device; background behavior and sustained operation have not completed separate acceptance. For the clarification of the earlier upload report, see [network quality and troubleshooting](#network-quality).
 
 The following device environments are historical records, not a complete test matrix for every release:
 
@@ -1732,12 +1732,13 @@ Copyright © 2026 Suzuran0y
 
 <a id="sec55"></a>
 <a id="known-issues"></a>
+<a id="network-quality"></a>
 
-### 5.5. Known Issues [⌃](#top)
+### 5.5. Network Quality and Troubleshooting [⌃](#top)
 
-**Known issue:** real-device uploads still intermittently time out during connection or response handling, which may leave the web image unchanged for extended periods.
+The connection/response timeouts and prolonged web-image stalls reported during Sentinel v1.1.4 / CamFlow v1.1.2 testing were confirmed by the maintainer to have been caused by poor Wi-Fi signal in the test environment. This report is no longer listed as an unresolved software defect; no upload-code change was needed for this clarification.
 
-The cause remains unconfirmed; do not rely on the current build for uninterrupted monitoring. Use [CamFlow upload diagnostics](CamFlow_UserGuide.md#upload-diagnostics) to distinguish pairing, Ingest and connection failures. Share only relevant diagnostic lines, never tokens or configuration files.
+Keep the phone and PC on a stable, trusted LAN. If timeouts or slow refresh occur, check Wi-Fi signal and connection quality first, then use [CamFlow upload diagnostics](CamFlow_UserGuide.md#upload-diagnostics) to check pairing, Ingest and request phases. Other occurrences still need diagnosis; a timeout alone does not identify its cause. Share only relevant diagnostic lines, never tokens or configuration files.
 
 ---
 

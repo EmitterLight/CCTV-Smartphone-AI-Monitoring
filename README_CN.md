@@ -81,7 +81,7 @@ Sentinel 是一个运行于局域网环境中的分布式实时视觉系统框�
   - [5.2. 测试环境说明](#sec52)
   - [5.3. 后续规划](#sec53)
   - [5.4. 使用与授权说明](#sec54)
-  - [5.5. 已知问题](#known-issues)
+  - [5.5. 网络质量与排查说明](#network-quality)
 
 ---
 
@@ -619,7 +619,7 @@ volcenginesdkarkruntime        # AI 模块依赖
 
 ### 3.4. Android 端部署 [⌃](#top)
 
-**兼容性：** 当前认证服务器需搭配 CamFlow v1.1.2，v1.1.0／v1.1.1 无法匿名上传。部署前请阅读[已知问题](#known-issues)。
+**兼容性：** 当前认证服务器需搭配 CamFlow v1.1.2，v1.1.0／v1.1.1 无法匿名上传。部署前请阅读[网络质量与排查说明](#network-quality)。
 
 Android 端应用 CamFlow 负责了项目的摄像功能与图像上传。应用源码位于项目库路径：
 
@@ -1664,7 +1664,7 @@ Sentinel 系统由 **PC 端服务程序 + Web Dashboard + Android 端 CamFlow** 
 
 69 项 Python 测试与 19 项 Android 单元测试通过；CI 亦通过 Windows／Linux 上的 Python 3.9／3.12 检查，以及 Android 单元测试和 APK 构建。覆盖权限、CSRF、配对与会话过期、设备撤销、录像保留／低磁盘、视频读写及 AI 状态转换／密钥轮换。
 
-CamFlow build 9 已完成基本真机复测。Keystore 设备测试已编译但尚未在设备执行，后台行为和长时间运行尚未完成专项验收，见[已知问题](#known-issues)。
+CamFlow build 9 已完成基本真机复测。Keystore 设备测试已编译但尚未在设备执行，后台行为和长时间运行尚未完成专项验收。此前上传现象的澄清见[网络质量与排查说明](#network-quality)。
 
 以下设备环境为历史测试记录，不代表每个版本的完整测试矩阵：
 
@@ -1720,12 +1720,13 @@ Sentinel 项目基于 MIT License 开源发布。
 
 <a id="sec55"></a>
 <a id="known-issues"></a>
+<a id="network-quality"></a>
 
-### 5.5. 已知问题 [⌃](#top)
+### 5.5. 网络质量与排查说明 [⌃](#top)
 
-**已知问题：** 真机上传仍间歇性连接/响应超时，导致网页可能长时间不更新。
+此前在 Sentinel v1.1.4／CamFlow v1.1.2 测试中出现的连接／响应超时及网页画面长时间不更新，已由维护者确认是测试环境 Wi-Fi 信号差所致。该反馈不再列为程序待修复问题；本次澄清无需修改上传代码。
 
-根因尚未确认，请勿依赖当前版本进行需要连续可靠画面的监控。可通过 [CamFlow 上传诊断](CamFlow_UserGuide_CN.md#upload-diagnostics)区分配对、Ingest 与连接失败；分享信息时仅提供相关诊断行，不要发送令牌或配置文件。
+使用时请确保手机与 PC 之间的可信局域网连接稳定。若遇到超时或刷新缓慢，优先检查 Wi-Fi 信号与连接质量，再按 [CamFlow 上传诊断](CamFlow_UserGuide_CN.md#upload-diagnostics)检查配对、Ingest 和请求阶段。其他环境中的类似现象仍需具体排查，不能仅凭超时判断原因；分享信息时仅提供相关诊断行，不要发送令牌或配置文件。
 
 ---
 

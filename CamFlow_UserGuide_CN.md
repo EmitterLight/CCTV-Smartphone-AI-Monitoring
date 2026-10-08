@@ -32,7 +32,7 @@
   - [2.4. 使用步骤](#sec24)
 
 - [3. 常见问题](#sec3)
-  - [已知上传问题](#known-issues)
+  - [网络质量与排查说明](#network-quality)
 
 - [4. 开发者文档](#sec4)
   - [4.1. 实现框架](#sec41)
@@ -135,12 +135,12 @@ CamFlow 主要功能包括：
 
 ### 1.3. 安装方式 [⌃](#top)
 
-Sentinel v1.1.4 需搭配 CamFlow v1.1.2。旧 v1.1.0／v1.1.1 客户端无法向认证服务器上传，部署前请阅读[已知问题](#known-issues)。
+Sentinel v1.1.4 需搭配 CamFlow v1.1.2。旧 v1.1.0／v1.1.1 客户端无法向认证服务器上传，部署前请阅读[网络质量与排查说明](#network-quality)。
 
 #### 1.3.1. 普通用户安装（APK 安装包）
 > 适用于“使用者/部署者”。
 
-1. 使用仓库内预发布的 `CamFlow-v1.1.2.apk`（debug-signed，build 9）。若从 GitHub 项目的 **Releases** 页面下载，请核对版本与已知问题；历史 APK 不兼容新版服务器。
+1. 使用仓库内的 `CamFlow-v1.1.2.apk`（debug-signed，build 9）。若从 GitHub 项目的 **Releases** 页面下载，请核对版本与兼容性说明；历史 APK 不兼容新版服务器。
 2. 安装并打开 CamFlow。
 3. 首次启动会请求摄像头权限，点击允许。
 
@@ -294,9 +294,9 @@ Frame size 来自当前相机裁剪区域，也是 JPEG 编码使用的尺寸，
 | `connecting` / `sending image` / `waiting response` | 客户端观察到的阶段，不代表已送达或已确认故障根因 |
 | `Server processing` | 响应头返回的服务端耗时；`unknown` 不等于 0 |
 
-连接超时为 3 秒，读／写超时各 4 秒，整笔请求上限为 5 秒；失败的旧帧不自动重放。这些限制用于约束等待，并不能修复故障根因。
+连接超时为 3 秒，读／写超时各 4 秒，整笔请求上限为 5 秒；失败的旧帧不自动重放。这些限制用于约束等待，不能弥补不佳的网络连接质量。
 
-可用请求编号关联 PC 的 `log/server.log` 中的 `upload begin/end` 行。分享时只摘取相关行，不发送令牌、认证数据库或整份配置。若配对有效、Ingest 已开启仍持续超时，见[已知问题](#known-issues)。
+可用请求编号关联 PC 的 `log/server.log` 中的 `upload begin/end` 行。分享时只摘取相关行，不发送令牌、认证数据库或整份配置。若配对有效、Ingest 已开启仍出现超时，见[网络质量与排查说明](#network-quality)。
 
 ---
 
@@ -320,7 +320,7 @@ Frame size 来自当前相机裁剪区域，也是 JPEG 编码使用的尺寸，
 4. 在手机 Settings 填写设备名与配对码，点击 **Pair / Re-pair**，成功后点击 **Save**。
 5. 管理员点击 **Enable Ingest**，手机保持相机运行。
 6. 检查手机 `ok` 是否持续增长，以及 Dashboard 的 Live View 和 Last frame age 是否持续更新；仅显示 Connected 不代表上传成功。
-7. 若失败，按[上传诊断](#upload-diagnostics)检查配对、Ingest、请求阶段和[已知问题](#known-issues)。
+7. 若失败，按[上传诊断](#upload-diagnostics)检查配对、Ingest 和请求阶段，并检查[网络质量](#network-quality)。
 
 ---
 
@@ -329,8 +329,9 @@ Frame size 来自当前相机裁剪区域，也是 JPEG 编码使用的尺寸，
 ## 3. 常见问题 [⌃](#top)
 
 <a id="known-issues"></a>
+<a id="network-quality"></a>
 
-**已知问题：** 真机上传仍间歇性连接/响应超时，导致网页可能长时间不更新。根因尚未确认，请勿依赖当前版本进行需要连续可靠画面的监控；降低档位不保证恢复。详见[上传诊断](#upload-diagnostics)。
+**网络质量与排查说明：** 此前在 Sentinel v1.1.4／CamFlow v1.1.2 测试中出现的连接／响应超时及网页画面长时间不更新，已由维护者确认是测试环境 Wi-Fi 信号差所致，不再列为程序待修复问题。请确保手机与 PC 之间的可信局域网连接稳定。若出现类似现象，先检查信号与连接质量，再按[上传诊断](#upload-diagnostics)继续排查，不能仅凭超时判断原因。降低上传档位可以减轻负载，但不能代替稳定的网络连接。
 
 
 <details>
@@ -388,7 +389,7 @@ Frame size 来自当前相机裁剪区域，也是 JPEG 编码使用的尺寸，
 **排查步骤**
 1. 在 PC 端查看是否收到 `/upload` 请求
 2. 刷新 Dashboard 页面，确认 ingest 开关状态
-3. 按[上传诊断](#upload-diagnostics)查看状态码和请求阶段；降低上传档位可以减轻负载，但不保证解决[已知超时问题](#known-issues)
+3. 按[上传诊断](#upload-diagnostics)查看状态码和请求阶段，并检查[网络质量](#network-quality)；降低上传档位可以减轻负载，但不能代替稳定的网络连接
 
 **解决方案**
 - 若尚未配对或凭据已撤销，获取新配对码，点击 **Pair / Re-pair** 后 **Save**；
@@ -671,7 +672,7 @@ CamFlow:    192.168.1.10:8000    enter this address manually in the app
 
 ### 5.2. 测试环境说明 [⌃](#top)
 
-本地验证通过 19 项 Android 单元测试及主 APK／设备测试 APK 构建，Android CI 亦已通过。build 9 已完成基本真机复测；Keystore 设备测试尚未在设备执行，长时间／后台运行未完成专项验收，[上传问题](#known-issues)仍待解决。
+本地验证通过 19 项 Android 单元测试及主 APK／设备测试 APK 构建，Android CI 亦已通过。build 9 已完成基本真机复测；Keystore 设备测试尚未在设备执行，长时间／后台运行未完成专项验收。此前上传现象已确认与测试环境的 Wi-Fi 质量有关，见[网络质量与排查说明](#network-quality)。
 
 以下环境为历史测试记录，不代表当前版本的完整测试矩阵：
 
