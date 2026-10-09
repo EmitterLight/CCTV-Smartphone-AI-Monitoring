@@ -3,7 +3,7 @@
 
 # CamFlow User Guide
 
-[![Version](https://img.shields.io/badge/version-v1.1.2-black)](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring/issues/2)
+[![Version](https://img.shields.io/badge/version-v1.1.4-black)](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring/issues/2)
 [![Android](https://img.shields.io/badge/Android-8.0%2B-green)](CamFlow_UserGuide.md)
 [![Role](https://img.shields.io/badge/role-Client-blue)](README.md)
 [![Protocol](https://img.shields.io/badge/protocol-HTTP%20Upload-orange)](#sec42)
@@ -168,13 +168,13 @@ CamFlow provides the following core functionalities:
 
 ### 1.3. Installation [⌃](#top)
 
-Use CamFlow v1.1.2 with Sentinel v1.1.4. Older v1.1.0 / v1.1.1 clients cannot upload to the authenticated server. Review [network quality and troubleshooting](#network-quality) before deployment.
+Use CamFlow v1.1.4 with Sentinel v1.1.4. Older v1.1.0 / v1.1.1 clients cannot upload to the authenticated server. Review [network quality and troubleshooting](#network-quality) before deployment.
 
 #### 1.3.1. Standard User Installation (APK Package)
 
 > Intended for end users / deployment operators.
 
-1. Use the bundled `CamFlow-v1.1.2.apk` (debug-signed, build 9). If downloading from the project's **Releases** page, check the version and compatibility notes; historical APKs are not compatible with the new server.
+1. Use the bundled `CamFlow-v1.1.4.apk` (keystore-signed, build 16). If downloading from the project's **Releases** page, check the version and compatibility notes; historical APKs are not compatible with the new server.
 2. Install and open CamFlow on your Android device.
 3. On first launch, grant camera permission when prompted.
 
@@ -757,9 +757,9 @@ If the PC's LAN IP changes, CamFlow will detect that the saved address is unavai
 The Sentinel system consists of the PC-side server program and the Android-side CamFlow application.  
 Current version information:
 
-- **CamFlow (Android source) Version**: v1.1.2
-- **Bundled APK Version**: v1.1.2 (debug-signed)
-- **This Document Version**: v1.1.2
+- **CamFlow (Android source) Version**: v1.1.4
+- **Bundled APK Version**: v1.1.4 (keystore-signed)
+- **This Document Version**: v1.1.4
 - **Last Updated**: 2026-09-26
 
 ---

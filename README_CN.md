@@ -537,7 +537,7 @@ Sentinel/
 │   ├── build.gradle.kts
 │   ├── settings.gradle.kts
 │   ├── ...
-│   ├── CamFlow-v1.1.2.apk        # 当前本地构建安装包（debug-signed）
+│   ├── CamFlow-v1.1.4.apk        # 当前本地构建安装包（keystore-signed）
 │   ├── CamFlow-v1.1.1.apk        # 保留的旧版安装包
 │   └── CamFlow-v1.1.0.apk        # 保留的旧版安装包
 │
@@ -619,7 +619,7 @@ volcenginesdkarkruntime        # AI 模块依赖
 
 ### 3.4. Android 端部署 [⌃](#top)
 
-**兼容性：** 当前认证服务器需搭配 CamFlow v1.1.2，v1.1.0／v1.1.1 无法匿名上传。部署前请阅读[网络质量与排查说明](#network-quality)。
+**兼容性：** 当前认证服务器需搭配 CamFlow v1.1.4，v1.1.0／v1.1.1 无法匿名上传。部署前请阅读[网络质量与排查说明](#network-quality)。
 
 Android 端应用 CamFlow 负责了项目的摄像功能与图像上传。应用源码位于项目库路径：
 
@@ -630,10 +630,12 @@ PhoneCamSender/
 已编译 APK 文件路径：
 
 ```
-PhoneCamSender/CamFlow-v1.1.2.apk
+PhoneCamSender/CamFlow-v1.1.4.apk
 ```
 
-> 当前仓库安装包为 CamFlow v1.1.2 build 9（debug-signed，分辨率显示语义修订），SHA-256：`EBBD242B5C1660607D45808480895D8F88F71F106B6A64CE7CE2E3FC726F58E5`。旧版安装包暂留，待 v1.1.2 真机验收后清理。
+> 当前仓库安装包为 CamFlow v1.1.4 build 16（keystore-signed，CameraX lifecycle 状态修复），SHA-256：`F56EA3AFE28739B283FC151A29A36AC6115DF48E62A500C7AE24E66E7058C283`。旧版安装包暂留，待 v1.1.4 真机验收后清理。
+
+> 每次构建都使用 `PhoneCamSender/camflow.keystore` 签名（密码与别名从未提交的 `.env` 读取），因此 debug 与 release 共享同一签名。`camflow.versionCode` 由 Gradle 在每次 `assemble`／`install` 构建时自动递增。若设备上已安装其他签名的 CamFlow，Android 会提示「应用与其他应用冲突」——请先卸载旧包。
 
 #### 3.4.1. 使用 APK 快速安装（推荐）
 
@@ -1649,8 +1651,8 @@ cd PhoneCamSender
 Sentinel 系统由 **PC 端服务程序 + Web Dashboard + Android 端 CamFlow** 组成，当前版本信息如下：
 
 - **Sentinel（PC + Dashboard）版本**：v1.1.4
-- **CamFlow（Android 源码）版本**：v1.1.2
-- **仓库内 CamFlow APK 版本**：v1.1.2（debug-signed）
+- **CamFlow（Android 源码）版本**：v1.1.4
+- **仓库内 CamFlow APK 版本**：v1.1.4（keystore-signed）
 - **本文档版本**：v1.1.4
 - **最后更新日期**：2026-09-27
 

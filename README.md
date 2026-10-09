@@ -503,7 +503,7 @@ Sentinel/
 │   ├── build.gradle.kts
 │   ├── settings.gradle.kts
 │   ├── ...
-│   ├── CamFlow-v1.1.2.apk        # Current locally built installation package (debug-signed)
+│   ├── CamFlow-v1.1.4.apk        # Current locally built installation package (keystore-signed)
 │   ├── CamFlow-v1.1.1.apk        # Retained legacy installation package
 │   └── CamFlow-v1.1.0.apk        # Retained legacy installation package
 │
@@ -589,7 +589,7 @@ volcenginesdkarkruntime        # AI module dependency
 
 ### 3.4. Android-side Deployment [⌃](#top)
 
-**Compatibility:** use CamFlow v1.1.2 with this authenticated server; v1.1.0 / v1.1.1 cannot upload anonymously. Before deployment, review [network quality and troubleshooting](#network-quality).
+**Compatibility:** use CamFlow v1.1.4 with this authenticated server; v1.1.0 / v1.1.1 cannot upload anonymously. Before deployment, review [network quality and troubleshooting](#network-quality).
 
 The Android application CamFlow is responsible for camera capture and image upload.  
 The application source code is located in the repository path:
@@ -601,10 +601,12 @@ PhoneCamSender/
 The precompiled APK file is located at:
 
 ```
-PhoneCamSender/CamFlow-v1.1.2.apk
+PhoneCamSender/CamFlow-v1.1.4.apk
 ```
 
-> The current bundled package is CamFlow v1.1.2 build 9 (debug-signed, resolution display clarification), SHA-256: `EBBD242B5C1660607D45808480895D8F88F71F106B6A64CE7CE2E3FC726F58E5`. Legacy packages remain until v1.1.2 device acceptance is complete.
+> The current bundled package is CamFlow v1.1.4 build 16 (keystore-signed, CameraX lifecycle state fix), SHA-256: `F56EA3AFE28739B283FC151A29A36AC6115DF48E62A500C7AE24E66E7058C283`. Legacy packages remain until v1.1.4 device acceptance is complete.
+
+> Every build is signed with `PhoneCamSender/camflow.keystore` (password and alias are read from `.env`, which is not committed), so debug and release builds share one signature. `camflow.versionCode` is incremented automatically by Gradle on every `assemble`/`install` build. If a device already has CamFlow installed with a different signature, Android reports "app conflicts with another app" — uninstall the old package first.
 
 #### 3.4.1. Quick Installation via APK (Recommended)
 
@@ -1658,8 +1660,8 @@ The Sentinel system consists of **PC-side service program + Web Dashboard + Andr
 The current version information is as follows:
 
 - **Sentinel (PC + Dashboard) Version**: v1.1.4
-- **CamFlow (Android source) Version**: v1.1.2
-- **Bundled CamFlow APK Version**: v1.1.2 (debug-signed)
+- **CamFlow (Android source) Version**: v1.1.4
+- **Bundled CamFlow APK Version**: v1.1.4 (keystore-signed)
 - **Documentation Version**: v1.1.4
 - **Last Updated**: 2026-09-27
 

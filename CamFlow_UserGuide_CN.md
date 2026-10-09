@@ -3,7 +3,7 @@
 
 # CamFlow 使用说明
 
-[![Version](https://img.shields.io/badge/version-v1.1.2-black)](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring/issues/2)
+[![Version](https://img.shields.io/badge/version-v1.1.4-black)](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring/issues/2)
 [![Android](https://img.shields.io/badge/Android-8.0%2B-green)](CamFlow_UserGuide_CN.md)
 [![Role](https://img.shields.io/badge/role-Client-blue)](README_CN.md)
 [![Protocol](https://img.shields.io/badge/protocol-HTTP%20Upload-orange)](#sec42)
@@ -136,12 +136,12 @@ CamFlow 主要功能包括：
 
 ### 1.3. 安装方式 [⌃](#top)
 
-Sentinel v1.1.4 需搭配 CamFlow v1.1.2。旧 v1.1.0／v1.1.1 客户端无法向认证服务器上传，部署前请阅读[网络质量与排查说明](#network-quality)。
+Sentinel v1.1.4 需搭配 CamFlow v1.1.4。旧 v1.1.0／v1.1.1 客户端无法向认证服务器上传，部署前请阅读[网络质量与排查说明](#network-quality)。
 
 #### 1.3.1. 普通用户安装（APK 安装包）
 > 适用于“使用者/部署者”。
 
-1. 使用仓库内的 `CamFlow-v1.1.2.apk`（debug-signed，build 9）。若从 GitHub 项目的 **Releases** 页面下载，请核对版本与兼容性说明；历史 APK 不兼容新版服务器。
+1. 使用仓库内的 `CamFlow-v1.1.4.apk`（keystore-signed，build 16）。若从 GitHub 项目的 **Releases** 页面下载，请核对版本与兼容性说明；历史 APK 不兼容新版服务器。
 2. 安装并打开 CamFlow。
 3. 首次启动会请求摄像头权限，点击允许。
 
@@ -678,9 +678,9 @@ CamFlow:    192.168.1.10:8000    enter this address manually in the app
 ### 5.1. 系统版本信息 [⌃](#top)
 
 本系统由 PC 端服务器程序与 Android 端 CamFlow 应用组成，版本信息如下：
-- CamFlow（Android 源码）版本：v1.1.2
-- 仓库内安装包版本：v1.1.2（debug-signed）
-- 本文档版本：v1.1.2
+- CamFlow（Android 源码）版本：v1.1.4
+- 仓库内安装包版本：v1.1.4（keystore-signed）
+- 本文档版本：v1.1.4
 - 最后更新日期：2026-09-26
 
 ---
