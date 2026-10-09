@@ -86,6 +86,9 @@ class CaptureService : Service(), LifecycleOwner {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        // CameraX attaches use cases only while the owner is at least STARTED; an
+        // INITIALIZED registry would leave the analyzer never firing.
+        registry.currentState = Lifecycle.State.STARTED
         wakeLock = getSystemService(PowerManager::class.java)
             .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "camflow:capture")
         wakeLock?.acquire(30 * 60 * 1000L)
@@ -120,6 +123,7 @@ class CaptureService : Service(), LifecycleOwner {
         super.onDestroy()
         instance = null
         gate.serviceRunning = false
+        registry.currentState = Lifecycle.State.DESTROYED
         handler.removeCallbacksAndMessages(null)
         ProcessCameraProvider.getInstance(this).addListener({
             try {
