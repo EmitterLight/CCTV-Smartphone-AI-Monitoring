@@ -76,6 +76,8 @@ class CaptureService : Service(), LifecycleOwner {
     private val cameraExecutor = Executors.newSingleThreadExecutor()
     private val activeUploads = ConcurrentHashMap<Call, UploadTrace>()
     private val source = AndroidNotificationSource(this)
+    private val recovery = BackgroundRecovery(120_000)
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private var analyzedProxy: ImageProxy? = null
     var pipeline: FramePipeline? = null
     private var boundAnalysis: ImageAnalysis? = null
@@ -104,7 +106,13 @@ class CaptureService : Service(), LifecycleOwner {
             }
         }
         applySettings()
-        if (hasCameraPermission()) bindCamera()
+        if (hasCameraPermission()) {
+            if (recovery.shouldRestart(prefs.getLong("lastUploadSuccess", 0L), System.currentTimeMillis())) {
+                verifyConnection()
+            } else {
+                bindCamera()
+            }
+        }
         return START_STICKY
     }
 
@@ -112,6 +120,7 @@ class CaptureService : Service(), LifecycleOwner {
         super.onDestroy()
         instance = null
         gate.serviceRunning = false
+        handler.removeCallbacksAndMessages(null)
         ProcessCameraProvider.getInstance(this).addListener({
             try {
                 val provider = ProcessCameraProvider.getInstance(this).get()
@@ -191,6 +200,7 @@ class CaptureService : Service(), LifecycleOwner {
                 status = "Failed: ${e.javaClass.simpleName}"
                 activeUploads.remove(call)
                 slot.close()
+                schedulePing(planner.nextDelayMs())
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -207,6 +217,7 @@ class CaptureService : Service(), LifecycleOwner {
                             DeviceCredentials.clearIfCurrent(applicationContext, url, token)
                             status = "Pairing revoked or invalid — pair again in Settings"
                         }
+                        schedulePing(planner.nextDelayMs())
                     }
                 } finally {
                     try { response.close() } finally {
@@ -221,6 +232,42 @@ class CaptureService : Service(), LifecycleOwner {
     @Synchronized private fun persistUploadSuccess() {
         val now = System.currentTimeMillis()
         prefs.edit().putLong("lastUploadSuccess", now).apply()
+    }
+
+    private fun schedulePing(delayMs: Long) {
+        handler.postDelayed({ verifyConnection() }, delayMs)
+    }
+
+    private fun verifyConnection() {
+        val url = baseUrl()
+        if (url == null) return
+        val request = try {
+            Request.Builder()
+                .url("${url.removeSuffix("/")}/ping")
+                .get()
+                .build()
+        } catch (_: IllegalArgumentException) {
+            return
+        }
+
+        uploadHttp.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                status = "Reconnect: ${e.javaClass.simpleName}"
+                schedulePing(planner.nextDelayMs())
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (it.isSuccessful) {
+                        planner.reset()
+                        status = "Reconnected"
+                        if (hasCameraPermission() && gate.allowCapture()) bindCamera()
+                    } else {
+                        schedulePing(planner.nextDelayMs())
+                    }
+                }
+            }
+        })
     }
 
     private fun bindCamera() {
