@@ -45,3 +45,6 @@ desktop.ini
 # UnderstandAnything
 .ua/intermediate/
 .ua/diff-overlay.json
+
+# Signing key (never commit)
+PhoneCamSender/camflow.keystore

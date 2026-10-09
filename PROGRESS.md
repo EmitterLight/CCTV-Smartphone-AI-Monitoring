@@ -9,6 +9,12 @@
 ---
 <!-- LOG_START -->
 
+### [2026-10-10 01:46] .gitignore: исключён signing key
+- Файл: `.gitignore`
+- Действие: изменён
+- Суть: добавлен `PhoneCamSender/camflow.keystore` — ключ подписи не должен попадать в коммиты; это также разблокировало `prepare-incremental.mjs` (он отказывался из-за untracked keystore).
+- Статус: [DONE]
+
 ### [2026-10-10 01:45] Подготовка коммитов для инкрементального обновления knowledge graph
 - Файл: git (рабочее дерево)
 - Действие: планируемое разделение на 4 коммита (fix lifecycle / keystore signing + metadata sync / bump v1.1.4 + APK + docs / docs+specs+PROGRESS)
