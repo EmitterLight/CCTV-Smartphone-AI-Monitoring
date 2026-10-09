@@ -41,13 +41,28 @@ class MainActivity : AppCompatActivity() {
     private val activeUploads = ConcurrentHashMap<Call, UploadTrace>()
     private val uploadSlots = UploadSlots(2)
     @Volatile private var uploadsStopped = false
+    private val pipelineSender = FrameSender { _, slot ->
+        val proxy = analyzedProxy
+        if (proxy == null) { slot.close(); return@FrameSender }
+        try {
+            val encodeStarted = SystemClock.elapsedRealtime()
+            val jpeg = ImageUtil.yuvToJpeg(proxy, getImageQualityValue())
+            lastEncodeMs = SystemClock.elapsedRealtime() - encodeStarted
+            uploadFrame(jpeg, slot)
+        } catch (e: Exception) {
+            slot.close()
+            throw e
+        }
+    }
+    private val gate = CaptureGate()
+    private var analyzedProxy: ImageProxy? = null
+    private var pipeline = FramePipeline(gate, uploadSlots, getUploadIntervalMs(), pipelineSender) { SystemClock.elapsedRealtime() }
     private data class UploadResult(val status: String, val latencyMs: Long, val trace: UploadTrace?)
     @Volatile private var lastUpload = UploadResult("Not started", 0, null)
     @Volatile private var lastEncodeMs = 0L
     private val resolutionStatus = ResolutionStatus()
     @Volatile
     private var baseUrl: String? = null
-    private var lastSentTs = 0L
     private var lastSuccessPersisted = 0L
     private val uploadSuccessCount = AtomicLong(0)
     private val uploadFailureCount = AtomicLong(0)
@@ -60,7 +75,6 @@ class MainActivity : AppCompatActivity() {
 
 // ===== Debug / Power control state =====
     private var dbgEnabledFlag = false
-    @Volatile private var powerSaveFlag = false
     // ===== CameraX provider control =====
     private var camProviderRef: ProcessCameraProvider? = null
     private val cameraStart = CameraStartGuard()
@@ -86,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         blackScreen = findViewById(R.id.blackScreen)
 
         setStatus("Status: Connecting...")
+        gate.serviceRunning = true
         findViewById<ImageButton>(R.id.btnSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
@@ -104,7 +119,10 @@ class MainActivity : AppCompatActivity() {
         val currentResolutionLabel = getResolutionLabel()
         val resolutionChanged = currentResolutionLabel != lastAppliedResolutionLabel
 
-        powerSaveFlag = stopCameraFlag
+        gate.userStopped = stopCameraFlag
+        if (getUploadIntervalMs() != pipeline.intervalMs) {
+            pipeline = FramePipeline(gate, uploadSlots, getUploadIntervalMs(), pipelineSender) { SystemClock.elapsedRealtime() }
+        }
         mainHandler.removeCallbacks(debugUpdater)
         mainHandler.post(debugUpdater)
 
@@ -316,37 +334,13 @@ class MainActivity : AppCompatActivity() {
 
                     resolutionStatus.record(resolutionTicket, imageProxy.cropRect.width(), imageProxy.cropRect.height())
 
-                    if (powerSaveFlag) {
-                        imageProxy.close()
-                        return@setAnalyzer
-                    }
-
+                    analyzedProxy = imageProxy
                     try {
-                        val now = SystemClock.elapsedRealtime()
-                        val uploadIntervalMs = getUploadIntervalMs()
-
-                        if (now - lastSentTs >= uploadIntervalMs) {
-                            lastSentTs = now
-                            // Check before YUV conversion/JPEG compression, not after doing wasted work.
-                            val slot = uploadSlots.tryAcquire()
-                            if (slot == null) {
-                                uploadDroppedCount.incrementAndGet()
-                                return@setAnalyzer
-                            }
-                            try {
-                                val jpegQuality = getImageQualityValue()
-                                val encodeStarted = SystemClock.elapsedRealtime()
-                                val jpeg = ImageUtil.yuvToJpeg(imageProxy, jpegQuality)
-                                lastEncodeMs = SystemClock.elapsedRealtime() - encodeStarted
-                                uploadFrame(jpeg, slot)
-                            } catch (e: Exception) {
-                                slot.close()
-                                throw e
-                            }
-                        }
+                        pipeline.handle(imageProxy.cropRect.width(), imageProxy.cropRect.height())
                     } catch (e: Exception) {
                         lastCameraError = e.javaClass.simpleName
                     } finally {
+                        analyzedProxy = null
                         imageProxy.close()
                     }
                 }
@@ -488,6 +482,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         mainHandler.removeCallbacks(debugUpdater)
         stopCameraEngine()
+        gate.serviceRunning = false
         uploadsStopped = true
         uploadSlots.stopAccepting()
         activeUploads.keys.forEach { it.cancel() }
@@ -525,7 +520,7 @@ class MainActivity : AppCompatActivity() {
                 (completed.trace?.let { "Last completed — ${it.summary()}\n" } ?: "") +
                 active.joinToString("") { "Active — ${it.summary()}\n" } +
                 "Uploads: ok=${uploadSuccessCount.get()} failed=${uploadFailureCount.get()} " +
-                "dropped=${uploadDroppedCount.get()}\nCamera error: $cameraErrorText"
+                "dropped=${pipeline.dropped}\nCamera error: $cameraErrorText"
     }
 
     private fun getImageQualityLabel(): String {
