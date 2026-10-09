@@ -8,6 +8,7 @@ __pycache__/
 
 # Virtual environments
 venv/
+.env
 .env/
 .env.*
 .venv/
@@ -40,3 +41,7 @@ CODEX_MODIFICATION_LOG.md
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# UnderstandAnything
+.ua/intermediate/
+.ua/diff-overlay.json

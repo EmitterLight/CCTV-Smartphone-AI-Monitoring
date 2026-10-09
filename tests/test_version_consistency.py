@@ -23,6 +23,10 @@ def test_runtime_versions_match_android_build_and_readmes():
     assert 'rootProject.file("../version.properties")' in gradle
     assert "versionName = camflowVersion" in gradle
     assert "versionCode = camflowVersionCode" in gradle
+    assert 'tasks.register("bumpVersionCode")' in gradle
+    assert 'gradle.startParameter.taskNames.any { it.contains("assemble") || it.contains("install") }' in gradle
+    assert "CAMFLOW_KEYSTORE_PASSWORD" in gradle and "CAMFLOW_KEYSTORE_ALIAS" in gradle
+    assert "signingConfigs" in gradle
     assert isinstance(CAMFLOW_VERSION_CODE, int)
     assert CAMFLOW_VERSION_CODE > 0
     apk_path = ROOT / CAMFLOW_APK_PATH
@@ -34,6 +38,7 @@ def test_runtime_versions_match_android_build_and_readmes():
         assert f"v{CAMFLOW_SOURCE_VERSION}" in readme
         assert CAMFLOW_APK_PATH in readme
         assert CAMFLOW_APK_SHA256 in readme
+        assert f"build {CAMFLOW_VERSION_CODE}" in readme
         assert RELEASE_DATE in readme
 
     dashboard = (ROOT / "app/web/templates/dashboard.html").read_text(encoding="utf-8")
@@ -44,6 +49,6 @@ def test_runtime_versions_match_android_build_and_readmes():
     assert "Resolution preference" in texts
     assert any("not fixed pixel sizes" in text for text in texts)
     main = (ROOT / "PhoneCamSender/app/src/main/java/com/example/phonecamsender/MainActivity.kt").read_text(encoding="utf-8")
-    assert "resolutionStatus.summary(getResolutionLabel())" in main
+    assert "service?.resolutionStatus?.summary(getResolutionLabel())" in main
     assert "getResolutionText()" not in main
     assert "(actual $actualResolution)" not in main
