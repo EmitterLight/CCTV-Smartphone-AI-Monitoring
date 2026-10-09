@@ -1671,9 +1671,9 @@ All runtime versions are defined once in the root `version.properties`. The PC l
 
 ### 5.2. Test Environment [⌃](#top)
 
-All 69 Python tests and 19 Android unit tests passed. CI also passed Python 3.9 / 3.12 on Windows / Linux and Android unit tests plus APK builds. Coverage includes permissions, CSRF, pairing/session expiry, device revocation, recording retention/low disk, video read/write, and AI state transitions/key rotation.
+All 69 Python tests and 31 Android unit tests passed. CI also passed Python 3.9 / 3.12 on Windows / Linux and Android unit tests plus APK builds. Coverage includes permissions, CSRF, pairing/session expiry, device revocation, recording retention/low disk, video read/write, and AI state transitions/key rotation.
 
-CamFlow build 9 completed a basic real-device retest. Keystore instrumentation tests were compiled but have not run on a device; background behavior and sustained operation have not completed separate acceptance. For the clarification of the earlier upload report, see [network quality and troubleshooting](#network-quality).
+CamFlow build 9 completed a basic real-device retest. Keystore instrumentation tests were compiled but have not run on a device. Background operation is implemented as a foreground service with a partial wake lock (see [background operation](CamFlow_UserGuide.md#background-operation)); sustained background upload has not been accepted on every device model, because Doze and vendor battery managers can still kill the process. For the clarification of the earlier upload report, see [network quality and troubleshooting](#network-quality).
 
 The following device environments are historical records, not a complete test matrix for every release:
 

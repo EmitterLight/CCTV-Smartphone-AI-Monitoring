@@ -33,6 +33,7 @@
 
 - [3. 常见问题](#sec3)
   - [网络质量与排查说明](#network-quality)
+  - [后台运行说明（熄屏持续上传）](#background-operation)
 
 - [4. 开发者文档](#sec4)
   - [4.1. 实现框架](#sec41)
@@ -414,6 +415,22 @@ Frame size 来自当前相机裁剪区域，也是 JPEG 编码使用的尺寸，
 
 ---
 
+<a id="background-operation"></a>
+
+<details>
+<summary><strong>后台运行说明（熄屏持续上传）</strong></summary>
+
+CamFlow 使用类型为 `camera` 的前台服务与部分唤醒锁（partial wake lock），屏幕关闭后仍可继续采集与上传。应用无法覆盖设备的电源策略：
+
+- Android Doze 与厂商省电管理（MIUI、三星、华为、OPPO）仍可能挂起或终止进程；
+- 用户需在系统设置中：为 CamFlow 关闭电池优化、允许后台活动、允许自启动，并授予通知权限；
+- 设置中的“停止摄像头”（stopCamera）是用户可控的停止，服务在后台同样遵守，服务不会自行恢复采集；
+- 若进程被系统终止，采集不会自动恢复，需重新打开 CamFlow。
+
+</details>
+
+---
+
 <a id="sec4"></a>
 
 ## 4. 开发者文档 [⌃](#top)
@@ -672,7 +689,7 @@ CamFlow:    192.168.1.10:8000    enter this address manually in the app
 
 ### 5.2. 测试环境说明 [⌃](#top)
 
-本地验证通过 19 项 Android 单元测试及主 APK／设备测试 APK 构建，Android CI 亦已通过。build 9 已完成基本真机复测；Keystore 设备测试尚未在设备执行，长时间／后台运行未完成专项验收。此前上传现象已确认与测试环境的 Wi-Fi 质量有关，见[网络质量与排查说明](#network-quality)。
+本地验证通过 31 项 Android 单元测试及主 APK／设备测试 APK 构建，Android CI 亦已通过。build 9 已完成基本真机复测；Keystore 设备测试尚未在设备执行。后台运行已实现为前台服务＋部分唤醒锁（见[后台运行说明](#background-operation)），但熄屏持续上传尚未在所有机型完成专项验收，Doze 与厂商省电策略仍可能终止进程。此前上传现象已确认与测试环境的 Wi-Fi 质量有关，见[网络质量与排查说明](#network-quality)。
 
 以下环境为历史测试记录，不代表当前版本的完整测试矩阵：
 
@@ -702,7 +719,6 @@ CamFlow:    192.168.1.10:8000    enter this address manually in the app
 - HTTPS 部署与进一步的访问控制（管理员认证和设备配对已实现）
 - WebSocket 长连接替代当前的 HTTP 轮询（降低延迟和损耗）
 - 自适应帧率/分辨率控制（根据网络情况动态调整 interval）
-- 后台运行模式（屏幕关闭仍持续上传）
 - 本地缓存队列（弱网缓冲）
 
 ---

@@ -33,6 +33,7 @@
 
 - [3. FAQ](#sec3)
   - [Network quality and troubleshooting](#network-quality)
+  - [Background operation (screen off)](#background-operation)
 
 - [4. Developer Documentation](#sec4)
   - [4.1. Architecture Overview](#sec41)
@@ -481,6 +482,23 @@ Before using CamFlow, ensure the following conditions are met:
 
 ---
 
+<a id="background-operation"></a>
+
+<details>
+
+<summary><strong>Background operation (screen off)</strong></summary>
+
+CamFlow runs a foreground service of type `camera` with a partial wake lock, so capture and upload continue after the screen turns off. The app cannot override the device power policy:
+
+- Android Doze and vendor battery managers (MIUI, Samsung, Huawei, Oppo) can still suspend or kill the process.
+- For reliable background operation the user must set, in system settings: disable battery optimization for CamFlow, allow background activity, allow autostart, and grant notification permission.
+- **Stop camera** (`stopCamera`) in Settings remains a user-controlled stop that the service honors even in background; the service never restarts capture by itself.
+- If the system kills the process, capture does not resume until CamFlow is opened again.
+
+</details>
+
+---
+
 <a id="sec4"></a>
 
 ## 4. Developer Documentation [⌃](#top)
@@ -750,7 +768,7 @@ Current version information:
 
 ### 5.2. Test Environment [⌃](#top)
 
-Local validation passed 19 Android unit tests and main/instrumentation APK builds; Android CI also passed. Build 9 completed a basic real-device retest. Keystore instrumentation tests have not run on a device, and sustained/background operation has not completed separate acceptance. The earlier upload report was traced to test-environment Wi-Fi quality; see [network quality and troubleshooting](#network-quality).
+Local validation passed 31 Android unit tests and main/instrumentation APK builds; Android CI also passed. Build 9 completed a basic real-device retest. Keystore instrumentation tests have not run on a device. Background operation is implemented as a foreground service with a partial wake lock (see [background operation](#background-operation)); sustained background upload has not been accepted on every device model, because Doze and vendor battery managers can still kill the process. The earlier upload report was traced to test-environment Wi-Fi quality; see [network quality and troubleshooting](#network-quality).
 
 The following environments are historical test records, not a complete current-release test matrix:
 
@@ -785,7 +803,6 @@ To improve system completeness and extensibility, future optimizations may inclu
 - HTTPS deployment and further access controls (administrator authentication and device pairing are implemented)
 - WebSocket long connections to replace current HTTP polling (reduce latency and overhead)
 - Adaptive frame rate / resolution control (dynamically adjust interval based on network conditions)
-- Background execution mode (continue uploading when screen is off)
 - Local buffering queue (weak-network tolerance)
 
 ---
