@@ -3,24 +3,22 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.SystemClock
-import android.util.Size
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.*
+import androidx.core.app.ActivityCompat
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicLong
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import android.widget.ImageButton
 import android.view.View
 
@@ -28,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var blackScreen: View
     private lateinit var previewView: PreviewView
     private lateinit var statusText: TextView
-    private val cameraExecutor = Executors.newSingleThreadExecutor()
+    private lateinit var overlayText: TextView
     private val okHttp = OkHttpClient.Builder()
         .followRedirects(false)
         .followSslRedirects(false)
@@ -37,48 +35,13 @@ class MainActivity : AppCompatActivity() {
         .readTimeout(10, TimeUnit.SECONDS)
         .build()
     private val prefs by lazy { getSharedPreferences("phonecam", MODE_PRIVATE) }
-    private val uploadHttp = UploadHttp.client()
-    private val activeUploads = ConcurrentHashMap<Call, UploadTrace>()
-    private val uploadSlots = UploadSlots(2)
-    @Volatile private var uploadsStopped = false
-    private val pipelineSender = FrameSender { _, slot ->
-        val proxy = analyzedProxy
-        if (proxy == null) { slot.close(); return@FrameSender }
-        try {
-            val encodeStarted = SystemClock.elapsedRealtime()
-            val jpeg = ImageUtil.yuvToJpeg(proxy, getImageQualityValue())
-            lastEncodeMs = SystemClock.elapsedRealtime() - encodeStarted
-            uploadFrame(jpeg, slot)
-        } catch (e: Exception) {
-            slot.close()
-            throw e
-        }
-    }
     private val gate = CaptureGate()
-    private var analyzedProxy: ImageProxy? = null
-    private var pipeline = FramePipeline(gate, uploadSlots, getUploadIntervalMs(), pipelineSender) { SystemClock.elapsedRealtime() }
-    private data class UploadResult(val status: String, val latencyMs: Long, val trace: UploadTrace?)
-    @Volatile private var lastUpload = UploadResult("Not started", 0, null)
-    @Volatile private var lastEncodeMs = 0L
-    private val resolutionStatus = ResolutionStatus()
     @Volatile
     private var baseUrl: String? = null
-    private var lastSuccessPersisted = 0L
-    private val uploadSuccessCount = AtomicLong(0)
-    private val uploadFailureCount = AtomicLong(0)
-    private val uploadDroppedCount = AtomicLong(0)
-
-    @Volatile
-    private var lastCameraError = ""
-
-    private var lastAppliedResolutionLabel: String? = null
-
-// ===== Debug / Power control state =====
     private var dbgEnabledFlag = false
-    // ===== CameraX provider control =====
     private var camProviderRef: ProcessCameraProvider? = null
+    private var boundPreview: Preview? = null
     private val cameraStart = CameraStartGuard()
-    // ===== Debug UI updater =====
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val debugUpdater = object : Runnable {
         override fun run() {
@@ -100,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         blackScreen = findViewById(R.id.blackScreen)
 
         setStatus("Status: Connecting...")
-        gate.serviceRunning = true
         findViewById<ImageButton>(R.id.btnSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
@@ -116,35 +78,26 @@ class MainActivity : AppCompatActivity() {
 
         val hidePreviewFlag = prefs.getBoolean("hidePreview", false)
         val stopCameraFlag = prefs.getBoolean("stopCamera", false)
-        val currentResolutionLabel = getResolutionLabel()
-        val resolutionChanged = currentResolutionLabel != lastAppliedResolutionLabel
 
-        gate.userStopped = stopCameraFlag
-        if (getUploadIntervalMs() != pipeline.intervalMs) {
-            pipeline = FramePipeline(gate, uploadSlots, getUploadIntervalMs(), pipelineSender) { SystemClock.elapsedRealtime() }
-        }
+        GateSync.apply(gate, stopCameraFlag)
         mainHandler.removeCallbacks(debugUpdater)
         mainHandler.post(debugUpdater)
 
-        if (stopCameraFlag) {
-            stopCameraEngine()
-            previewView.visibility = View.GONE
-            blackScreen.visibility = View.VISIBLE
-            setStatus("Status: Camera stopped")
-            lastAppliedResolutionLabel = currentResolutionLabel
+        if (!hasCameraPermission()) {
+            setStatus("Status: Camera permission required")
             return
         }
 
-        if (!cameraStart.running || resolutionChanged) {
-            if (!hasCameraPermission()) {
-                setStatus("Status: Camera permission required")
-                lastAppliedResolutionLabel = currentResolutionLabel
-                return
-            }
-            if (resolutionChanged) stopCameraEngine()
-            startCamera()
-            lastAppliedResolutionLabel = currentResolutionLabel
+        if (gate.userStopped) {
+            previewView.visibility = View.GONE
+            blackScreen.visibility = View.VISIBLE
+            setStatus("Status: Camera stopped")
+            return
         }
+
+        CaptureService.current()?.applySettings()
+        CaptureService.start(this, gate)
+        bindPreview()
 
         if (hidePreviewFlag) {
             // Keep the CameraX preview surface alive; the opaque overlay hides it.
@@ -192,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show()
 
             if (hasCameraPermission()) {
-                startCamera()
+                applySettingsFromPrefs()
             } else {
                 ActivityCompat.requestPermissions(
                     this,
@@ -282,7 +235,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ==========================
-    // Camera
+    // Foreground preview only
     // ==========================
 
     private fun hasCameraPermission(): Boolean =
@@ -302,177 +255,37 @@ class MainActivity : AppCompatActivity() {
             val granted = grantResults.isNotEmpty() &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
-                startCamera()
+                applySettingsFromPrefs()
             } else {
                 Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun startCamera() {
-        if (isDestroyed || isFinishing || prefs.getBoolean("stopCamera", false)) return
+    private fun bindPreview() {
+        if (isDestroyed || isFinishing) return
         val ticket = cameraStart.begin() ?: return
-        val resolutionTicket = resolutionStatus.start(getResolutionLabel())
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
-        cameraProviderFuture.addListener({
+        val future = ProcessCameraProvider.getInstance(this)
+        future.addListener({
             if (!cameraStart.isCurrent(ticket) || isDestroyed || isFinishing) return@addListener
             try {
-                val cameraProvider = cameraProviderFuture.get()
-                camProviderRef = cameraProvider
-
+                val provider = future.get()
+                camProviderRef = provider
+                boundPreview?.let { provider.unbind(it) }
                 val preview = Preview.Builder().build().also {
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
-
-                val analysis = ImageAnalysis.Builder()
-                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                    .setTargetResolution(getTargetResolutionSize())
-                    .build()
-
-                analysis.setAnalyzer(cameraExecutor) { imageProxy ->
-
-                    resolutionStatus.record(resolutionTicket, imageProxy.cropRect.width(), imageProxy.cropRect.height())
-
-                    analyzedProxy = imageProxy
-                    try {
-                        pipeline.handle(imageProxy.cropRect.width(), imageProxy.cropRect.height())
-                    } catch (e: Exception) {
-                        lastCameraError = e.javaClass.simpleName
-                    } finally {
-                        analyzedProxy = null
-                        imageProxy.close()
-                    }
-                }
-
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    this,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    preview,
-                    analysis
-                )
-
+                boundPreview = preview
+                provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview)
                 cameraStart.complete(ticket, true)
-                lastCameraError = ""
-                val url = baseUrl
-                if (url != null) {
-                    setStatus("Status: Connected ${NetworkDiscover.baseUrlToInput(url)}")
-                } else {
-                    setStatus("Status: Not connected")
-                }
             } catch (e: Exception) {
                 cameraStart.complete(ticket, false)
-                resolutionStatus.stop()
-                lastCameraError = e.javaClass.simpleName
-                setStatus("Status: Camera unavailable")
             }
-
         }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun uploadFrame(jpegBytes: ByteArray, slot: UploadSlots.Lease) {
-        val url = baseUrl
-        if (url == null || uploadsStopped) { slot.close(); return }
-        val token = DeviceCredentials.tokenFor(applicationContext, url)
-        if (token == null) {
-            lastUpload = UploadResult("Pairing required — open Settings", 0, null)
-            setStatus("Status: Pairing required — open Settings")
-            slot.close()
-            return
-        }
-
-        val trace = UploadTrace(jpegBytes.size)
-        val uploadUrl = "${url.removeSuffix("/")}/upload"
-
-        val body = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "image",
-                "frame.jpg",
-                jpegBytes.toRequestBody("image/jpeg".toMediaType())
-            )
-            .build()
-
-        val request = try {
-            Request.Builder()
-                .url(uploadUrl)
-                .header("Authorization", "Bearer $token")
-                .header("X-CamFlow-Upload-ID", trace.id)
-                .tag(UploadTrace::class.java, trace)
-                .post(body)
-                .build()
-        } catch (_: IllegalArgumentException) {
-            uploadFailureCount.incrementAndGet()
-            lastUpload = UploadResult("Invalid server URL", 0, null)
-            slot.close()
-            return
-        }
-
-        val uploadCall = uploadHttp.newCall(request)
-        activeUploads[uploadCall] = trace
-        // Covers destruction between reserving a slot and registering the call.
-        if (uploadsStopped) uploadCall.cancel()
-        try {
-            uploadCall.enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    uploadFailureCount.incrementAndGet()
-                    lastUpload = UploadResult("Failed: ${e.javaClass.simpleName}", trace.elapsedMs(), trace)
-                    activeUploads.remove(call)
-                    slot.close()
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    try {
-                        if (response.isSuccessful) {
-                            uploadSuccessCount.incrementAndGet()
-                            lastUpload = UploadResult("OK (${response.code})", trace.elapsedMs(), trace)
-                            persistUploadSuccess()
-                        } else {
-                            uploadFailureCount.incrementAndGet()
-                            val status = when (response.code) {
-                                401, 403 -> "Pairing revoked or invalid — pair again in Settings"
-                                503 -> "Ingest disabled — ask administrator to enable it"
-                                else -> "HTTP ${response.code}"
-                            }
-                            lastUpload = UploadResult(status, trace.elapsedMs(), trace)
-                            if (response.code == 401 || response.code == 403) {
-                                DeviceCredentials.clearIfCurrent(applicationContext, url, token)
-                                setStatus("Status: Pairing required — open Settings")
-                            }
-                        }
-                    } finally {
-                        try { response.close() } finally {
-                            activeUploads.remove(call)
-                            slot.close()
-                        }
-                    }
-                }
-            })
-        } catch (e: Exception) {
-            activeUploads.remove(uploadCall)
-            slot.close()
-            throw e
-        }
-    }
-
-    @Synchronized private fun persistUploadSuccess() {
-        val now = System.currentTimeMillis()
-        if (now - lastSuccessPersisted >= 10000) {
-            lastSuccessPersisted = now
-            prefs.edit().putLong("lastUploadSuccess", now).apply()
-        }
-    }
-
-    private lateinit var overlayText: TextView
-
     private fun setStatus(text: String) {
         runOnUiThread { statusText.text = text }
-    }
-    private fun stopCameraEngine() {
-        cameraStart.stop()
-        resolutionStatus.stop()
-        camProviderRef?.unbindAll()
     }
     override fun onPause() {
         super.onPause()
@@ -481,14 +294,12 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mainHandler.removeCallbacks(debugUpdater)
-        stopCameraEngine()
-        gate.serviceRunning = false
-        uploadsStopped = true
-        uploadSlots.stopAccepting()
-        activeUploads.keys.forEach { it.cancel() }
-        cameraExecutor.shutdown()
+        // Stopping capture requires the explicit stopCamera setting, not activity destruction.
+        cameraStart.stop()
+        camProviderRef?.let { provider -> boundPreview?.let { provider.unbind(it) } }
     }
     private fun generateDebugText(): String {
+        val service = CaptureService.current()
         val url = baseUrl?.let { NetworkDiscover.baseUrlToInput(it) } ?: "Not connected"
         val hidePreviewFlag = prefs.getBoolean("hidePreview", false)
         val stopCameraFlag = prefs.getBoolean("stopCamera", false)
@@ -499,7 +310,8 @@ class MainActivity : AppCompatActivity() {
         val uploadRateLabel = getUploadRateLabel()
         val uploadIntervalMs = getUploadIntervalMs()
 
-        val resolutionText = resolutionStatus.summary(getResolutionLabel())
+        val resolutionText = service?.resolutionStatus?.summary(getResolutionLabel())
+            ?: "Resolution preference: ${getResolutionLabel()}\nFrame size: waiting for frame"
 
         val mode = when {
             stopCameraFlag -> "Camera stopped"
@@ -507,20 +319,17 @@ class MainActivity : AppCompatActivity() {
             else -> "Normal"
         }
 
-        val cameraErrorText = if (lastCameraError.isBlank()) "none" else lastCameraError
-        val completed = lastUpload
-        val active = activeUploads.values.toList().sortedBy { it.id }
+        val serviceStatus = service?.status ?: "service not started"
         return "CamFlow ${BuildConfig.VERSION_NAME} build ${BuildConfig.VERSION_CODE}\n" +
                 "Server: $url\nMode: $mode\n$resolutionText\n" +
                 "Upload rate: $uploadRateLabel (${uploadIntervalMs}ms)\n" +
                 "Quality: $qualityLabel ($qualityValue)\n" +
-                "Upload status: ${completed.status} (${completed.latencyMs}ms)\n" +
-                "Concurrency: ${uploadSlots.count()}/${uploadSlots.limit} (no queue)\n" +
-                "Encode: ${lastEncodeMs}ms | limit: ${UploadHttp.CALL_TIMEOUT_MS}ms\n" +
-                (completed.trace?.let { "Last completed — ${it.summary()}\n" } ?: "") +
-                active.joinToString("") { "Active — ${it.summary()}\n" } +
-                "Uploads: ok=${uploadSuccessCount.get()} failed=${uploadFailureCount.get()} " +
-                "dropped=${pipeline.dropped}\nCamera error: $cameraErrorText"
+                "Upload status: $serviceStatus\n" +
+                "Encode: ${service?.lastEncodeMs ?: 0L}ms | limit: ${UploadHttp.CALL_TIMEOUT_MS}ms\n" +
+                "Uploads: ok=${service?.uploadSuccessCount?.get() ?: 0} " +
+                "failed=${service?.uploadFailureCount?.get() ?: 0} " +
+                "dropped=${service?.pipeline?.dropped ?: 0}\n" +
+                "Gate: service=${gate.serviceRunning} userStopped=${gate.userStopped}"
     }
 
     private fun getImageQualityLabel(): String {
@@ -549,14 +358,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun getResolutionLabel(): String {
         return prefs.getString("resolutionLabel", "Medium") ?: "Medium"
-    }
-
-    private fun getTargetResolutionSize(): Size {
-        return when (getResolutionLabel()) {
-            "Low" -> Size(320, 240)
-            "High" -> Size(1280, 960)
-            else -> Size(640, 480)
-        }
     }
 
 }
