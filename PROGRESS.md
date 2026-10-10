@@ -8,6 +8,14 @@
 
 ---
 <!-- LOG_START -->
+### [2026-10-10 12:27] Batch 8 knowledge graph
+- Файл: `.ua/intermediate/batch-8.json`
+- Действие: создан
+- Суть: собран валидный JSON для batch 8: 54 узла и 82 ребра, включая APK-файлы, манифест, Kotlin-файлы, previousSymbols и явные связи contains/exports/calls/tested_by/configures.
+- Статус: [DONE]
+- Следующий шаг: проверить отсутствие подтверждённых удалений и продолжить merge knowledge graph.
+
+
 
 ### [2026-10-10 01:46] .gitignore: исключён signing key
 - Файл: `.gitignore`
