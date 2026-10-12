@@ -1,0 +1,55 @@
+# .understandignore — patterns for files/dirs to exclude from analysis
+# Syntax: same as .gitignore (globs, # comments, ! negation, trailing / for dirs)
+
+# --- Understand-Anything data directory (always excluded) ---
+.ua/
+.understand-anything/
+
+# --- Runtime / generated artifacts ---
+*.pyc
+*.pyo
+*.pyd
+*.pyc.*
+*.pkl
+*.sqlite3
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tmp/
+log/*
+!log/.gitkeep
+recordings/*
+!recordings/.gitkeep
+app/config/config.json
+app/config/config.json.tmp
+app/config/auth.sqlite3*
+
+# --- Secrets ---
+.env
+.env/
+.env*
+*.keystore
+*.jks
+PhoneCamSender/Keystore
+keystore.properties
+secrets.properties
+
+# --- Release binaries ---
+*.apk
+
+# --- Android build output ---
+.gradle/
+PhoneCamSender/build/
+PhoneCamSender/app/build/
+
+# --- IDE / system files ---
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Non-analysis documents ---
+CODEX_MODIFICATION_LOG.md
+/DESIGN_PLAN.md

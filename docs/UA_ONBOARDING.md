@@ -47,7 +47,7 @@ Kotlin-приложение для Android: захват с камеры, обн
 
 ### Документация
 
-`README.md` (+ `README_CN.md`), `CamFlow_UserGuide.md` (+ `CamFlow_UserGuide_CN.md`), план `2026-10-09-camflow-background-capture.md`.
+`README.md`, `CamFlow_UserGuide.md` (обе — на русском), план `2026-10-09-camflow-background-capture.md`.
 
 ### Конфигурация и CI/CD
 

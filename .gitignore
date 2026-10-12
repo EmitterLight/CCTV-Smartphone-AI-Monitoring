@@ -18,6 +18,15 @@ venv/
 .vscode/
 *.iml
 
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Agent/session scratch
+.tmp/
+*.sqlite3
+
 # Log files
 log/*
 !log/.gitkeep
@@ -30,21 +39,61 @@ recordings/*
 app/config/config.json
 app/config/config.json.tmp
 app/config/auth.sqlite3*
-CODEX_MODIFICATION_LOG.md
 .local-validation/
-
-# Local release preparation notes (not project documentation)
-/docs/release-v1.1.4.md
-/docs/upload-diagnostics.md
 
 # System files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# UnderstandAnything
-.ua/intermediate/
-.ua/diff-overlay.json
+# UnderstandAnything (generated artifacts, keep only graph + ignore rules)
+.ua/*
+!.ua/knowledge-graph.json
+!.ua/.understandignore
+.understand-anything/
+
+# Android build artifacts
+.gradle/
+PhoneCamSender/build/
+PhoneCamSender/app/build/
+
+# Release binaries are published via GitLab Releases, not stored in git
+*.apk
 
 # Signing key (never commit)
-PhoneCamSender/camflow.keystore
+*.keystore
+*.jks
+PhoneCamSender/Keystore
+keystore.properties
+secrets.properties
+
+# Working draft (not project documentation)
+/DESIGN_PLAN.md
+PhoneCamSender/Keystore
+keystore.properties
+secrets.properties
+.tmp/
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.sqlite3
+
+# Understand-Anything: только knowledge-graph.json + .understandignore
+.ua/*
+!.ua/knowledge-graph.json
+!.ua/.understandignore
+.understand-anything/
+
+# Android build artifacts
+.gradle/
+PhoneCamSender/build/
+PhoneCamSender/app/build/
+
+# Release binaries → GitLab Releases, не в git
+*.apk
+
+# Secrets / signing
+*.keystore
+*.jks
+

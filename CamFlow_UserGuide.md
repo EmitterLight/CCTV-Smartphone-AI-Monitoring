@@ -1,82 +1,74 @@
 
 <a id="top"></a>
 
-# CamFlow User Guide
+# Руководство пользователя CamFlow
 
-[![Version](https://img.shields.io/badge/version-v1.1.4-black)](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring/issues/2)
-[![Android](https://img.shields.io/badge/Android-8.0%2B-green)](CamFlow_UserGuide.md)
-[![Role](https://img.shields.io/badge/role-Client-blue)](README.md)
-[![Protocol](https://img.shields.io/badge/protocol-HTTP%20Upload-orange)](#sec42)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey)](#sec54)
-
-**Language** --- [🇺🇸 English](CamFlow_UserGuide.md) | [🇨🇳 中文](CamFlow_UserGuide_CN.md)
-
-> CamFlow is the Android-side "Image Capture & Transmission" module of the Sentinel system. Installing this application is a prerequisite for deploying and using Sentinel (PC server program + Web Dashboard). This guide is intended to help users understand the application's functionality, reproduce the deployment process, and troubleshoot common issues.
+> CamFlow — это модуль Android «Захват и передача изображения» системы Sentinel. Установка этого приложения является необходимым условием для развёртывания и использования Sentinel (программа-сервер для ПК + Web Dashboard). Это руководство помогает пользователям понять функциональность приложения, воспроизвести процесс развёртывания и устранить распространённые проблемы.
 
 ---
 
-## Contents
+## Содержание
 
-- [1. Project Overview](#sec1)
-  - [1.1. Positioning](#sec11)
-  - [1.2. Feature Overview](#sec12)
-  - [1.3. Installation](#sec13)
+- [1. Обзор проекта](#sec1)
+  - [1.1. Позиционирование](#sec11)
+  - [1.2. Обзор функциональности](#sec12)
+  - [1.3. Установка](#sec13)
 
-- [2. Usage Workflow](#sec2)
-  - [2.1. Launch & Interface](#sec21)
-  - [2.2. Connecting to Server](#sec22)
-    - [Pairing and credentials](#camera-pairing)
-  - [2.3. Settings Page](#sec23)
-    - [Resolution preference and measured size](#resolution-preference)
-    - [Upload status and diagnostics](#upload-diagnostics)
-  - [2.4. Usage Steps](#sec24)
+- [2. Рабочий процесс использования](#sec2)
+  - [2.1. Запуск и интерфейс](#sec21)
+  - [2.2. Подключение к серверу](#sec22)
+    - [Спаривание и учётные данные](#camera-pairing)
+  - [2.3. Страница Settings](#sec23)
+    - [Предпочтение разрешения и измеренный размер](#resolution-preference)
+    - [Статус загрузки и диагностика загрузки](#upload-diagnostics)
+  - [2.4. Шаги использования](#sec24)
 
 - [3. FAQ](#sec3)
-  - [Network quality and troubleshooting](#network-quality)
-  - [Background operation (screen off)](#background-operation)
+  - [Качество сети и устранение неполадок](#network-quality)
+  - [Работа в фоне (экран выключен)](#background-operation)
 
-- [4. Developer Documentation](#sec4)
-  - [4.1. Architecture Overview](#sec41)
-  - [4.2. API Reference](#sec42)
+- [4. Документация разработчика](#sec4)
+  - [4.1. Обзор архитектуры](#sec41)
+  - [4.2. Справочник API](#sec42)
 
-- [5. Version Information & Notes](#sec5)
-  - [5.1 System Version](#sec51)
-  - [5.2 Test Environment](#sec52)
+- [5. Информация о версии и примечания](#sec5)
+  - [5.1 Версия системы](#sec51)
+  - [5.2 Тестовая среда](#sec52)
   - [5.3 Roadmap](#sec53)
-  - [5.4 Usage & License](#sec54)
+  - [5.4 Использование и лицензия](#sec54)
 
 ---
 
 <a id="sec1"></a>
 
-## 1. Project Overview [⌃](#top)
+## 1. Обзор проекта [⌃](#top)
 
 <a id="sec11"></a>
 
-### 1.1. Positioning [⌃](#top)
+### 1.1. Позиционирование [⌃](#top)
 
-The Sentinel system consists of a PC-side server, a Web Dashboard, and an optional AI monitoring module.  
-CamFlow acts as the mobile data acquisition client, responsible for capturing real-time camera frames from the smartphone and uploading them to the PC server at a stable and controllable rate. These frames serve as the raw data input for real-time preview, recording, and event analysis.
+Система Sentinel состоит из серверной части для ПК, Web Dashboard и необязательного модуля AI-мониторинга.  
+CamFlow выступает как мобильный клиент сбора данных, отвечающий за захват кадров с камеры смартфона в реальном времени и их загрузку на сервер ПК с стабильной и управляемой частотой. Эти кадры служат «сырыми» входными данными для предпросмотра в реальном времени, записи и анализа событий.
 
-The project follows a **layered architecture design: Mobile Input → PC Processing & Management**.
+Проект следует **слоистой архитектуре: мобильный ввод → обработка и управление на ПК**.
 
-In the overall system architecture, the current version of CamFlow is responsible for:
+В общей архитектуре системы текущая версия CamFlow отвечает за:
 
-- Camera capture
-- JPEG encoding
-- Network transmission
-- Server discovery & connection state indication
-- Runtime mode control (hide preview / stop capture)
+- захват камеры;
+- кодирование JPEG;
+- сетевую передачу;
+- обнаружение сервера и индикацию состояния подключения;
+- управление режимами во время выполнения (скрыть предпросмотр / остановить захват).
 
-All other functionalities — such as video recording, event detection, and AI inference — are handled by the PC-side server.  
-This separation reduces complexity on the mobile device and improves maintainability.
+Все остальные функции — такие как видеозапись, обнаружение событий и AI-анализ — обрабатываются серверной частью на ПК.  
+Такое разделение снижает сложность на мобильном устройстве и улучшает поддерживаемость.
 
-CamFlow and the PC server together form the complete Sentinel system:
+CamFlow и сервер ПК вместе образуют полную систему Sentinel:
 
-- **Android Client** — Responsible for image capture and upload  
-- **PC Server** — Responsible for video processing, recording, AI analysis, and visualization  
+- **Клиент для Android** — отвечает за захват и загрузку изображений  
+- **Сервер для ПК** — отвечает за обработку видео, запись, AI-анализ и визуализацию  
 
-> 📘 For the complete system architecture and deployment instructions, please refer to: **[Sentinel Main System Guide](README.md)**
+> 📘 Полную архитектуру системы и инструкции по развёртыванию см. в: **[Главное руководство системы Sentinel](README.md)**
 
 ---
 
@@ -84,34 +76,34 @@ CamFlow and the PC server together form the complete Sentinel system:
 <tr>
 <td width="33%">
 
-#### Engineering Focus
+#### Инженерный фокус
 
-- Distributed video data acquisition architecture  
-- Manual LAN server configuration and connection verification
-- Lightweight image frame upload protocol  
-- Client runtime state management  
-
-</td>
-
-<td width="33%">
-
-#### Intelligent System Focus
-
-- AI monitoring and backend analysis pipeline integration  
-- Layered trigger-based visual processing mechanism  
-- Mobile device and multimodal model collaboration  
-- Real-time vision system performance optimization  
+- Распределённая архитектура сбора видеоданных  
+- Ручная настройка сервера в локальной сети и проверка подключения
+- Облегчённый протокол загрузки кадров изображений  
+- Управление состоянием клиента во время выполнения  
 
 </td>
 
 <td width="33%">
 
-#### This Project Can Serve As:
+#### Фокус интеллектуальной системы
 
-- An engineering practice example  
-- An Android camera integration template  
-- A research-oriented vision system prototype  
-- A front-end data input module for AI video analysis  
+- Интеграция AI-мониторинга и конвейера серверного анализа  
+- Слоистый механизм визуальной обработки на основе триггеров  
+- Сотрудничество мобильного устройства и мультимодальной модели  
+- Оптимизация производительности системы машинного зрения в реальном времени  
+
+</td>
+
+<td width="33%">
+
+#### Этот проект может служить:
+
+- примером инженерной практики  
+- шаблоном интеграции камеры для Android  
+- исследовательским прототипом системы машинного зрения  
+- модулем ввода данных для AI-анализа видео  
 
 </td>
 </tr>
@@ -121,265 +113,265 @@ CamFlow and the PC server together form the complete Sentinel system:
 
 <a id="sec12"></a>
 
-### 1.2. Feature Overview [⌃](#top)
+### 1.2. Обзор функциональности [⌃](#top)
 
-CamFlow provides the following core functionalities:
-
----
-
-#### 1. Real-time Camera Capture & Transmission
-
-- Capture frames using the Android camera;
-- Encode each frame into JPEG format;
-- Upload frames to the PC server via HTTP (`/upload` endpoint).
+CamFlow предоставляет следующие основные функции:
 
 ---
 
-#### 2. Server Address Configuration
+#### 1. Захват и передача камеры в реальном времени
 
-- Print a copy-ready CamFlow `IP:PORT` when PC-side `server.py` starts;
-- Request and save this address on first use, then test the saved address on subsequent launches.
-
----
-
-#### 3. Connection Testing & Status Visualization
-
-- Display real-time connection status (`Status` / `Server`);
-- Provide a **Test connection** button in the Settings page to quickly verify server reachability (typically via `/ping`).
+- захват кадров с помощью камеры Android;
+- кодирование каждого кадра в формат JPEG;
+- загрузка кадров на сервер ПК через HTTP (эндпоинт `/upload`).
 
 ---
 
-#### 4. Runtime Controls & Deployment Flexibility
+#### 2. Настройка адреса сервера
+
+- печатать готовый к копированию `IP:PORT` CamFlow при запуске `server.py` на ПК;
+- запрос и сохранение этого адреса при первом использовании, затем проверка сохранённого адреса при последующих запусках.
+
+---
+
+#### 3. Тестирование подключения и визуализация статуса
+
+- отображение статуса подключения в реальном времени (`Status` / `Server`);
+- кнопка **Test connection** на странице Settings для быстрой проверки доступности сервера (обычно через `/ping`).
+
+---
+
+#### 4. Управление во время выполнения и гибкость развёртывания
 
 - **Show debug info**  
-  Display runtime debug information (useful for on-site deployment and connection diagnostics).
+  Показывает отладочную информацию во время выполнения (полезно для развёртывания на месте и диагностики подключения).
 
 - **Hide camera preview**  
-  Hide the camera preview (black screen) while continuing to upload frames.  
-  Useful for privacy-sensitive or discreet deployment scenarios.
+  Скрывает предпросмотр камеры (чёрный экран), продолжая загрузку кадров.  
+  Полезно для сценариев, чувствительных к конфиденциальности, или для незаметного развёртывания.
 
 - **Stop camera**  
-  Stop both camera capture and frame upload.  
-  Useful for power saving or temporarily pausing input.
+  Останавливает и захват камеры, и загрузку кадров.  
+  Полезно для экономии энергии или временной паузы ввода.
 
 ---
 
 <a id="sec13"></a>
 
-### 1.3. Installation [⌃](#top)
+### 1.3. Установка [⌃](#top)
 
-Use CamFlow v1.1.4 with Sentinel v1.1.4. Older v1.1.0 / v1.1.1 clients cannot upload to the authenticated server. Review [network quality and troubleshooting](#network-quality) before deployment.
+Используйте CamFlow v1.1.4 вместе с Sentinel v1.1.4. Более старые клиенты v1.1.0 / v1.1.1 не могут загружать данные на сервер с аутентификацией. Перед развёртыванием изучите [качество сети и устранение неполадок](#network-quality).
 
-#### 1.3.1. Standard User Installation (APK Package)
+#### 1.3.1. Стандартная установка для пользователя (пакет APK)
 
-> Intended for end users / deployment operators.
+> Предназначена для конечных пользователей / операторов развёртывания.
 
-1. Use the bundled `CamFlow-v1.1.4.apk` (keystore-signed, build 16). If downloading from the project's **Releases** page, check the version and compatibility notes; historical APKs are not compatible with the new server.
-2. Install and open CamFlow on your Android device.
-3. On first launch, grant camera permission when prompted.
+1. Используйте поставляемый `CamFlow-v1.1.4.apk` (подписанный keystore, build 16). Если скачиваете со страницы **Releases** проекта, проверьте версию и примечания о совместимости; исторические APK несовместимы с новым сервером.
+2. Установите и откройте CamFlow на вашем устройстве Android.
+3. При первом запуске предоставьте разрешение на использование камеры, когда будет запрошено.
 
 ---
 
-#### 1.3.2. Developer / Debug Installation (Android Studio)
+#### 1.3.2. Установка для разработчика / отладки (Android Studio)
 
-> Intended for developers and maintainers.
+> Предназначена для разработчиков и сопровождения.
 
-1. Open the CamFlow project using Android Studio;
-2. Connect your Android device and enable USB debugging;
-3. Click **Run** to install and launch the app on the device.
+1. Откройте проект CamFlow в Android Studio;
+2. Подключите ваше устройство Android и включите отладку по USB;
+3. Нажмите **Run**, чтобы установить и запустить приложение на устройстве.
 
 ---
 
 <a id="sec2"></a>
 
-## 2. Usage Workflow [⌃](#top)
+## 2. Рабочий процесс использования [⌃](#top)
 
 <a id="sec21"></a>
 
-### 2.1. Launch & Interface [⌃](#top)
+### 2.1. Запуск и интерфейс [⌃](#top)
 
-After opening CamFlow, you will enter the main interface.  
-If the server has not yet been connected, the application will typically display a *Not connected* state (see Figure 1).
+После открытия CamFlow вы попадаете в основной интерфейс.  
+Если сервер ещё не подключён, приложение обычно показывает состояние *Not connected* (см. рисунок 1).
 
 <table align="center">
   <tr>
     <td align="center">
       <img src="assets/app_main_page.jpg" width="250"><br>
-      <b>Figure 1 - Main Interface (Not Connected)</b><br>
+      <b>Рисунок 1 — основной интерфейс (не подключён)</b><br>
     </td>
   </tr>
 </table>
 
 ---
 
-#### Main Interface Field Explanation
+#### Пояснение полей основного интерфейса
 
-| Field | Possible States | Meaning | Trigger Scenario |
+| Поле | Возможные состояния | Значение | Сценарий возникновения |
 |-------|------------------|---------|------------------|
-| **Status** | Not connected | No valid server connection established | First launch / server not configured |
-| | Connecting... | Attempting to connect to server | After manual address input |
-| | Connected | Successfully connected and verified | `/ping` returned success |
-| **Server** | Not connected | No available server address | Not configured / connection failed |
-| | xxx.xxx.xxx.xxx(:xxxx) | Saved server IP (and port) | Manual input and successful connection |
-| **Mode** | Normal | Capturing and uploading normally with preview shown | Default mode |
-| | Hidden Preview | Preview hidden but still uploading | Hide camera preview enabled |
-| | Stopped | Capture and upload stopped | Stop camera enabled |
-| **Interval** | 120ms | Default sending interval | Default configuration |
-| | >120ms | Lower frame rate mode | Interval adjusted (developer option) |
+| **Status** | Not connected | Не установлено корректного подключения к серверу | Первый запуск / сервер не настроен |
+| | Connecting... | Попытка подключиться к серверу | После ручного ввода адреса |
+| | Connected | Успешно подключено и проверено | `/ping` вернул успех |
+| **Server** | Not connected | Нет доступного адреса сервера | Не настроен / подключение не удалось |
+| | xxx.xxx.xxx.xxx(:xxxx) | Сохранённый IP-адрес сервера (и порт) | Ручной ввод и успешное подключение |
+| **Mode** | Normal | Захват и загрузка выполняются нормально, предпросмотр показан | Режим по умолчанию |
+| | Hidden Preview | Предпросмотр скрыт, но загрузка продолжается | Включён Hide camera preview |
+| | Stopped | Захват и загрузка остановлены | Включён Stop camera |
+| **Interval** | 120ms | Интервал отправки по умолчанию | Конфигурация по умолчанию |
+| | >120ms | Режим пониженной частоты кадров | Интервал изменён (опция разработчика) |
 
 ---
 
 <a id="sec22"></a>
 
-### 2.2. Connecting to Server [⌃](#top)
+### 2.2. Подключение к серверу [⌃](#top)
 
-#### 2.2.1. Manual Input
+#### 2.2.1. Ручной ввод
 
-On first launch, CamFlow displays a prompt requesting the Sentinel server address. Start `server.py` on the PC first, then enter the address shown after `CamFlow:` in its startup output.
+При первом запуске CamFlow показывает запрос адреса сервера Sentinel. Сначала запустите `server.py` на ПК, затем введите адрес, указанный после `CamFlow:` в его выводе при запуске.
 
-Prompt explanation and input format:
+Пояснение запроса и формат ввода:
 
 - **Enter Sentinel server address**
-  - Enter the CamFlow address printed by `server.py`.
-  - Input the server IP address.
-  - If using a non-default port, append the port number.
+  - Введите адрес CamFlow, напечатанный `server.py`.
+  - Введите IP-адрес сервера.
+  - Если используется нестандартный порт, добавьте номер порта.
 
-Format examples:
+Примеры формата:
 
 - `192.168.1.10`  
- (Default port will be automatically appended — typically `8000`.)
+  (порт по умолчанию будет добавлен автоматически — обычно `8000`.)
 
 - `192.168.1.10:xxxx`  
-  (Explicitly specify the port.)
+  (явно указанный порт.)
 
 - **Connect**
-  - Performs a connection test.
-  - If the Dashboard still does not display video after connection:
-    - Confirm [pairing](#camera-pairing) is valid and **Ingest** is enabled on the PC Dashboard.
-    - Verify firewall and port accessibility.
+  - Выполняет тест подключения.
+  - Если Dashboard по-прежнему не показывает видео после подключения:
+    - Убедитесь, что [спаривание](#camera-pairing) действительно и **Ingest** включён на PC Dashboard.
+    - Проверьте доступность брандмауэра и порта.
 
 ---
 
 <a id="camera-pairing"></a>
 
-#### 2.2.2. Pairing and Credential Management
+#### 2.2.2. Спаривание и управление учётными данными
 
-1. Ask the administrator to sign into the PC Dashboard and click **Add CamFlow**.
-2. In CamFlow Settings, enter the server address, a device name and the 8-character pairing code.
-3. Tap **Pair / Re-pair**, then **Save**.
-4. The administrator enables **Ingest**; keep the camera running to upload.
+1. Попросите администратора войти в PC Dashboard и нажать **Add CamFlow**.
+2. В Settings CamFlow введите адрес сервера, имя устройства и 8-значный код спаривания.
+3. Нажмите **Pair / Re-pair**, затем **Save**.
+4. Администратор включает **Ingest**; держите камеру работающей для загрузки.
 
-Pairing codes are single-use and expire after 5 minutes. Generating a new code replaces the previous one. Keep the administrator token on the PC; never enter it on the phone.
+Коды спаривания одноразовые и истекают через 5 минут. Генерация нового кода заменяет предыдущий. Храните токен администратора на ПК; никогда не вводите его на телефоне.
 
-Android Keystore encrypts the upload credential, binds it to the server address and excludes it from backups. **Clear local credentials** removes only the phone's copy. To invalidate it on the server, the administrator must click **Revoke** in Dashboard. Pair again after changing servers, clearing credentials or revocation.
+Android Keystore шифрует учётные данные (токен устройства) для загрузки, привязывает их к адресу сервера и исключает из резервных копий. **Clear local credentials** удаляет только копию на телефоне. Чтобы аннулировать их на сервере, администратор должен нажать **Revoke** в Dashboard. Выполните спаривание заново после смены сервера, очистки учётных данных или их аннулирования.
 
-Both default and privacy modes require camera pairing. Default mode permits read-only visitors; privacy mode requires administrator login for viewing. See [Dashboard viewing modes](README.md#privacy-mode). Authentication does not encrypt HTTP: use a trusted LAN or HTTPS. Multiple paired phones still share one stream.
+И режим по умолчанию, и режим конфиденциальности требуют спаривания камеры. Режим по умолчанию разрешает посетителей только для чтения; режим конфиденциальности требует входа администратора для просмотра. См. [режимы просмотра Dashboard](README.md#privacy-mode). Аутентификация не шифрует HTTP: используйте доверенную локальную сеть или HTTPS. Несколько спаренных телефонов по-прежнему используют один поток.
 
 ---
 
 <a id="sec23"></a>
 
-### 2.3. Settings Page [⌃](#top)
+### 2.3. Страница Settings [⌃](#top)
 
-Tap the **top-right corner** of the main interface to enter the Settings page.
-Here you can configure the server address, test connectivity, and control runtime switches.
+Нажмите **правый верхний угол** основного интерфейса, чтобы перейти на страницу Settings.
+Здесь можно настроить адрес сервера, проверить связность и управлять переключателями во время выполнения.
 
 ---
 
-#### 2.3.1. Settings Fields and Controls
+#### 2.3.1. Поля и элементы управления Settings
 
-| Field | Type | Format | Description |
+| Поле | Тип | Формат | Описание |
 |-------|------|--------|-------------|
-| Server address | Text input | IPv4 or IPv4:Port | Specify the target server address for manual connection |
-| Device name | Text input | 1–80 characters | Name shown in Dashboard device management |
-| Pairing code | Text input | 8-character code | Single-use code generated by the administrator |
-| Upload image quality | Selection | Low / Medium / High | JPEG quality 35 / 55 / 75; higher values generally increase file size |
-| Upload rate | Selection | Low / Medium / High | Minimum intervals of 500 / 250 / 120 ms; actual successful FPS depends on capture and upload time |
-| Resolution preference | Selection | Low / Medium / High | Camera size preference, not guaranteed dimensions; see [resolution reporting](#resolution-preference) |
+| Server address | текстовое поле | IPv4 или IPv4:Port | Указывает целевой адрес сервера для ручного подключения |
+| Device name | текстовое поле | 1–80 символов | Имя, отображаемое в управлении устройствами Dashboard |
+| Pairing code | текстовое поле | 8-значный код | Одноразовый код, созданный администратором |
+| Upload image quality | выбор | Low / Medium / High | Качество JPEG 35 / 55 / 75; более высокие значения обычно увеличивают размер файла |
+| Upload rate | выбор | Low / Medium / High | Минимальные интервалы 500 / 250 / 120 мс; фактическая успешная FPS зависит от времени захвата и загрузки |
+| Resolution preference | выбор | Low / Medium / High | Предпочтение разрешения камеры, не гарантированные размеры; см. [отчёт о разрешении](#resolution-preference) |
 
 ---
 
-| Button | Trigger | Result | Description |
+| Кнопка | Действие | Результат | Описание |
 |--------|--------|--------|-------------|
-| Test connection | Click | Success / Failure | Send a reachability test request to server (typically `/ping`) |
-| Save | Click | Save successful | Save current server address and settings |
-| Pair / Re-pair | Click | Success / Failure | Exchange a valid code for a device credential; tap Save afterward |
-| Clear local credentials | Click | Local credential removed | Does not revoke the server-side credential; see [pairing](#camera-pairing) |
+| Test connection | нажатие | успех / отказ | Отправляет серверу запрос проверки доступности (обычно `/ping`) |
+| Save | нажатие | сохранение успешно | Сохраняет текущий адрес сервера и настройки |
+| Pair / Re-pair | нажатие | успех / отказ | Обменивает корректный код на учётные данные (токен устройства); после этого нажмите Save |
+| Clear local credentials | нажатие | локальные учётные данные удалены | Не аннулирует учётные данные на сервере; см. [спаривание](#camera-pairing) |
 
 ---
 
-| Switch | State | System Behavior | Design Purpose |
+| Переключатель | Состояние | Поведение системы | Назначение |
 |--------|-------|----------------|----------------|
-| Show debug info | ON / OFF | Display debug information on main screen | Assist deployment & diagnostics |
-| Hide camera preview | ON / OFF | Hide camera preview but continue uploading | Reduce visual exposure / minimize disturbance |
-| Stop camera | ON / OFF | Stop capture and upload | Power saving / temporary pause |
+| Show debug info | ВКЛ / ВЫКЛ | показывает отладочную информацию на основном экране | помощь при развёртывании и диагностике |
+| Hide camera preview | ВКЛ / ВЫКЛ | скрывает предпросмотр камеры, но продолжает загрузку | снижает визуальную экспозицию / минимизирует вмешательство |
+| Stop camera | ВКЛ / ВЫКЛ | останавливает захват и загрузку | экономия энергии / временная пауза |
 
-> When **Stop camera = ON**, the system will automatically enable *Hide preview* to prevent residual image display.
+> Когда **Stop camera = ВКЛ**, система автоматически включает *Hide preview*, чтобы предотвратить отображение остаточного изображения.
 
 ---
 
 <a id="resolution-preference"></a>
 
-#### 2.3.2. Resolution Preference and Measured Frame Size
+#### 2.3.2. Предпочтение разрешения и измеренный размер кадра
 
-Low / Medium / High express a camera resolution preference, not fixed output dimensions. The camera chooses a supported size; different levels may produce the same size. Debug can therefore show:
+Low / Medium / High выражают предпочтение разрешения камеры, а не фиксированные выходные размеры. Камера выбирает поддерживаемый размер; разные уровни могут дать одинаковый размер. Поэтому отладка может показывать:
 
 ```text
-Resolution preference: Low
-Frame size: 480x480
+Предпочтение разрешения: Low
+Размер кадра: 480x480
 ```
 
-Frame size is measured from the current camera crop, which is also used for JPEG encoding. It is not a delivery confirmation. The value updates even while uploads are busy; changing levels clears old dimensions until a fresh frame arrives. No fixed-size resizing, stretching, padding or additional cropping is applied.
+Размер кадра измеряется по текущему кропу камеры, который также используется для кодирования JPEG. Это не подтверждение доставки. Значение обновляется, даже когда загрузка занята; смена уровня очищает старые размеры до поступления нового кадра. Изменение фиксированного размера, растягивание, дополнение поля или дополнительное обрезание не применяются.
 
 <a id="upload-diagnostics"></a>
 
-#### 2.3.3. Upload Status and Diagnostics
+#### 2.3.3. Статус загрузки и диагностика загрузки
 
-Enable **Show debug info** in Settings and return to the camera screen.
+Включите **Show debug info** в Settings и вернитесь на экран камеры.
 
-| Field / result | Meaning and action |
+| Поле / результат | Значение и действие |
 | --- | --- |
-| `OK (200)` / `ok` | Upload accepted; check that successes continue increasing |
-| `401/403` | Pairing required, invalid or revoked; obtain a new code and pair again |
-| `503` | Administrator needs to enable Ingest |
-| `failed` | Failed upload count; inspect its status and network phase |
-| `dropped` | Candidate frames skipped while upload slots are busy, not a network packet-loss count |
-| `Concurrency` | At most two outstanding uploads; no queued backlog. Arrivals can be out of order |
-| `Encode` | JPEG conversion/compression time |
-| `Last completed` / `Active` | Completed and active request IDs; do not mix different requests when comparing times |
-| `connecting` / `sending image` / `waiting response` | Observed client-side phase, not proof of packet delivery or the root cause |
-| `Server processing` | Server-side duration returned in response headers; `unknown` is not zero |
+| `OK (200)` / `ok` | загрузка принята; проверьте, что число успехов продолжает расти |
+| `401/403` | требуется спаривание, оно некорректно или аннулировано; получите новый код и выполните спаривание заново |
+| `503` | администратору нужно включить Ingest |
+| `failed` | число неудачных загрузок; проверьте его статус и сетевую фазу |
+| `dropped` | пропущенные кандидатные кадры, пока слоты загрузки заняты; это не счётчик потери сетевых пакетов |
+| `Concurrency` | не более двух незавершённых загрузок; очереди накопления нет. Поступления могут быть вне порядка |
+| `Encode` | время преобразования/сжатия JPEG |
+| `Last completed` / `Active` | завершённые и активные ID запросов; не смешивайте разные запросы при сравнении времён |
+| `connecting` / `sending image` / `waiting response` | наблюдаемая фаза на стороне клиента, не доказательство доставки пакета или корневой причины |
+| `Server processing` | серверная длительность, возвращаемая в заголовках ответа; `unknown` — это не ноль |
 
-Connect timeout is 3 seconds, read/write timeouts are 4 seconds and the whole-call limit is 5 seconds; failed frames are not automatically replayed. These limits bound waiting but cannot compensate for a poor network connection.
+Таймаут подключения — 3 секунды, таймауты чтения/записи — 4 секунды, общий лимит вызова — 5 секунд; неудачные кадры не воспроизводятся автоматически. Эти лимиты ограничивают ожидание, но не компенсируют плохое сетевое соединение.
 
-Match a request ID with `upload begin/end` lines in the PC's `log/server.log`. Share only relevant lines, never tokens, authentication databases or full configuration files. If a paired phone times out with Ingest enabled, see [network quality and troubleshooting](#network-quality).
+Сопоставьте ID запроса со строками `upload begin/end` в `log/server.log` на ПК. Публикуйте только релевантные строки, никогда — токены, базы данных аутентификации или полные конфигурационные файлы. Если спаренный телефон выходит по таймауту при включённом Ingest, см. [качество сети и устранение неполадок](#network-quality).
 
 ---
 
 <a id="sec24"></a>
 
-### 2.4. Usage Steps [⌃](#top)
+### 2.4. Шаги использования [⌃](#top)
 
-#### 2.4.1. Prerequisites
+#### 2.4.1. Предварительные условия
 
-Before using CamFlow, ensure the following conditions are met:
+Перед использованием CamFlow убедитесь, что выполнены следующие условия:
 
-- **Project deployed locally**: The Sentinel repository has been cloned to the PC;
-- **Same LAN**: The smartphone and PC server are connected to the same Wi-Fi / LAN;
-- **PC server running**: The Sentinel PC-side service is accessible from the phone;
-- **Firewall & port allowed**: Default port is `8000` (unless modified). Ensure the PC firewall allows inbound access from the phone.
+- **проект развёрнут локально**: репозиторий Sentinel клонирован на ПК;
+- **одна локальная сеть**: смартфон и сервер ПК подключены к одному Wi-Fi / LAN;
+- **сервер ПК запущен**: сервис Sentinel на ПК доступен с телефона;
+- **брандмауэр и порт разрешены**: порт по умолчанию — `8000` (если не изменён). Убедитесь, что брандмауэр ПК разрешает входящий доступ с телефона.
 
 ---
 
-#### 2.4.2. Deployment Workflow
+#### 2.4.2. Процесс развёртывания
 
-1. Start Sentinel on the PC, save the first-run administrator token and find `CamFlow: <PC_IP>:<PORT>`.
-2. Connect the phone and PC to the same trusted LAN; enter that address in CamFlow and test connectivity.
-3. Sign into Dashboard as administrator and click **Add CamFlow**.
-4. Enter the device name and code in phone Settings; tap **Pair / Re-pair**, then **Save**.
-5. The administrator clicks **Enable Ingest**; keep the phone camera running.
-6. Check that the phone's `ok` count grows and Dashboard Live View / Last frame age keep updating. Connected alone does not mean upload succeeded.
-7. If this fails, use [upload diagnostics](#upload-diagnostics) to inspect pairing, Ingest and request phases, and check [network quality](#network-quality).
+1. Запустите Sentinel на ПК, сохраните токен администратора первого запуска и найдите `CamFlow: <PC_IP>:<PORT>`.
+2. Подключите телефон и ПК к одной доверенной локальной сети; введите этот адрес в CamFlow и проверьте связность.
+3. Войдите в Dashboard как администратор и нажмите **Add CamFlow**.
+4. Введите имя устройства и код в Settings телефона; нажмите **Pair / Re-pair**, затем **Save**.
+5. Администратор нажимает **Enable Ingest**; держите камеру телефона работающей.
+6. Проверьте, что счётчик `ok` на телефоне растёт, а Dashboard Live View / Last frame age продолжают обновляться. Сам факт подключения не означает, что загрузка удалась.
+7. Если это не удаётся, используйте [диагностику загрузки](#upload-diagnostics), чтобы проверить спаривание, Ingest и фазы запросов, и изучите [качество сети](#network-quality).
 
 ---
 
@@ -390,17 +382,17 @@ Before using CamFlow, ensure the following conditions are met:
 <a id="known-issues"></a>
 <a id="network-quality"></a>
 
-**Network quality and troubleshooting:** The connection/response timeouts and prolonged web-image stalls reported during Sentinel v1.1.4 / CamFlow v1.1.2 testing were confirmed by the maintainer to have been caused by poor Wi-Fi signal in the test environment, not an unresolved software defect. Keep the phone and PC on a stable, trusted LAN. If similar symptoms occur, check signal and connection quality first, then follow [upload diagnostics](#upload-diagnostics); a timeout alone does not identify its cause. Lower upload settings can reduce load but cannot replace a stable network connection.
+**Качество сети и устранение неполадок:** таймауты соединения/ответа и длительные зависания веб-изображений, сообщавшиеся при тестировании Sentinel v1.1.4 / CamFlow v1.1.2, были подтверждены сопровождением как вызванные плохим сигналом Wi-Fi в тестовой среде, а не неустранимым дефектом программного обеспечения. Держите телефон и ПК в стабильной доверенной локальной сети. Если подобные симптомы возникают, сначала проверьте сигнал и качество соединения, затем следуйте [диагностике загрузки](#upload-diagnostics); сам по себе таймаут не определяет свою причину. Пониженные настройки загрузки могут снизить нагрузку, но не могут заменить стабильное сетевое соединение.
 
 
 <details>
 
-<summary><strong>Which address should I enter on first use?</strong></summary>
+<summary><strong>Какой адрес вводить при первом использовании?</strong></summary>
 
-1. Run `python server.py` on the PC.
-2. Find `CamFlow: <PC_IP>:8000` in the terminal output.
-3. Enter `<PC_IP>:8000` in the app and select **Connect**, or use **Test connection** in Settings first.
-4. If it fails, visit `http://<PC_IP>:8000/ping` in the phone browser and check the PC firewall, same-Wi-Fi connection, and AP isolation settings.
+1. Запустите `python server.py` на ПК.
+2. Найдите `CamFlow: <PC_IP>:8000` в выводе терминала.
+3. Введите `<PC_IP>:8000` в приложении и выберите **Connect**, или сначала используйте **Test connection** в Settings.
+4. Если не удалось, откройте в браузере телефона `http://<PC_IP>:8000/ping` и проверьте брандмауэр ПК, подключение к тому же Wi-Fi и настройки AP isolation.
 
 </details>
 
@@ -408,60 +400,28 @@ Before using CamFlow, ensure the following conditions are met:
 
 <details>
 
-<summary><strong>Test connection failed (/ping unreachable)</strong></summary>
+<summary><strong>Test connection не удался (/ping недоступен)</strong></summary>
 
-- Clicking **Test connection** in Settings shows failure or no response.
+- Нажатие **Test connection** в Settings показывает отказ или отсутствие ответа.
 
-### Possible Causes
+### Возможные причины
 
-1. Incorrect server IP or port;
-2. PC server not running or listening on a different port;
-3. Firewall blocking incoming connections;
-4. Phone not connected to Wi-Fi.
+1. неверный IP или порт сервера;
+2. сервер ПК не запущен или слушает на другом порту;
+3. брандмауэр блокирует входящие соединения;
+4. телефон не подключён к Wi-Fi.
 
-### Troubleshooting Steps
+### Шаги устранения
 
-1. Ensure the phone and PC are on the same Wi-Fi network;
-2. On the phone browser, visit: `http://<PC_IP>:<PORT>/ping`
-- If accessible → TCP connectivity is normal.
-- If not accessible → Check firewall, port configuration, or network isolation.
+1. убедитесь, что телефон и ПК в одной сети Wi-Fi;
+2. в браузере телефона откройте: `http://<PC_IP>:<PORT>/ping`
+- если доступно → связность TCP нормальна.
+- если недоступно → проверьте брандмауэр, настройку порта или сетевую изоляцию.
 
-### Solutions
+### Решения
 
-- Correct the IP/port;
-- Allow the configured HTTP port (TCP 8000 by default) in the PC firewall.
-
-</details>
-
----
-
-<details>
-
-<summary><strong>CamFlow shows Connected, but Dashboard has no video</strong></summary>
-
-- Phone status indicates connected;
-- PC Dashboard Live View does not update.
-
-### Possible Causes
-
-1. Device pairing is missing/revoked, or privacy mode requires administrator login in the browser.
-2. **Ingest** is not enabled on the PC Dashboard (receiving switch is OFF);
-3. Upload endpoint path or field name mismatch (e.g., server expects `image` but client sends differently);
-4. Upload succeeds but frames are rate-limited or dropped on server side (check logs);
-5. Browser cache or page not refreshed.
-
-### Troubleshooting Steps
-
-1. Check whether `/upload` requests are received on the PC server;
-2. Refresh the Dashboard page and verify **Ingest** status;
-3. Inspect the status code and request phase using [upload diagnostics](#upload-diagnostics), and check [network quality](#network-quality). Lower upload settings can reduce load but cannot replace a stable connection.
-
-### Solutions
-
-- If pairing is missing or revoked, obtain a new code, tap **Pair / Re-pair**, then **Save**;
-- Ensure **Ingest** is enabled;
-- Align client/server API contract (path, field name, port);
-- Adjust sending interval, resolution, or JPEG quality to match network and PC performance.
+- исправьте IP/порт;
+- разрешите в брандмауэре ПК настроенный HTTP-порт (по умолчанию TCP 8000).
 
 </details>
 
@@ -469,14 +429,46 @@ Before using CamFlow, ensure the following conditions are met:
 
 <details>
 
-<summary><strong>APK installation blocked or marked unsafe</strong></summary>
+<summary><strong>CamFlow показывает Connected, но в Dashboard нет видео</strong></summary>
 
-- System shows “Installation blocked” or “Unknown source not allowed”.
+- статус телефона показывает подключение;
+- Dashboard Live View на ПК не обновляется.
 
-### Solutions
+### Возможные причины
 
-- Enable installation from unknown sources in system settings;
-- Ensure the APK is downloaded from the official GitHub Releases page, not from third-party redistribution.
+1. спаривание устройства отсутствует/аннулировано, либо режим конфиденциальности требует входа администратора в браузере.
+2. **Ingest** не включён на PC Dashboard (переключатель приёма ВЫКЛ);
+3. несовпадение пути эндпоинта загрузки или имени поля (например, сервер ожидает `image`, но клиент отправляет иначе);
+4. загрузка удаётся, но кадры ограничиваются по частоте или отбрасываются на серверной стороне (проверьте логи);
+5. кеш браузера или страница не обновлена.
+
+### Шаги устранения
+
+1. проверьте, получает ли сервер ПК запросы `/upload`;
+2. обновите страницу Dashboard и проверьте состояние **Ingest**;
+3. проверьте код статуса и фазу запроса с помощью [диагностики загрузки](#upload-diagnostics) и изучите [качество сети](#network-quality). Пониженные настройки загрузки могут снизить нагрузку, но не могут заменить стабильное соединение.
+
+### Решения
+
+- если спаривание отсутствует или аннулировано, получите новый код, нажмите **Pair / Re-pair**, затем **Save**;
+- убедитесь, что **Ingest** включён;
+- согласуйте контракт API клиента/сервера (путь, имя поля, порт);
+- настройте интервал отправки, разрешение или качество JPEG в соответствии с сетью и производительностью ПК.
+
+</details>
+
+---
+
+<details>
+
+<summary><strong>Установка APK заблокирована или помечена как небезопасная</strong></summary>
+
+- система показывает «Installation blocked» или «Unknown source not allowed».
+
+### Решения
+
+- включите установку из неизвестных источников в системных настройках;
+- убедитесь, что APK загружен с официальной страницы GitHub Releases, а не из стороннего перераспространения.
 
 </details>
 
@@ -486,14 +478,14 @@ Before using CamFlow, ensure the following conditions are met:
 
 <details>
 
-<summary><strong>Background operation (screen off)</strong></summary>
+<summary><strong>Работа в фоне (экран выключен)</strong></summary>
 
-CamFlow runs a foreground service of type `camera` with a partial wake lock, so capture and upload continue after the screen turns off. The app cannot override the device power policy:
+CamFlow запускает foreground-сервис типа `camera` с partial wake lock, поэтому захват и загрузка продолжаются после выключения экрана. Приложение не может переопределить политику энергосбережения устройства:
 
-- Android Doze and vendor battery managers (MIUI, Samsung, Huawei, Oppo) can still suspend or kill the process.
-- For reliable background operation the user must set, in system settings: disable battery optimization for CamFlow, allow background activity, allow autostart, and grant notification permission.
-- **Stop camera** (`stopCamera`) in Settings remains a user-controlled stop that the service honors even in background; the service never restarts capture by itself.
-- If the system kills the process, capture does not resume until CamFlow is opened again.
+- Android Doze и вендорные менеджеры батареи (MIUI, Samsung, Huawei, Oppo) по-прежнему могут приостановить или убить процесс.
+- Для надёжной работы в фоне пользователь должен установить в системных настройках: отключить оптимизацию батареи для CamFlow, разрешить фоновую активность, разрешить автостарт и выдать разрешение на уведомления.
+- **Stop camera** (`stopCamera`) в Settings остаётся управляемым пользователем остановом, который сервис соблюдает даже в фоне; сервис никогда не возобновляет захват сам.
+- если система убивает процесс, захват не возобновляется, пока CamFlow не откроют снова.
 
 </details>
 
@@ -501,193 +493,193 @@ CamFlow runs a foreground service of type `camera` with a partial wake lock, so 
 
 <a id="sec4"></a>
 
-## 4. Developer Documentation [⌃](#top)
+## 4. Документация разработчика [⌃](#top)
 
-For secondary developers, this section describes CamFlow’s structural position within the Sentinel system, its data flow path, and external contracts (API / protocol), enabling further extension and integration.
+Для вторичных разработчиков этот раздел описывает структурное положение CamFlow в системе Sentinel, путь его потока данных и внешние контракты (API / протокол), что позволяет дальнейшее расширение и интеграцию.
 
 ---
 
 <a id="sec41"></a>
 
-### 4.1. Architecture Overview [⌃](#top)
+### 4.1. Обзор архитектуры [⌃](#top)
 
 ```
-CamFlow (Android App)
+CamFlow (приложение для Android)
 │
-├─ [A] UI Layer
+├─ [A] Слой UI
 │   │
-│   ├─ Main Screen
-│   │   ├─ Camera Preview (Live preview)
-│   │   ├─ Status Header
+│   ├─ Основной экран
+│   │   ├─ Предпросмотр камеры (живой предпросмотр)
+│   │   ├─ Заголовок статуса
 │   │   │   ├─ Status ∈ {NotConnected, Connecting, Connected}
-│   │   │   ├─ Server (Current server address)
+│   │   │   ├─ Server (текущий адрес сервера)
 │   │   │   ├─ Mode ∈ {Normal, HiddenPreview, Stopped}
-│   │   │   └─ Interval (Upload interval in ms)
+│   │   │   └─ Interval (интервал загрузки в мс)
 │   │   │
-│   │   └─ Connection Dialog
-│   │       └─ First launch / invalid saved address → Manual server input
+│   │   └─ Диалог подключения
+│   │       └─ Первый запуск / некорректный сохранённый адрес → ручной ввод сервера
 │   │
-│   └─ Settings Screen
-│       ├─ Server Address Input
-│       ├─ Test Connection (/ping test)
-│       ├─ Switches
-│       │   ├─ Show Debug Info
-│       │   ├─ Hide Camera Preview
-│       │   └─ Stop Camera
-│       └─ Save (Persist configuration)
+│   └─ Экран Settings
+│       ├─ Ввод адреса сервера
+│       ├─ Test connection (тест /ping)
+│       ├─ Переключатели
+│       │   ├─ Show debug info
+│       │   ├─ Hide camera preview
+│       │   └─ Stop camera
+│       └─ Save (сохранение конфигурации)
 │
-├─ [B] Application State Layer
+├─ [B] Слой состояния приложения
 │   │
-│   ├─ Core State Variables
+│   ├─ Основные переменные состояния
 │   │   ├─ connectionState
 │   │   ├─ serverUrl
 │   │   ├─ uploadIntervalMs
 │   │   └─ flags (debug / previewHidden / cameraStopped)
 │   │
-│   ├─ State Controller
-│   │   ├─ UI ↔ State binding
-│   │   ├─ State-driven camera start/stop
-│   │   └─ State-driven upload thread control
+│   ├─ Контроллер состояния
+│   │   ├─ Связь UI ↔ состояния
+│   │   ├─ Запуск/остановка камеры по состоянию
+│   │   └─ Управление потоком загрузки по состоянию
 │   │
-│   └─ Thread Model
-│       ├─ UI Thread
-│       ├─ Camera Callback Thread
-│       └─ Network Worker Thread
+│   └─ Модель потоков
+│       ├─ Поток UI
+│       ├─ Поток обратных вызовов камеры
+│       └─ Сетевой рабочий поток
 │
-├─ [C] Camera Capture Pipeline
+├─ [C] Конвейер захвата камеры
 │   │
-│   ├─ Permission Management (CAMERA permission)
+│   ├─ Управление разрешениями (разрешение CAMERA)
 │   │
-│   ├─ Camera Provider (CameraX)
-│   │   ├─ Preview UseCase (Display)
-│   │   └─ ImageAnalysis UseCase (Frame callback)
+│   ├─ Поставщик камеры (CameraX)
+│   │   ├─ UseCase предпросмотра (отображение)
+│   │   └─ UseCase анализа изображения (обратный вызов кадра)
 │   │
-│   └─ Frame Dispatch Strategy
-│       ├─ Latest-frame overwrite policy (avoid queue buildup)
-│       └─ Frame dropping mechanism (maintain real-time behavior)
+│   └─ Стратегия отправки кадров
+│       ├─ Политика перезаписи последнего кадра (избежать накопления очереди)
+│       └─ Механизм отбрасывания кадров (сохранять поведение реального времени)
 │
-├─ [D] Encoding & Upload Pipeline
+├─ [D] Конвейер кодирования и загрузки
 │   │
-│   ├─ Frame Encoder
-│   │   ├─ YUV → RGB/BGR conversion
-│   │   └─ JPEG encoding (adjustable quality)
+│   ├─ Кодировщик кадра
+│   │   ├─ Преобразование YUV → RGB/BGR
+│   │   └─ Кодирование JPEG (регулируемое качество)
 │   │
-│   ├─ Rate Limiter
-│   │   └─ Interval-based throttling (uploadIntervalMs)
+│   ├─ Ограничитель частоты
+│   │   └─ Троттлинг по интервалу (uploadIntervalMs)
 │   │
-│   ├─ HTTP Uploader
+│   ├─ Загрузчик HTTP
 │   │   ├─ POST {serverUrl}/upload
 │   │   ├─ multipart/form-data
-│   │   └─ Response handling (200 / 400 / 503)
+│   │   └─ Обработка ответа (200 / 400 / 503)
 │   │
-│   └─ Error Handling
-│       ├─ Connection failure → Switch to Error state
-│       └─ UI feedback update
+│   └─ Обработка ошибок
+│       ├─ Отказ подключения → переход в состояние Error
+│       └─ Обновление обратной связи UI
 │
-├─ [E] Connectivity Layer
+├─ [E] Слой связности
 │   │
-│   ├─ Manual Address Input
-│   │   └─ Support IP or IP:Port format
+│   ├─ Ручной ввод адреса
+│   │   └─ Поддержка формата IP или IP:Port
 │   │
-│   └─ Connectivity Check
-│       └─ GET {serverUrl}/ping → Expect "OK"
+│   └─ Проверка связности
+│       └─ GET {serverUrl}/ping → ожидается "OK"
 │
-└─ [F] Persistence Layer
+└─ [F] Слой хранения
     │
     ├─ SharedPreferences
-    │   ├─ Persist serverUrl
-    │   ├─ Persist switch states
-    │   └─ Persist uploadIntervalMs
+    │   ├─ Сохранение serverUrl
+    │   ├─ Сохранение состояний переключателей
+    │   └─ Сохранение uploadIntervalMs
     │
-    └─ App Startup Restore
-        ├─ Restore last configuration on launch
-        └─ Auto-reconnect attempt (planned)
+    └─ Восстановление при запуске приложения
+        ├─ Восстановление последней конфигурации при запуске
+        └─ Попытка автоматического переподключения (планируется)
 ```
 
 <a id="sec42"></a>
 
-### 4.2. API Reference [⌃](#top)
+### 4.2. Справочник API [⌃](#top)
 
-#### 4.2.1. Base Contract
+#### 4.2.1. Базовый контракт
 
 - **Base URL**: `http://<PC_IP>:<PORT>`
-- **Default Port**: Determined by PC server startup parameters (default: `8000`)
-- **Transport Protocol**: HTTP (plaintext; recommended for LAN use only)
-- **Client Upload Field Name**: `image`
+- **Порт по умолчанию**: определяется параметрами запуска сервера ПК (по умолчанию: `8000`)
+- **Транспортный протокол**: HTTP (открытый текст; рекомендуется только для локальной сети)
+- **Имя поля загрузки клиента**: `image`
 
 ---
 
-#### 4.2.2. Health Check Endpoint: `GET /ping`
+#### 4.2.2. Эндпоинт проверки здоровья: `GET /ping`
 
-Used by CamFlow Settings page via **Test connection**.
+Используется страницей Settings CamFlow через **Test connection**.
 
-Purpose:
-- Distinguish between network connectivity issues and application-level errors.
+Назначение:
+- различать проблемы сетевой связности и ошибки прикладного уровня.
 
-**Request**
+**Запрос**
 
-- Method: `GET`
-- Path: `/ping`
-- Body: None
+- метод: `GET`
+- путь: `/ping`
+- тело: отсутствует
 
-**Response**
+**Ответ**
 
-- Status: `200 OK`
-- Body: `OK`
-- Timeout, connection error, or non-200 status code → considered failure.
+- статус: `200 OK`
+- тело: `OK`
+- таймаут, ошибка подключения или не-200 код статуса → считается отказом.
 
-**curl Example**
+**Пример curl**
 
 ```bash
 curl -i "http://<PC_IP>:<PORT>/ping"
 ```
 
-#### 4.2.3. Frame Upload Endpoint: `POST /upload`
+#### 4.2.3. Эндпоинт загрузки кадра: `POST /upload`
 
-CamFlow continuously uploads image data to the server in the form of **single-frame JPEG images**.
+CamFlow непрерывно загружает данные изображения на сервер в виде **одиночных JPEG-кадров**.
 
-After receiving the request, the server:
+После получения запроса сервер:
 
-- Decodes the image bytes;
-- Writes the frame into `FrameBuffer`;
-- Makes it available to `/stream` and downstream modules (Recorder / AI Monitor).
+- декодирует байты изображения;
+- записывает кадр в `FrameBuffer`;
+- делает его доступным для `/stream` и последующих модулей (Recorder / AI Monitor).
 
 ---
 
-**Request**
+**Запрос**
 
-- Method: `POST`
-- Path: `/upload`
+- метод: `POST`
+- путь: `/upload`
 - Content-Type: `multipart/form-data`
-- Authorization: `Bearer <paired-device-token>` (added automatically by CamFlow after pairing; never use the administrator token)
+- Authorization: `Bearer <paired-device-token>` (добавляется CamFlow автоматически после спаривания; никогда не используйте токен администратора)
 
-| Field Name | Type | Required | Description |
+| Имя поля | Тип | Обязательно | Описание |
 |------------|------|----------|-------------|
-| `image` | JPEG bytes | Yes | A single-frame JPEG image; decoded into an image frame on the server side |
+| `image` | байты JPEG | да | одиночное JPEG-изображение; декодируется в кадр изображения на серверной стороне |
 
-> The `image` field and a valid paired-device credential are required. Missing or invalid credentials return `401/403`; successful `/ping` does not authorize uploads.
-
----
-
-**Response Format**
-
-- Status: `200 OK`
-- Body: `OK`
+> Поле `image` и корректные учётные данные спаренного устройства (токен устройства) обязательны. Отсутствующие или некорректные учётные данные возвращают `401/403`; успешный `/ping` не авторизует загрузку.
 
 ---
 
-**Common HTTP Status Codes**
+**Формат ответа**
 
-| HTTP Status | Body | Meaning |
+- статус: `200 OK`
+- тело: `OK`
+
+---
+
+**Распространённые HTTP-коды статуса**
+
+| HTTP-статус | Тело | Значение |
 |-------------|------|---------|
-| 503 | `ingest disabled` | Ingest is OFF in the PC Dashboard |
-| 400 | `missing image` | `image` field not provided (or incorrect field name) |
-| 400 | `decode failed` | Image bytes could not be decoded (corrupted / not JPEG) |
-| Network Error | Timeout / connection failed | IP/Port incorrect, firewall issue, different subnet |
+| 503 | `ingest disabled` | Ingest ВЫКЛ на PC Dashboard |
+| 400 | `missing image` | поле `image` не предоставлено (или неверное имя поля) |
+| 400 | `decode failed` | байты изображения не удалось декодировать (повреждены / не JPEG) |
+| сетевая ошибка | таймаут / отказ подключения | неверный IP/Port, проблема брандмауэра, другая подсеть |
 
 ---
 
-**curl Example**
+**Пример curl**
 
 ```bash
 curl -i -X POST "http://<PC_IP>:<PORT>/upload" \
@@ -696,101 +688,101 @@ curl -i -X POST "http://<PC_IP>:<PORT>/upload" \
 
 ---
 
-#### 4.2.4. Video Stream Endpoint: `GET /stream`
+#### 4.2.4. Эндпоинт видеопотока: `GET /stream`
 
-> Note: This endpoint is primarily used by the Sentinel Dashboard.
-It is typically embedded via: `<img src="/stream">`. CamFlow itself does not actively call this endpoint.
+> Примечание: этот эндпоинт в основном используется Sentinel Dashboard.
+Он обычно встраивается через: `<img src="/stream">`. Сам CamFlow активно не вызывает этот эндпоинт.
 
 ---
 
-**Request**
+**Запрос**
 
-- Method: `GET`
-- Path: `/stream`
-- Body: None
+- метод: `GET`
+- путь: `/stream`
+- тело: отсутствует
 
-**Response Format**
+**Формат ответа**
 
 - Content-Type: `multipart/x-mixed-replace; boundary=frame`
-- Data Format: Continuous MJPEG frame stream
+- формат данных: непрерывный поток кадров MJPEG
 
-**curl Example**
+**Пример curl**
 
 ```bash
 curl -v "http://<PC_IP>:<PORT>/stream"
 ```
 ---
 
-#### 4.2.5. Manual Address Configuration
+#### 4.2.5. Ручная настройка адреса
 
-CamFlow does not perform UDP broadcasts or LAN scans in the default workflow. The PC prints a copy-ready address when it starts:
-
-```text
-CamFlow:    192.168.1.10:8000    enter this address manually in the app
-```
-
-Connection flow:
+CamFlow не выполняет UDP-широковещание или сканирование локальной сети в базовом рабочем процессе. ПК печатает готовый к копированию адрес при своём запуске:
 
 ```text
-Run server.py
-    → Copy the IP:PORT shown after `CamFlow:`
-    → Enter it in the first-launch prompt or Settings
-    → Test the connection with GET /ping
-    → Save the address
-    → Pair with an administrator-generated code
-    → Administrator enables Ingest
-    → Upload images with POST /upload
+CamFlow:    192.168.1.10:8000    введите этот адрес вручную в приложении
 ```
 
-If the PC's LAN IP changes, CamFlow will detect that the saved address is unavailable on the next launch and prompt for a new address.
+Процесс подключения:
+
+```text
+Запустить server.py
+    → скопировать IP:PORT, показанный после `CamFlow:`
+    → ввести его в запросе первого запуска или в Settings
+    → проверить подключение через GET /ping
+    → сохранить адрес
+    → выполнить спаривание с кодом, созданным администратором
+    → администратор включает Ingest
+    → загружать изображения через POST /upload
+```
+
+Если IP-адрес ПК в локальной сети меняется, CamFlow обнаружит, что сохранённый адрес недоступен при следующем запуске, и запросит новый адрес.
 
 ---
 
 <a id="sec5"></a>
 
-## 5. Version Information & Notes [⌃](#top)
+## 5. Информация о версии и примечания [⌃](#top)
 
 <a id="sec51"></a>
 
-### 5.1. System Version [⌃](#top)
+### 5.1. Версия системы [⌃](#top)
 
-The Sentinel system consists of the PC-side server program and the Android-side CamFlow application.  
-Current version information:
+Система Sentinel состоит из программы-сервера для ПК и приложения CamFlow для Android.  
+Текущая информация о версии:
 
-- **CamFlow (Android source) Version**: v1.1.4
-- **Bundled APK Version**: v1.1.4 (keystore-signed)
-- **This Document Version**: v1.1.4
-- **Last Updated**: 2026-09-26
+- **версия CamFlow (исходники Android)**: v1.1.4
+- **версия поставляемого APK**: v1.1.4 (подписан keystore)
+- **версия этого документа**: v1.1.4
+- **последнее обновление**: 2026-09-26
 
 ---
 
 <a id="sec52"></a>
 
-### 5.2. Test Environment [⌃](#top)
+### 5.2. Тестовая среда [⌃](#top)
 
-Local validation passed 31 Android unit tests and main/instrumentation APK builds; Android CI also passed. Build 9 completed a basic real-device retest. Keystore instrumentation tests have not run on a device. Background operation is implemented as a foreground service with a partial wake lock (see [background operation](#background-operation)); sustained background upload has not been accepted on every device model, because Doze and vendor battery managers can still kill the process. The earlier upload report was traced to test-environment Wi-Fi quality; see [network quality and troubleshooting](#network-quality).
+Локальная проверка прошла: 31 модульный тест Android и сборки main/instrumentation APK; Android CI также прошёл. Build 9 завершил базовое повторное тестирование на реальном устройстве. Instrumentation-тесты keystore не запускались на устройстве. Работа в фоне реализована как foreground-сервис с partial wake lock (см. [работа в фоне](#background-operation)); устойчивая фоновая загрузка не была принята на каждой модели устройства, потому что Doze и вендорные менеджеры батареи по-прежнему могут убить процесс. Прежний отчёт о загрузке был связан с качеством Wi-Fi в тестовой среде; см. [качество сети и устранение неполадок](#network-quality).
 
-The following environments are historical test records, not a complete current-release test matrix:
-
----
-
-#### Android Side
-
-- OS Version: Android 10 and above  
-- Test Device: nova 8 SE Vitality Edition — HarmonyOS 3.0.0  
-- Network: Same LAN (Wi-Fi)
+Перечисленные ниже среды — исторические записи тестирования, а не полная тестовая матрица текущего релиза:
 
 ---
 
-#### PC Side
+#### Сторона Android
 
-- OS: Windows 10 / Windows 11  
-- Python Version: Python 3.9+  
-- Dependencies: Flask, OpenCV, Requests, etc.  
-- Network: Local Area Network (LAN)
+- версия ОС: Android 10 и выше  
+- тестовое устройство: nova 8 SE Vitality Edition — HarmonyOS 3.0.0  
+- сеть: одна локальная сеть (Wi-Fi)
 
-> It is not recommended to expose the service directly to the public Internet.  
-> Administrator authentication and camera pairing are implemented, but authentication does not encrypt HTTP traffic. Use a trusted LAN or configure HTTPS.
+---
+
+#### Сторона ПК
+
+- ОС: Windows 10 / Windows 11  
+- версия Python: Python 3.9+  
+- зависимости: Flask, OpenCV, Requests и т. д.  
+- сеть: локальная сеть (LAN)
+
+> Не рекомендуется выставлять сервис напрямую в публичный интернет.  
+> Аутентификация администратора и спаривание камеры реализованы, но аутентификация не шифрует HTTP-трафик. Используйте доверенную локальную сеть или настройте HTTPS.
 
 ---
 
@@ -798,27 +790,27 @@ The following environments are historical test records, not a complete current-r
 
 ## 5.3. Roadmap [⌃](#top)
 
-To improve system completeness and extensibility, future optimizations may include:
+Чтобы улучшить полноту и расширяемость системы, будущие оптимизации могут включать:
 
-- HTTPS deployment and further access controls (administrator authentication and device pairing are implemented)
-- WebSocket long connections to replace current HTTP polling (reduce latency and overhead)
-- Adaptive frame rate / resolution control (dynamically adjust interval based on network conditions)
-- Local buffering queue (weak-network tolerance)
+- развёртывание HTTPS и дальнейшие контроли доступа (аутентификация администратора и спаривание устройств реализованы)
+- долгие соединения WebSocket вместо текущих HTTP-опросов (меньше задержка и накладные расходы)
+- адаптивный контроль частоты кадров / разрешения (динамически настраивать интервал в зависимости от условий сети)
+- локальная очередь буферизации (устойчивость к слабой сети)
 
 ---
 
 <a id="sec54"></a>
 
-## 5.4. License & Usage Notice [⌃](#top)
+## 5.4. Лицензия и примечание об использовании [⌃](#top)
 
-CamFlow is released under the **MIT License**.
+CamFlow выпущен под **MIT License**.
 
-Copyright © 2026 Suzuran0y
+Copyright © 2026 EmitterLight
 
-This project is intended for learning, research, and technical validation purposes.
+Этот проект предназначен для обучения, исследований и технической проверки.
 
-Before use, please ensure compliance with local laws and regulations, especially regarding image data collection and transmission.
+Перед использованием убедитесь в соответствии местным законам и нормативным актам, особенно в отношении сбора и передачи данных изображений.
 
-If deploying in real production or commercial environments, it is strongly recommended to improve the security mechanism and performance optimization according to local environment.
+При развёртывании в реальном производственном или коммерческом окружении настоятельно рекомендуется улучшить механизм безопасности и оптимизацию производительности в соответствии с местным окружением.
 
 ---

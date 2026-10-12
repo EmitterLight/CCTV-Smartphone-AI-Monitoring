@@ -152,7 +152,7 @@ tasks.register("updateApkMetadata") {
         versionProperties["camflow.apkSha256"] = sha256
         saveVersionProperties()
 
-        for (name in listOf("README.md", "README_CN.md", "CamFlow_UserGuide.md", "CamFlow_UserGuide_CN.md")) {
+        for (name in listOf("README.md", "CamFlow_UserGuide.md")) {
             val readme = rootProject.file("../$name")
             if (!readme.exists()) continue
             val original = readme.readText()

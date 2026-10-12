@@ -195,6 +195,13 @@ Skills загружаются on-demand — только name и description п�
 
 ## 🔄 Execution Model
 
+### Project Context & Knowledge Graph
+This project has a generated knowledge graph located at `.ua/knowledge-graph.json`.
+- Before answering any architectural questions or analyzing the impact of changes, **read and analyze `.ua/knowledge-graph.json` first**.
+- Use the graph to understand file relationships and business domains.
+- Only read the raw source code if you need to see the exact implementation details that are not covered by the graph summaries.
+- This will save tokens and provide a more accurate high-level overview.
+
 Для каждого запроса:
 1. Определить, применим ли какой-либо skill (даже если есть 1% вероятность)
 2. Вызвать соответствующий skill через `skill` tool

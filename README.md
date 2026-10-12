@@ -1,139 +1,131 @@
 <a id="top"></a>
 
-# Sentinel Real-Time Monitoring System
+# Система мониторинга Sentinel в реальном времени
 
-[![GitHub stars](https://img.shields.io/github/stars/suzuran0y/CCTV-Smartphone-AI-Monitoring?style=social)](#stars)
-[![GitHub forks](https://img.shields.io/github/forks/suzuran0y/CCTV-Smartphone-AI-Monitoring?style=social)](#stars)
-[![Version](https://img.shields.io/badge/version-v1.1.4-black)](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring/issues/2)
-[![Python](https://img.shields.io/badge/python-3.9%2B-yellow)](https://www.python.org/)
-[![Android](https://img.shields.io/badge/Android-8.0%2B-green)](CamFlow_UserGuide.md)
 <br>
-[🇺🇸 English](README.md) | [🇨🇳 中文](README_CN.md)
 
-This project has been featured by ruanyf's [weekly](#CR) and xuanli199's [Tech Review](#CR). We sincerely appreciate their recognition and support.
+🚀 Последнее обновление (в процессе): v1.1.4 — 2026-09-27
 
-🚀 Latest Update (ongoing): [v1.1.4 — 2026-09-27](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring/issues/2)
-
-Sentinel is a distributed real-time vision system framework for local area networks (LAN).
+Sentinel — это фреймворк распределённой системы компьютерного зрения в реальном времени для локальных вычислительных сетей (LAN).
 
 <p align="center">
   <img src="assets/readme_banner_2.png" width="92%">
 </p>
 
 <p align="center">
-  <em>Figure 1 – System banner (AI-generated — author's drawing skills not implemented ·_· )</em>
+  <em>Рисунок 1 – Баннер системы (сгенерирован ИИ — навыки рисования автора не реализованы ·_· )</em>
 </p>
 
-♻️ It repurposes unused Android devices as network camera nodes, enabling:
+♻️ Он переиспользует неиспользуемые Android-устройства как сетевые узлы-камеры, позволяя:
 
-- Distributed image acquisition
-- Real-time PC-side video streaming
-- AI-driven monitoring and analysis
+- Распределённый сбор изображений
+- Стриминг видео на стороне PC в реальном времени
+- Мониторинг и анализ на основе ИИ
 
-It adopts a layered architecture of **“mobile capture + PC processing + browser control”**, supporting real-time image preview, local video recording, and structured event analysis, and can be extended to integrate multimodal AI models.
+Он использует многоуровневую архитектуру **«мобильный захват + обработка на PC + управление через браузер»**, поддерживающую предпросмотр изображений в реальном времени, локальную видеозапись и структурированный анализ событий, и может быть расширен для интеграции мультимодальных ИИ-моделей.
 
-- The system consists of a PC Dashboard and an Android client CamFlow.
+- Система состоит из Dashboard (на стороне PC) и Android-клиента CamFlow.
 
-This project can be used both as a lightweight local monitoring system and as an engineering prototype platform for visual data acquisition and intelligent analysis.
+Этот проект можно использовать и как лёгкую локальную систему мониторинга, и как прототипную платформу для сбора визуальных данных и интеллектуального анализа.
 
 <p align="center">
-  <img src="assets/ai_monitoring_record.png" alt="Sentinel system running demo" width="92%">
+  <img src="assets/ai_monitoring_record.png" alt="Демонстрация работы системы Sentinel" width="92%">
 </p>
 
 <p align="center">
-  <em>Figure 2 – System demonstration（Dashboard + AI Monitoring）</em>
+  <em>Рисунок 2 – Демонстрация системы (Dashboard + AI Monitoring)</em>
 </p>
 
-> Before first use, it is strongly recommended to read the chapters in order. Click to jump:  
-> ① [Project Overview](#sec1) → ② [Project Deployment](#sec3) → ③ [Run the Project](#sec4) → ④ [Dashboard Guide](#sec43)
+> Перед первым использованием настоятельно рекомендуется читать разделы по порядку. Переход по ссылке:  
+> ① [Обзор проекта](#sec1) → ② [Развёртывание проекта](#sec3) → ③ [Запуск проекта](#sec4) → ④ [Руководство по Dashboard](#sec43)
 
 ---
 
-## Table of Contents
+## Содержание
 
-- [1. Project Overview](#sec1)
-  - [1.1. Core Capabilities](#sec11)
-  - [1.2. System Architecture](#sec12)
-  - [1.3. Practical Applications](#sec13)
+- [1. Обзор проекта](#sec1)
+  - [1.1. Ключевые возможности](#sec11)
+  - [1.2. Архитектура системы](#sec12)
+  - [1.3. Практические применения](#sec13)
 
-- [2. Implemented Features](#sec2)
-  - [2.1. Real-time Video Preview](#sec21)
-  - [2.2. System Parameter Customization](#sec22)
-  - [2.3. AI Triggered Monitoring & Controllable Cognitive Output](#sec23)
-  - [2.4. Mobile Camera Capture App (CamFlow)](#sec24)
+- [2. Реализованные функции](#sec2)
+  - [2.1. Предпросмотр видео в реальном времени](#sec21)
+  - [2.2. Настройка параметров системы](#sec22)
+  - [2.3. Мониторинг с триггером ИИ и управляемый когнитивный вывод](#sec23)
+  - [2.4. Мобильное приложение захвата камеры (CamFlow)](#sec24)
 
-- [3. Project Deployment](#sec3)
-  - [3.1. Environment Requirements](#sec31)
-  - [3.2. Get the Source Code](#sec32)
-  - [3.3. PC-side Deployment](#sec33)
-  - [3.4. Android-side Deployment](#sec34)
+- [3. Развёртывание проекта](#sec3)
+  - [3.1. Требования к окружению](#sec31)
+  - [3.2. Получение исходного кода](#sec32)
+  - [3.3. Развёртывание на стороне PC](#sec33)
+  - [3.4. Развёртывание на стороне Android](#sec34)
 
-- [4. Run the Project](#sec4)
-  - [4.1. Start the PC Side](#sec41)
-  - [4.2. Start CamFlow](#sec42)
-  - [4.3. Dashboard Guide](#sec43)
-  - [4.4. AI Monitoring Features](#sec44)
-  - [4.5. Dashboard AI Module Guide](#sec45)
-  - [4.6. Third-party Model Integration](#sec46)
+- [4. Запуск проекта](#sec4)
+  - [4.1. Запуск стороны PC](#sec41)
+  - [4.2. Запуск CamFlow](#sec42)
+  - [4.3. Руководство по Dashboard](#sec43)
+  - [4.4. Функции мониторинга на основе ИИ](#sec44)
+  - [4.5. Руководство по модулю ИИ в Dashboard](#sec45)
+  - [4.6. Интеграция сторонних моделей](#sec46)
 
-- [5. Version Information & Notes](#sec5)
-  - [5.1. System Version](#sec51)
-  - [5.2. Test Environment](#sec52)
-  - [5.3. Roadmap](#sec53)
-  - [5.4. Usage & License](#sec54)
-  - [5.5. Network Quality and Troubleshooting](#network-quality)
+- [5. Информация о версии и примечания](#sec5)
+  - [5.1. Версия системы](#sec51)
+  - [5.2. Тестовое окружение](#sec52)
+  - [5.3. Дорожная карта](#sec53)
+  - [5.4. Использование и лицензия](#sec54)
+  - [5.5. Качество сети и устранение неполадок](#network-quality)
 
 ---
 
 <a id="sec1"></a>
 
-## 1. Project Overview [⌃](#top)
+## 1. Обзор проекта [⌃](#top)
 
-Sentinel is a real-time monitoring system that runs on a LAN, and it can also serve as a tool for data acquisition and analysis. It consists of the following two parts:
+Sentinel — это система мониторинга в реальном времени, работающая в LAN, и она также может служить инструментом для сбора и анализа данных. Она состоит из следующих двух частей:
 
-- **CamFlow (Android client)**: captures the phone camera feed and uploads it to the server as single-frame JPEG images.
-- **PC Dashboard (Flask + Web UI)**: receives image frames and provides live preview, video recording, screenshot saving, log viewing, and optional AI triggered monitoring.
+- **CamFlow (Android-клиент)**: захватывает поток с камеры телефона и загружает его на сервер как одиночные JPEG-изображения.
+- **Dashboard на стороне PC (Flask + Web UI)**: принимает кадры и предоставляет live-просмотр, видеозапись, сохранение снимков, просмотр журналов и опциональный мониторинг с триггером ИИ.
 
-The system supports running in a local LAN environment without relying on cloud services. However, to run multimodal models, it is recommended to use an online model inference service.
+Система поддерживает работу в локальной сети LAN без опоры на облачные сервисы. Однако для запуска мультимодальных моделей рекомендуется использовать онлайн-сервис инференса моделей.
 
 ---
 
 <a id="sec11"></a>
 
-### 1.1. Core Capabilities [⌃](#top)
+### 1.1. Ключевые возможности [⌃](#top)
 
-Sentinel is not designed as a single-purpose monitoring tool. Instead, it aims to build an extensible real-time vision system framework of **“mobile capture + PC processing + browser control”**. Its core capabilities include:
+Sentinel разработан не как мониторинговый инструмент единственного назначения. Вместо этого он стремится создать расширяемый фреймворк системы компьютерного зрения в реальном времени на основе **«мобильный захват + обработка на PC + управление через браузер»**. Его ключевые возможности включают:
 
 <table>
 <tr>
 <td width="50%">
 
-- **Self-developed Android camera client (CamFlow)**  
-  A regular smartphone can be used as a real-time camera endpoint, without purchasing dedicated IP cameras or extra hardware.
+- **Собственный Android-клиент камеры (CamFlow)**  
+  Обычный смартфон может использоваться как узел камеры в реальном времени, без покупки специализированных IP-камер или дополнительного оборудования.
 
-- **Real-time MJPEG video preview in the browser**  
-  Based on HTTP streaming output; can be viewed directly in a browser without plugins.
+- **Предпросмотр видео MJPEG в браузере в реальном времени**  
+  Основан на потоковой выдаче по HTTP; можно просматривать напрямую в браузере без плагинов.
 
-- **Standardized image frame upload interface (HTTP POST)**  
-  The Android client continuously uploads single-frame JPEG images; the interface is clear and extensible.
+- **Стандартизированный интерфейс загрузки кадров (HTTP POST)**  
+  Android-клиент непрерывно загружает одиночные JPEG-изображения; интерфейс понятен и расширяем.
 
-- **Segmented local video recording (MP4 / AVI) and real-time screenshots**
-  Supports time-based segmentation for writing video/image files, suitable for long-term operation and archival management.
+- **Сегментированная локальная видеозапись (MP4 / AVI) и снимки в реальном времени**
+  Поддерживает сегментацию по времени для записи видео/изображений, подходит для длительной работы и архивного управления.
 
 </td>
 <td width="50%">
 
-- **Layered, trigger-based visual processing mechanism**  
-  A two-stage architecture of “traditional CV algorithms → model inference” to improve real-time performance and reduce compute/inference costs.
+- **Многоуровневый механизм визуальной обработки с триггером**  
+  Двухступенчатая архитектура «традиционные алгоритмы компьютерного зрения → инференс модели» для повышения производительности в реальном времени и снижения вычислительных затрат/стоимости инференса.
 
-- **Structured multimodal visual cognition**  
-  After trigger conditions are met, a vision model is called for semantic analysis and structured outputs, supporting risk grading and event management.
+- **Структурированное мультимодальное визуальное восприятие**  
+  После выполнения условий триггера вызывается модель компьютерного зрения для семантического анализа и структурированного вывода, поддерживающего градацию риска и управление событиями.
 
-- **Explicit and verifiable manual connection setup**
-  The PC prints the CamFlow address at startup, while the Android client validates it and provides a `/ping` connection test.
+- **Явная и проверяемая ручная установка соединения**
+  PC печатает адрес CamFlow при запуске, а Android-клиент проверяет его и предоставляет тест соединения `/ping`.
 
-- **Structured logging and configuration management**  
-  Generates local runtime logs and AI event records to support traceability and data analysis.
+- **Структурированное ведение журналов и управление конфигурацией**  
+  Генерирует локальные журналы работы и записи событий ИИ для обеспечения прослеживаемости и анализа данных.
 
 </td>
 </tr>
@@ -143,109 +135,109 @@ Sentinel is not designed as a single-purpose monitoring tool. Instead, it aims t
 
 <a id="sec12"></a>
 
-### 1.2. System Architecture [⌃](#top)
+### 1.2. Архитектура системы [⌃](#top)
 
-The system consists of three structural layers:
+Система состоит из трёх структурных уровней:
 
-1. Data Acquisition Layer (Android App)
-2. Service Processing Layer (PC Server)
-3. Presentation & Control Layer (Browser Dashboard)
+1. Уровень сбора данных (Android-приложение)
+2. Уровень обработки сервисов (сервер PC)
+3. Уровень представления и управления (Dashboard в браузере)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         Android Client (CamFlow)
+│                         Android-клиент (CamFlow)
 │
-│          Camera Capture → Single JPEG Frame → HTTP POST /upload
+│          Захват камеры → Одиночный JPEG-кадр → HTTP POST /upload
 └─────────────────────────────────────────────────────────────────────────┘
-                                     │
-                                     ▼
+                                      │
+                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                           PC-side Flask Server
+│                        Flask-сервер на стороне PC
 │
-│   ① FrameBuffer (Latest Frame Cache)
-│         ├── Provides MJPEG Stream (/stream)
-│         ├── Provides Snapshot
-│         └── Provides Recorder Access
+│   ① FrameBuffer (кэш последнего кадра)
+│         ├── Предоставляет MJPEG-поток (/stream)
+│         ├── Предоставляет снимок
+│         └── Предоставляет доступ к модулю записи
 │
-│   ② Recorder Module
-│         └── Writes Segmented Video Files by FPS
+│   ② Модуль записи (Recorder)
+│         └── Записывает сегментированные видеофайлы по FPS
 │
-│   ③ AI Monitor (Optional Module)
-│         ├── Motion Trigger (Traditional CV Detection)
-│         ├── Vision Model Interface (Pluggable)
-│         └── Event Logging / Real-time Feedback (Local / Web Access)
+│   ③ AI Monitor (опциональный модуль)
+│         ├── Триггер движения (традиционное детектирование CV)
+│         ├── Интерфейс модели компьютерного зрения (подключаемый)
+│         └── Журналирование событий / обратная связь в реальном времени (локально / через веб)
 │
-│   ④ Config & Log Management
+│   ④ Управление конфигурацией и журналами
 │         ├── config.json
 │         └── server.log
 └─────────────────────────────────────────────────────────────────────────┘
-                                     │
-                                     ▼
+                                      │
+                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                            Browser Dashboard
+│                            Dashboard в браузере
 │
-│ Live Preview | Recording Control | Parameter Configuration | Log Viewer
+│ Live View | Управление записью | Настройка параметров | Просмотр журнала
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-- Architecture Design
+- Проектирование архитектуры
 
-  - All image data flows only within the local area network (LAN);
-  - FrameBuffer serves as the core shared data structure to avoid repeated decoding;
-  - Recording and AI analysis both read from FrameBuffer without interfering with each other;
-  - The AI module adopts an interface-based design, allowing flexible integration of different vision models;
-  - The Dashboard functions purely as the control and presentation layer, and does not participate in image processing.
+  - Все данные изображений перемещаются только внутри локальной вычислительной сети (LAN);
+  - FrameBuffer служит основной общей структурой данных, чтобы избежать повторного декодирования;
+  - Запись и анализ ИИ оба читают из FrameBuffer, не мешая друг другу;
+  - Модуль ИИ использует интерфейс-ориентированный дизайн, позволяющий гибко интегрировать разные модели компьютерного зрения;
+  - Dashboard функционирует исключительно как уровень управления и представления и не участвует в обработке изображений.
 
 ---
 
 <a id="sec13"></a>
 
-### 1.3. Practical Applications [⌃](#top)
+### 1.3. Практические применения [⌃](#top)
 
-Sentinel is not only a real-time monitoring tool, but also an extensible platform for visual data acquisition and analysis.
-Its LAN-based localized operation gives it practical value in the following scenarios:
+Sentinel — это не только инструмент мониторинга в реальном времени, но и расширяемая платформа для сбора и анализа визуальных данных.
+Его локальная работа на основе LAN даёт ему практическую ценность в следующих сценариях:
 
 <table> <tr> <td width="50%">
-Local Privacy-Oriented Monitoring Solution
+Локальное решение мониторинга с упором на конфиденциальность
 
-- All data is fully stored on the local LAN PC
+- Все данные полностью хранятся на PC в локальной LAN
 
-- No reliance on cloud storage or third-party platforms
+- Нет опоры на облачное хранение или сторонние платформы
 
-- No need for additional storage cards or subscription fees
+- Не нужны дополнительные карты памяти или абонентская плата
 
-- Suitable for private environments such as homes, laboratories, and studios
+- Подходит для частных сред, таких как дома, лаборатории и студии
 
-AI Behavior Analysis Experimental Platform
+Экспериментальная платформа анализа поведения с ИИ
 
-- Supports integration of multimodal vision models
+- Поддерживает интеграцию мультимодальных моделей компьютерного зрения
 
-- Output structure can be controlled through Prompt engineering
+- Структура вывода может управляться через инженерию промптов
 
-- Outputs person count, activity, risk level, and confidence
+- Выводит количество людей, активность, уровень риска и уверенность
 
-- Suitable for behavior recognition and risk analysis research
+- Подходит для исследований распознавания поведения и анализа риска
 
 </td> <td width="50%">
-Data Acquisition & Analysis Prototype System
+Прототипная система сбора и анализа данных
 
-- Automatically generates structured JSON event records
+- Автоматически генерирует структурированные записи событий в JSON
 
-- Local video and logs are traceable
+- Локальные видео и журналы прослеживаемы
 
-- Convenient for subsequent statistical analysis and model optimization
+- Удобно для последующего статистического анализа и оптимизации моделей
 
-- Can serve as a small-scale visual data collection prototype
+- Может служить небольшим прототипом сбора визуальных данных
 
-Distributed Vision System Architecture Example
+Пример архитектуры распределённой системы компьютерного зрения
 
-- Android-side acquisition + PC-side processing
+- Сбор на стороне Android + обработка на стороне PC
 
-- State machine–driven trigger-based AI analysis
+- Анализ с триггером на основе конечного автомата (state machine)
 
-- FrameBuffer decoupled architecture design
+- Архитектурный дизайн с развязкой через FrameBuffer
 
-- Suitable for teaching and system architecture demonstrations
+- Подходит для обучения и демонстрации архитектуры систем
 
 </td> </tr> </table>
 
@@ -253,153 +245,153 @@ Distributed Vision System Architecture Example
 
 <a id="sec2"></a>
 
-## 2. Implemented Features [⌃](#top)
+## 2. Реализованные функции [⌃](#top)
 
 <a id="sec21"></a>
 
-### 2.1. Real-time Video Preview [⌃](#top)
+### 2.1. Предпросмотр видео в реальном времени [⌃](#top)
 
-Sentinel provides browser-based real-time video preview capability.
-The camera feed captured by the Android device is continuously uploaded to the server as single JPEG frames, and the server pushes real-time images to the browser via an MJPEG stream.
+Sentinel предоставляет возможность предпросмотра видео в реальном времени через браузер.
+Поток с камеры, захватываемый Android-устройством, непрерывно загружается на сервер как одиночные JPEG-кадры, а сервер передаёт изображения в реальном времени в браузер через MJPEG-поток.
 
-This mechanism has the following characteristics:
+Этот механизм имеет следующие характеристики:
 
 <table> <tr> <td width="55%">
 
-- **Implemented based on MJPEG streaming** — the browser can parse and refresh frames in real time without any plugins.
+- **Реализован на основе MJPEG-стриминга** — браузер может разбирать и обновлять кадры в реальном времени без каких-либо плагинов.
 
-- **No additional client software required** — users only need to access the Dashboard address through a browser to view the live video.
+- **Не требуется дополнительное клиентское ПО** — пользователям достаточно открыть адрес Dashboard в браузере, чтобы видеть live-видео.
 
-- **Low-latency transmission within LAN** — under the same Wi-Fi network, end-to-end latency is typically at the millisecond level.
+- **Передача с низкой задержкой внутри LAN** — в рамках одной Wi-Fi сети сквозная задержка обычно находится на уровне миллисекунд.
 
-- **Decoupled architectural design** — real-time preview reads the latest frame from FrameBuffer and does not interfere with recording or AI analysis modules.
+- **Архитектурная развязка** — предпросмотр в реальном времени читает последний кадр из FrameBuffer и не мешает модулям записи или анализа ИИ.
 
-- **Supports dynamic parameter adjustment** — stream FPS and JPEG compression quality can be modified via configuration to adapt to different device performance and network conditions.
+- **Поддержка динамической настройки параметров** — FPS потока и качество сжатия JPEG можно изменять через конфигурацию, подстраиваясь под разные возможности устройств и условия сети.
 
-- **Fully localized storage and data control** — unlike traditional monitoring solutions that rely on SD cards or cloud storage, Sentinel saves video data directly on the LAN PC. Local disk storage avoids cloud service fees and third-party data risks, and also facilitates subsequent data analysis, model training, or secondary processing.
+- **Полностью локальное хранение и контроль данных** — в отличие от традиционных решений мониторинга, полагающихся на SD-карты или облачное хранение, Sentinel сохраняет видеоданные непосредственно на PC в LAN. Локальное дисковое хранение избегает облачных платежей и рисков данных третьих сторон, а также облегчает последующий анализ данных, обучение моделей или вторичную обработку.
 
-</td> <td width="45%" align="center"> <img src="assets/dashboard_ingest_on.png" width="100%"> <br> <b>Figure 3 - Dashboard Live Preview Interface (Full-screen Mode)</b> </td> </tr> </table>
+</td> <td width="45%" align="center"> <img src="assets/dashboard_ingest_on.png" width="100%"> <br> <b>Рисунок 3 - Интерфейс live-просмотра Dashboard (полноэкранный режим)</b> </td> </tr> </table>
 
 ---
 
 <a id="sec22"></a>
 
-## 2.2. System Parameter Customization [⌃](#top)
+## 2.2. Настройка параметров системы [⌃](#top)
 
-Sentinel is not a fixed-behavior “black-box monitoring tool”, but a highly configurable real-time vision system.
-Users can finely control video streaming, recording strategies, and AI behavior through the Dashboard to adapt to different hardware environments and application scenarios.
+Sentinel — не «чёрный ящик» мониторинга с фиксированным поведением, а высоко настраиваемая система компьютерного зрения в реальном времени.
+Пользователи могут тонко управлять видеопотоком, стратегиями записи и поведением ИИ через Dashboard, адаптируя систему к разным аппаратным окружениям и сценариям применения.
 
 <table> <tr> <td width="55%">
 
-System parameters are mainly divided into three categories:
+Параметры системы делятся на три основные категории:
 
-#### ① Video Stream Parameters
+#### ① Параметры видеопотока
 
-- Stream FPS (real-time preview frame rate), JPEG Quality (image compression quality), Upload FPS (upload rate)......
+- Stream FPS (частота кадров предпросмотра в реальном времени), JPEG Quality (качество сжатия изображений), Upload FPS (частота загрузки)......
 
-Users can balance image quality and network bandwidth, making it suitable for weak network conditions or low-performance device environments.
+Пользователи могут балансировать качество изображения и пропускную способность сети, что подходит для слабых сетевых условий или окружений с низкопроизводительными устройствами.
 
-#### ② Recording Strategy Parameters
+#### ② Параметры стратегии записи
 
-- Record FPS (recording frame rate), Segment Seconds (segment duration), Codec (video encoding format)......
+- Record FPS (частота кадров записи), Segment Seconds (длительность сегмента), Codec (формат видеокодирования)......
 
-Configures segmented writing and video encoding to avoid oversized single files and facilitate long-term operation and archival management.
+Настраивает сегментированную запись и видеокодирование, чтобы избежать чрезмерно больших одиночных файлов и облегчить длительную работу и архивное управление.
 
-#### ③ AI Behavior Parameters
+#### ③ Параметры поведения ИИ
 
-- OBSERVE Interval (detection interval), Motion Threshold (motion trigger threshold), Prompt Template / Scene Profile ......
+- Интервал OBSERVE (интервал детектирования), Motion Threshold (порог триггера движения), Prompt Template / Scene Profile ......
 
-These parameters allow adjustments to “AI trigger sensitivity” and “model decision logic” via the Settings page, optimizing token usage and enabling personalized monitoring scenarios.
+Эти параметры позволяют через страницу Settings настраивать «чувствительность триггера ИИ» и «логику решений модели», оптимизируя использование токенов и обеспечивая персонализированные сценарии мониторинга.
 
-</td> <td width="45%" align="center"> <img src="assets/dashboard_recording.png" width="100%"> <br> <b>Figure 4 - Dashboard Parameter Control Interface (Expanded View)</b> </td> </tr> </table>
+</td> <td width="45%" align="center"> <img src="assets/dashboard_recording.png" width="100%"> <br> <b>Рисунок 4 - Интерфейс управления параметрами Dashboard (развёрнутый вид)</b> </td> </tr> </table>
 
 ---
 
 <a id="sec23"></a>
 
-### 2.3. AI Trigger-based Monitoring and Controllable Cognitive Output [⌃](#top)
+### 2.3. Мониторинг с триггером ИИ и управляемый когнитивный вывод [⌃](#top)
 
-With the support of multimodal vision models, Sentinel is capable not only of “seeing the scene”, but also of performing structured understanding and risk assessment. The system adopts a layered mechanism of “motion trigger + model analysis”:
+При поддержке мультимодальных моделей компьютерного зрения Sentinel способен не только «видеть сцену», но и выполнять структурированное понимание и оценку риска. Система использует многоуровневый механизм «триггер движения + анализ моделью»:
 
-- Uses “traditional computer vision algorithms + large model inference” for layered processing, reducing token consumption and API costs;
-- When trigger conditions are met, the system calls the model and enters the OBSERVE state;
-- Invokes the vision model for semantic analysis and outputs structured JSON results;
-- Records observation results and displays them in real time on the Dashboard.
+- Использует «традиционные алгоритмы компьютерного зрения + инференс большой модели» для многоуровневой обработки, снижая потребление токенов и стоимость API;
+- Когда условия триггера выполнены, система вызывает модель и переходит в состояние OBSERVE;
+- Вызывает модель компьютерного зрения для семантического анализа и выдаёт структурированные результаты в JSON;
+- Записывает результаты наблюдения и отображает их в реальном времени на Dashboard.
 
 <table> <tr> <td width="%">
 
-AI module capabilities include:
+Возможности модуля ИИ включают:
 
-#### ① Structured Semantic Output
+#### ① Структурированный семантический вывод
 
-Under the current configuration, model analysis outputs follow a unified structure: whether a person is present (has_person), risk level (risk_level), confidence (confidence), scene summary (summary)......
+При текущей конфигурации анализ модели следует единой структуре: наличие человека (has_person), уровень риска (risk_level), уверенность (confidence), краткое описание сцены (summary)......
 
-Structured outputs facilitate subsequent rule engine processing or statistical data analysis.
-
----
-
-#### ② Event-level State Management
-
-The system records the complete lifecycle of a defined event:
-
-SLEEP → OBSERVE state machine, trigger/duration statistics, AI call health monitoring......
-
-This allows the system not only to determine whether an event has occurred, but also to manage the evaluation criteria of such decisions.
+Структурированный вывод облегчает последующую обработку правилным движком или статистический анализ данных.
 
 ---
 
-#### ③ Flexible Model Rule Configuration
+#### ② Управление состояниями на уровне событий
 
-Users can modify multiple prompt-related parameters:
+Система записывает полный жизненный цикл определённого события:
 
-Prompt Template (role definition), Scene Profile (long-term scene context), Session Focus (short-term task focus), Extra Rules (additional constraints)
+Конечный автомат SLEEP → OBSERVE, статистику триггеров/длительности, мониторинг здоровья вызовов ИИ......
 
-to make model behavior programmable and controllable.
+Это позволяет системе не только определять, произошло ли событие, но и управлять критериями оценки таких решений.
 
-</td> <td width="45%" align="center"> <img src="assets\ai_monitoring_record.png" width="100%"> <br> <b>Figure 5 - AI Enabled Status</b> </td> </tr> </table>
+---
+
+#### ③ Гибкая настройка правил модели
+
+Пользователи могут изменять несколько параметров, связанных с промптом:
+
+Prompt Template (определение роли), Scene Profile (долгосрочный контекст сцены), Session Focus (краткосрочный фокус задачи), Extra Rules (дополнительные ограничения)
+
+что делает поведение модели программируемым и управляемым.
+
+</td> <td width="45%" align="center"> <img src="assets\ai_monitoring_record.png" width="100%"> <br> <b>Рисунок 5 - Состояние с включённым ИИ</b> </td> </tr> </table>
 
 ---
 
 <a id="sec24"></a>
 
-### 2.4. Mobile Camera Capture Application (CamFlow) [⌃](#top)
+### 2.4. Мобильное приложение захвата камеры (CamFlow) [⌃](#top)
 
-Sentinel does not rely on dedicated surveillance cameras. Instead, it provides a self-developed Android client **CamFlow** to handle image acquisition and data upload.
+Sentinel не полагается на специализированные камеры наблюдения. Вместо этого он предоставляет собственный Android-клиент **CamFlow** для обработки захвата изображений и загрузки данных.
 
-CamFlow transforms an ordinary smartphone into a real-time camera endpoint and:
+CamFlow превращает обычный смартфон в узел камеры в реальном времени и:
 
 <table>
 <tr>
 <td width="55%">
 
-#### ① Real-time Image Capture and Upload
+#### ① Захват и загрузка изображений в реальном времени
 
-- Invokes the device's native camera
-- Continuously uploads frames in single JPEG format
-- Configure upload rate, JPEG quality and [resolution preference](CamFlow_UserGuide.md#resolution-preference) in Settings
-- Allows at most two outstanding uploads, with status counters and no queued backlog; concurrent arrivals can be out of order
-
----
-
-#### ② Manual Configuration and Connection
-
-- Prints a copy-ready `IP:PORT` for CamFlow when PC-side `server.py` starts
-- Requests this address on first launch and tests the saved connection on subsequent launches
-- Validates IP, port, and HTTP/HTTPS addresses and provides real-time diagnostics
-- Allows specifying a particular device camera (code-level interface)
+- Вызывает нативную камеру устройства
+- Непрерывно загружает кадры в формате одиночного JPEG
+- Настройте частоту загрузки, качество JPEG и [предпочтение разрешения](CamFlow_UserGuide.md#resolution-preference) в Settings
+- Допускает максимум две незавершённые загрузки, со счётчиками состояния и без очереди накопления; одновременные поступления могут быть вне порядка
 
 ---
 
-#### ③ Runtime Control
+#### ② Ручная конфигурация и соединение
 
-- Supports start/stop capture
-- Allows preview to be disabled for power saving
-- Provides runtime status feedback
+- Печатает готовый к копированию `IP:PORT` для CamFlow при запуске `server.py` на стороне PC
+- Запрашивает этот адрес при первом запуске и проверяет сохранённое соединение при последующих запусках
+- Проверяет адреса IP, порта и HTTP/HTTPS и предоставляет диагностику в реальном времени
+- Позволяет указать конкретную камеру устройства (интерфейс на уровне кода)
 
 ---
 
-CamFlow and the PC side together form a complete system architecture of “mobile acquisition + local processing,”  
-enabling the construction of a real-time vision system without additional hardware devices.
+#### ③ Управление во время работы
+
+- Поддерживает запуск/остановку захвата
+- Позволяет отключить предпросмотр для экономии энергии
+- Предоставляет обратную связь о состоянии во время работы
+
+---
+
+CamFlow и сторона PC вместе формируют полную архитектуру системы «мобильный сбор + локальная обработка»,  
+позволяя построить систему компьютерного зрения в реальном времени без дополнительных аппаратных устройств.
 
 </td>
 
@@ -408,115 +400,115 @@ enabling the construction of a real-time vision system without additional hardwa
 <img src="assets/app_main_page.jpg" width="40%">
 
 <br>
-<b>Figure 6 - CamFlow Application Interface</b>
+<b>Рисунок 6 - Интерфейс приложения CamFlow</b>
 
 </td>
 </tr>
 </table>
 
-> 📘 For detailed functionality and usage instructions, please refer to **[CamFlow User Guide](CamFlow_UserGuide_CN.md)**.
+> 📘 Подробные сведения о функциональности и инструкции по использованию смотрите в **[Руководстве пользователя CamFlow](CamFlow_UserGuide.md)**.
 
 ---
 
-### Contributing 🤝
+### Участие в развитии 🤝
 
-This project is still evolving, and contributions and issues are **highly welcome**!
+Этот проект всё ещё развивается, и вклады и сообщения об ошибках **очень приветствуются**!
 
-If you have ideas, improvements, or bug fixes, feel free to open a PR or submit an issue. Even small contributions are meaningful — feel free to jump in.
+Если у вас есть идеи, улучшения или исправления ошибок, не стесняйтесь открывать PR или отправлять issue. Даже небольшой вклад значим — присоединяйтесь.
 
 ---
 
 <a id="sec3"></a>
 
-## 3. Project Deployment [⌃](#top)
+## 3. Развёртывание проекта [⌃](#top)
 
-Please complete the basic project deployment in the following order:
+Выполните базовое развёртывание проекта в следующем порядке:
 
-- Obtain the project source code
-- Deploy the PC-side server
-- Install the Android client APK
+- Получите исходный код проекта
+- Разверните сервер на стороне PC
+- Установите APK Android-клиента
 
 
-### Project Structure 📂
+### Структура проекта 📂
 
 ```
 Sentinel/
 │
-├── server.py                     # Program entry point (starts Flask, initializes runtime environment, launches threads)
-├── README.md                     # Project documentation
-├── CamFlow_UserGuide.md          # Android user guide
-├── requirements.txt              # Dependency installation list
-├── version.properties            # Shared version metadata for PC, Android, and documentation
-├── .gitignore                    # Git ignore rules
-├── LICENSE                       # MIT License
+├── server.py                     # Точка входа программы (запускает Flask, инициализирует окружение работы, запускает потоки)
+├── README.md                     # Документация проекта
+├── CamFlow_UserGuide.md          # Руководство пользователя Android
+├── requirements.txt              # Список установки зависимостей
+├── version.properties            # Общие метаданные версии для PC, Android и документации
+├── .gitignore                    # Правила игнорирования Git
+├── LICENSE                       # Лицензия MIT
 │
-├── app/                          # Main application package
+├── app/                          # Основной пакет приложения
 │   │
-│   ├── __init__.py               # Package initialization
+│   ├── __init__.py               # Инициализация пакета
 │   │
-│   ├── ai/                       # AI-related modules (optional)
-│   │   ├── ai_ark.py             # Vision model interface implementation (replaceable)
-│   │   ├── ai_monitor_worker.py  # AI monitoring thread (SLEEP/OBSERVE state machine)
-│   │   ├── ai_store.py           # AI event writing and persistence
-│   │   ├── motion_trigger.py     # Low-cost motion detection module
+│   ├── ai/                       # Модули, связанные с AI (необязательные)
+│   │   ├── ai_ark.py             # Реализация интерфейса модели зрения (заменяемая)
+│   │   ├── ai_monitor_worker.py  # Поток AI-мониторинга (машина состояний SLEEP/OBSERVE)
+│   │   ├── ai_store.py           # Запись и сохранение AI-событий
+│   │   ├── motion_trigger.py     # Модуль дешёвого обнаружения движения
 │   │   └── __init__.py
 │   │
-│   ├── config/                   # Configuration management module
-│   │   ├── config.json           # Automatically generated after saving in Dashboard
-│   │   ├── config_store.py       # Configuration validation and read/write logic
+│   ├── config/                   # Модуль управления конфигурацией
+│   │   ├── config.json           # Автоматически создаётся после сохранения в Dashboard
+│   │   ├── config_store.py       # Логика проверки и чтения/записи конфигурации
 │   │   └── __init__.py
 │   │
-│   ├── core/                     # Core runtime modules
-│   │   ├── auth.py               # Administrator sessions and device pairing
-│   │   ├── frame_buffer.py       # Latest frame cache (system data sharing center)
-│   │   ├── logger.py             # Logging initialization
-│   │   ├── runtime.py            # Global runtime state management
-│   │   ├── upload_stats.py       # Upload statistics
+│   ├── core/                     # Основные модули среды выполнения
+│   │   ├── auth.py               # Сессии администратора и спаривание устройств
+│   │   ├── frame_buffer.py       # Кэш последнего кадра (центр обмена данными системы)
+│   │   ├── logger.py             # Инициализация логирования
+│   │   ├── runtime.py            # Управление глобальным состоянием среды выполнения
+│   │   ├── upload_stats.py       # Статистика загрузок
 │   │   └── __init__.py
 │   │
-│   ├── net/                      # Networking modules
-│   │   ├── net_discovery.py      # Retained experimental LAN module (not enabled by the default workflow)
+│   ├── net/                      # Сетевые модули
+│   │   ├── net_discovery.py      # Сохранённый экспериментальный модуль локальной сети (не включён в стандартный workflow)
 │   │   └── __init__.py
 │   │
-│   ├── recorder/                 # Video recording module
-│   │   ├── storage.py            # Registered recording retention and disk protection
-│   │   ├── recorder.py           # Video writing logic
-│   │   ├── recorder_worker.py    # Recording thread controller
+│   ├── recorder/                 # Модуль видеозаписи
+│   │   ├── storage.py            # Срок хранения зарегистрированных записей и защита диска
+│   │   ├── recorder.py           # Логика записи видео
+│   │   ├── recorder_worker.py    # Контроллер потока записи
 │   │   └── __init__.py
 │   │
-│   └── web/                      # Web interface and API layer
-│       ├── webapp.py             # Flask routes and APIs
-│       ├── upload_diagnostics.py # Upload timing and request correlation
+│   └── web/                      # Веб-интерфейс и API-слой
+│       ├── webapp.py             # Маршруты Flask и API
+│       ├── upload_diagnostics.py # Тайминги загрузок и сопоставление запросов
 │       ├── __init__.py
 │       │
-│       ├── static/               # Frontend static assets
-│       │   ├── access.js          # Login, access state and camera pairing
+│       ├── static/               # Статические ресурсы фронтенда
+│       │   ├── access.js          # Вход, состояние доступа и спаривание камеры
 │       │   ├── dashboard.js
 │       │   └── style.css
 │       │
-│       └── templates/            # HTML templates
+│       └── templates/            # HTML-шаблоны
 │           └── dashboard.html
 │
-├── PhoneCamSender/               # Android client source code (Android Studio project)
-│   ├── app/                      # Android application module
-│   ├── gradle/                   # Gradle configuration
+├── PhoneCamSender/               # Исходный код Android-клиента (проект Android Studio)
+│   ├── app/                      # Модуль Android-приложения
+│   ├── gradle/                   # Конфигурация Gradle
 │   ├── build.gradle.kts
 │   ├── settings.gradle.kts
 │   ├── ...
-│   ├── CamFlow-v1.1.4.apk        # Current locally built installation package (keystore-signed)
-│   ├── CamFlow-v1.1.1.apk        # Retained legacy installation package
-│   └── CamFlow-v1.1.0.apk        # Retained legacy installation package
+│   ├── CamFlow-v1.1.4.apk        # Текущий локально собранный установочный пакет (подписан keystore)
+│   ├── CamFlow-v1.1.1.apk        # Сохранённый устаревший установочный пакет
+│   └── CamFlow-v1.1.0.apk        # Сохранённый устаревший установочный пакет
 │
-├── assets/                       # Images used in README
+├── assets/                       # Изображения, используемые в README
 │   ├── app_main_page.jpg
 │   ├── app_setting_page.jpg
 │   └── app_failed_hint.jpg
 │
-├── log/                          # Runtime log directory (empty at first run)
-│   ├── server.log                # System runtime log
-│   └── ai_events.jsonl           # AI event records
+├── log/                          # Каталог журналов среды выполнения (пуст при первом запуске)
+│   ├── server.log                # Журнал работы системы
+│   └── ai_events.jsonl           # Записи AI-событий
 │
-└── recordings/                   # Video and snapshot output directory (empty at first run)
+└── recordings/                   # Каталог вывода видео и снимков (пуст при первом запуске)
     ├── snapshots/
     └── videos/
 ```
@@ -525,24 +517,24 @@ Sentinel/
 
 <a id="sec31"></a>
 
-### 3.1. Environment Requirements [⌃](#top)
+### 3.1. Требования к окружению [⌃](#top)
 
-| PC Side | Android Side |
+| Сторона ПК | Сторона Android |
 |---------------|-------------------|
-| Python 3.9 or above | Android 8.0 or above |
-| Windows / macOS / Linux | Allow installation from unknown sources |
-| Git installed (for cloning repository) | Connected to the same local area network as the PC |
+| Python 3.9 или выше | Android 8.0 или выше |
+| Windows / macOS / Linux | Разрешить установку из неизвестных источников |
+| Установлен Git (для клонирования репозитория) | Подключено к той же локальной сети, что и ПК |
 
 ---
 
 <a id="sec32"></a>
 
-### 3.2. Obtain the Project Source Code [⌃](#top)
+### 3.2. Получение исходного кода проекта [⌃](#top)
 
-Execute in the cmd terminal:
+Выполните в терминале cmd:
 
 ```bash
-git clone https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring.git
+git clone <адрес репозитория>
 cd CCTV-Smartphone-AI-Monitoring
 ```
 
@@ -550,487 +542,487 @@ cd CCTV-Smartphone-AI-Monitoring
 
 <a id="sec33"></a>
 
-### 3.3. PC-side Deployment [⌃](#top)
+### 3.3. Развёртывание на стороне ПК [⌃](#top)
 
-#### 3.3.1. Create a Virtual Environment (Recommended)
+#### 3.3.1. Создание виртуального окружения (рекомендуется)
 
-> Windows System
+> Система Windows
 
 ```bash
-python -m venv venv            # Create virtual environment
-venv\Scripts\activate          # Activate virtual environment
+python -m venv venv            # Создать виртуальное окружение
+venv\Scripts\activate          # Активировать виртуальное окружение
 ```
 
-> macOS / Linux System
+> Система macOS / Linux
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-#### 3.3.2. Install Dependencies
+#### 3.3.2. Установка зависимостей
 
 ```bash
 pip install -r requirements.txt
 ```
 
-The dependency list includes:
+Список зависимостей включает:
 
 ```
-flask>=2.2                     # Web service
-numpy>=1.23                    # Image data processing
-opencv-python>=4.8             # Image decoding and video writing
-volcenginesdkarkruntime        # AI module dependency
+flask>=2.2                     # Веб-сервис
+numpy>=1.23                    # Обработка данных изображений
+opencv-python>=4.8             # Декодирование изображений и запись видео
+volcenginesdkarkruntime        # Зависимость модуля AI
 ```
 
 ---
 
 <a id="sec34"></a>
 
-### 3.4. Android-side Deployment [⌃](#top)
+### 3.4. Развёртывание на стороне Android [⌃](#top)
 
-**Compatibility:** use CamFlow v1.1.4 with this authenticated server; v1.1.0 / v1.1.1 cannot upload anonymously. Before deployment, review [network quality and troubleshooting](#network-quality).
+**Совместимость:** используйте CamFlow v1.1.4 с этим аутентифицированным сервером; v1.1.0 / v1.1.1 не могут загружать данные анонимно. Перед развёртыванием ознакомьтесь с [качеством сети и устранением неполадок](#network-quality).
 
-The Android application CamFlow is responsible for camera capture and image upload.  
-The application source code is located in the repository path:
+Приложение Android CamFlow отвечает за захват камеры и загрузку изображений.  
+Исходный код приложения находится в пути репозитория:
 
 ```
 PhoneCamSender/
 ```
 
-The precompiled APK file is located at:
+Предварительно скомпилированный файл APK находится по адресу:
 
 ```
 PhoneCamSender/CamFlow-v1.1.4.apk
 ```
 
-> The current bundled package is CamFlow v1.1.4 build 16 (keystore-signed, CameraX lifecycle state fix), SHA-256: `F56EA3AFE28739B283FC151A29A36AC6115DF48E62A500C7AE24E66E7058C283`. Legacy packages remain until v1.1.4 device acceptance is complete.
+> Текущий включённый пакет — CamFlow v1.1.4 build 16 (подписан keystore, исправление состояний жизненного цикла CameraX), SHA-256: `F56EA3AFE28739B283FC151A29A36AC6115DF48E62A500C7AE24E66E7058C283`. Устаревшие пакеты остаются до завершения приёмки устройств v1.1.4.
 
-> Every build is signed with `PhoneCamSender/camflow.keystore` (password and alias are read from `.env`, which is not committed), so debug and release builds share one signature. `camflow.versionCode` is incremented automatically by Gradle on every `assemble`/`install` build. If a device already has CamFlow installed with a different signature, Android reports "app conflicts with another app" — uninstall the old package first.
+> Каждая сборка подписывается с помощью `PhoneCamSender/camflow.keystore` (пароль и псевдоним читаются из `.env`, который не коммитится), поэтому debug- и release-сборки используют одну подпись. `camflow.versionCode` автоматически увеличивается Gradle при каждой сборке `assemble`/`install`. Если на устройстве уже установлен CamFlow с другой подписью, Android сообщает «приложение конфликтует с другим приложением» — сначала удалите старый пакет.
 
-#### 3.4.1. Quick Installation via APK (Recommended)
+#### 3.4.1. Быстрая установка через APK (рекомендуется)
 
-For general users, installing via the APK file is the most convenient method:
+Для обычных пользователей установка через файл APK — самый удобный способ:
 
-1. Use the APK file included in the cloned repository or download it from the project's Release page;
+1. Используйте APK-файл, включённый в клонированный репозиторий, или загрузите его со страницы Release проекта;
 
-2. Open the APK file and install **CamFlow** on the Android device;
+2. Откройте APK-файл и установите **CamFlow** на Android-устройство;
 
-3. If prompted by the system, allow installation from unknown sources, then complete installation and launch the application.
+3. Если система запросит, разрешите установку из неизвестных источников, затем завершите установку и запустите приложение.
 
-#### 3.4.2. Build and Install via Android Studio (Optional)
+#### 3.4.2. Сборка и установка через Android Studio (необязательно)
 
-For developers who want to debug or modify features, the app can be built from source:
+Для разработчиков, которые хотят отлаживать или изменять функции, приложение можно собрать из исходного кода:
 
-1. Open Android Studio;
+1. Откройте Android Studio;
 
-2. Open the project directory: `Sentinel/PhoneCamSender`;
+2. Откройте каталог проекта: `Sentinel/PhoneCamSender`;
 
-3. Connect an Android device;
+3. Подключите Android-устройство;
 
-4. Wait for Gradle synchronization to complete, then run the project.
+4. Дождитесь завершения синхронизации Gradle, затем запустите проект.
 
-> 📘 For detailed Android-side functionality and usage instructions, please refer to **[CamFlow User Guide](CamFlow_UserGuide.md)**.
+> 📘 Подробные сведения о функциях и инструкция по использованию на стороне Android см. в **[Руководстве пользователя CamFlow](CamFlow_UserGuide.md)**.
 
 <a id="sec4"></a>
 
 ---
 
-## 4. Run the Project [⌃](#top)
+## 4. Запуск проекта [⌃](#top)
 
-> After completing project deployment, verify the entire pipeline in the order of **Start PC → Connect Mobile → Dashboard Displays Video** to ensure the full chain is functioning correctly.  
+> После завершения развёртывания проекта проверьте весь конвейер в порядке **Запуск ПК → Подключение мобильного устройства → Dashboard показывает видео**, чтобы убедиться, что вся цепочка работает корректно.  
 
 ---
 
-**You should observe the following success indicators:**
+**Вы должны наблюдать следующие признаки успеха:**
 
-- The terminal outputs something like `http://127.0.0.1:<PORT>/` and `http://<LAN_IP>:<PORT>/`
-- The browser successfully opens the Dashboard page
-- The mobile app shows successful Test connection / Ping (or a connected status message)
+- Терминал выводит что-то вроде `http://127.0.0.1:<PORT>/` и `http://<LAN_IP>:<PORT>/`
+- Браузер успешно открывает страницу Dashboard
+- Мобильное приложение показывает успешный Test connection / Ping (или сообщение о подключённом статусе)
 
-> Note: After the PC side starts, certain switches will reset to default safe states (for example, ingest / recording are OFF by default).  
-> This is intentional design to prevent unintended recording or data reception.
+> Примечание: после запуска стороны ПК определённые переключатели сбрасываются в безопасные состояния по умолчанию (например, ingest / запись выключены по умолчанию).  
+> Это преднамеренное проектирование, чтобы предотвратить непреднамеренную запись или приём данных.
 
 ---
 
 <a id="sec41"></a>
 
-### 4.1. Start the PC Side (Server + Dashboard) [⌃](#top)
+### 4.1. Запуск стороны ПК (сервер + Dashboard) [⌃](#top)
 
-Run the following command in the project root directory:
+Выполните следующую команду в корневом каталоге проекта:
 
 ```bash
 python server.py
 ```
 
-After successful startup, you should see output similar to:
+После успешного запуска вы должны увидеть вывод, похожий на:
 
 ```
 ===========================================================
 PhoneCam Server Started
-Local:   http://127.0.0.1:<PORT>/        for dashboard web  # Recommended address for browser
-LAN:     http://<LAN_IP>:<PORT>/         for CamFlow link   # Address for CamFlow device connection
+Local:   http://127.0.0.1:<PORT>/        for dashboard web  # Рекомендуемый адрес для браузера
+LAN:     http://<LAN_IP>:<PORT>/         for CamFlow link   # Адрес для подключения устройства CamFlow
 Default ingest: OFF (enable in dashboard)
-===========================================================
+==========================================================
 
 * Serving Flask app 'app.web.webapp'
 * Debug mode: off
 ```
 
-> ⚠️ Important: The camera device must use the LAN address. If the server starts successfully but ingest is not enabled, the Live View being empty is normal behavior.
+> ⚠️ Важно: устройство камеры должно использовать адрес LAN. Если сервер запустился успешно, но ingest не включён, пустой Live View — нормальное поведение.
 
-On first startup, the terminal also displays the administrator token once. Save it securely, then expand **Login & camera pairing** in Dashboard to sign in. Token recovery and session rules are described under [Administrator access](#admin-access).
+При первом запуске терминал также один раз показывает токен администратора. Сохраните его надёжно, затем раскройте **Login & camera pairing** в Dashboard, чтобы войти. Восстановление токена и правила сессий описаны в разделе [Доступ администратора](#admin-access).
 
 ---
 
 <a id="sec42"></a>
 
-### 4.2. Start CamFlow (Android App) [⌃](#top)
+### 4.2. Запуск CamFlow (приложение Android) [⌃](#top)
 
-#### 4.2.1. Prerequisites
+#### 4.2.1. Предварительные условия
 
-- The PC and the mobile device must be connected to the **same local area network** (same Wi-Fi);
-- The PC-side service must already be running, and the Dashboard must be accessible in the browser.
+- ПК и мобильное устройство должны быть подключены к **одной и той же локальной сети** (одна Wi-Fi);
+- Сервис на стороне ПК должен уже работать, и Dashboard должен быть доступен в браузере.
 
-#### 4.2.2. Connection Methods
+#### 4.2.2. Способы подключения
 
-- CamFlow now uses manual address configuration and does not attempt automatic server discovery.
-- On first launch, the app prompts for the Sentinel server address.
-- Run `server.py` on the PC and enter the address shown after `CamFlow:` in its startup output:
+- CamFlow теперь использует ручную настройку адреса и не пытается автоматически обнаруживать сервер.
+- При первом запуске приложение запрашивает адрес сервера Sentinel.
+- Запустите `server.py` на ПК и введите адрес, показанный после `CamFlow:` в его выводе запуска:
 
 ```
 CamFlow:    192.168.1.10:8000
 ```
 
-You can change the address later in Settings. Use `Test connection` first, then select `Save` after the connection succeeds.
+Вы можете изменить адрес позже в Settings. Сначала используйте `Test connection`, затем выберите `Save` после успешного подключения.
 
-#### 4.2.3. Start Uploading (Push Frames)
+#### 4.2.3. Начало загрузки (отправка кадров)
 
-1. Sign into Dashboard and click **Add CamFlow** to generate a pairing code.
-2. In CamFlow Settings, enter the server address, device name and code; tap **Pair / Re-pair**, then **Save**.
-3. The administrator enables **Ingest**. CamFlow captures and uploads while the camera is running and its credential remains valid.
+1. Войдите в Dashboard и нажмите **Add CamFlow**, чтобы создать код спаривания.
+2. В Settings CamFlow введите адрес сервера, имя устройства и код; нажмите **Pair / Re-pair**, затем **Save**.
+3. Администратор включает **Ingest**. CamFlow захватывает и загружает кадры, пока камера работает и его учётные данные остаются действительными.
 
-A successful **Test connection** only confirms reachability, not upload permission. See [camera pairing](#camera-pairing) and the phone-side [pairing procedure](CamFlow_UserGuide.md#camera-pairing).
+Успешный **Test connection** подтверждает только доступность, а не разрешение на загрузку. См. [спаривание камеры](#camera-pairing) и [процедуру спаривания](CamFlow_UserGuide.md#camera-pairing) на стороне телефона.
 
-#### 4.2.4. PC-side Verification
+#### 4.2.4. Проверка на стороне ПК
 
-- After confirming successful connection in CamFlow, open the browser on the PC and enter the Dashboard address printed by `server.py`.
+- После подтверждения успешного подключения в CamFlow откройте браузер на ПК и введите адрес Dashboard, напечатанный `server.py`.
 
-- Since `Ingest` is OFF by default, the Live View section will initially display `Ingest OFF - enable in dashboard` instead of the camera feed.
+- Поскольку `Ingest` выключен по умолчанию, раздел Live View изначально показывает `Ingest OFF - enable in dashboard` вместо потока с камеры.
 
-- After administrator login, click `Enable Ingest` to check whether Live View displays video.
-  If no video appears, expand the Logs section under Live View (collapsed by default) and check for messages such as ingest disabled, then adjust settings accordingly.
+- После входа администратора нажмите `Enable Ingest`, чтобы проверить, показывает ли Live View видео.
+  Если видео не появляется, раскройте раздел Logs под Live View (свёрнут по умолчанию) и проверьте сообщения вроде ingest disabled, затем соответствующим образом настройте параметры.
 
-- Under normal conditions, once `Ingest` is switched to ON, the Live View section in the Dashboard will immediately update with the camera feed from the device.
+- В нормальных условиях, как только `Ingest` переключается в ON, раздел Live View в Dashboard немедленно обновляется потоком с устройства.
 
-At this point, the CamFlow service and data transmission to the PC have been successfully started.  
-For detailed usage instructions of CamFlow, please refer to the repository documentation: **[CamFlow User Guide](CamFlow_UserGuide.md)**.
+В этот момент сервис CamFlow и передача данных на ПК успешно запущены.  
+Подробную инструкцию по использованию CamFlow см. в документации репозитория: **[Руководство пользователя CamFlow](CamFlow_UserGuide.md)**.
 
 ---
 
 <a id="sec43"></a>
 
-### 4.3. Dashboard Guide [⌃](#top)
+### 4.3. Руководство по Dashboard [⌃](#top)
 
-> Dashboard uses `dashboard.html`, `access.js`, `dashboard.js` and `style.css`; data and access checks come from backend APIs. The controls below require administrator login. Visitors only receive the viewing access described in [Viewing modes](#privacy-mode).
+> Dashboard использует `dashboard.html`, `access.js`, `dashboard.js` и `style.css`; данные и проверки доступа поступают из backend-API. Приведённые ниже элементы управления требуют входа администратора. Посетители получают только просмотрный доступ, описанный в [Режимы просмотра](#privacy-mode).
 ---
 
-#### 4.3.1. Page Structure
+#### 4.3.1. Структура страницы
 
-The layout of the Dashboard is divided into three sections: top bar + left monitoring panel + right settings panel.
+Макет Dashboard разделён на три секции: верхняя панель + левая панель мониторинга + правая панель настроек.
 
-- **Top Bar**
-  - Title: `Sentinel System Dashboard` & Subtitle: `Multi-Device Vision Monitoring & Risk Detection System`
-  - **Login & camera pairing**: collapsed by default; expand for sign-in, logout and device management
-  - Button: `Shutdown` (administrator only)
-- **Left Panel**
-  - `Live View`: real-time video preview + quick control buttons
-  - `Monitor Status`: system status summary + `Logs`: system logs
-- **Right Panel**
-  - `Settings`: all configurable parameter input fields
-  - `AI Monitoring`: AI module switches and configuration
-  - `Apply / Save / Load`: configuration application and persistence
+- **Верхняя панель**
+  - Заголовок: `Sentinel System Dashboard` и подзаголовок: `Multi-Device Vision Monitoring & Risk Detection System`
+  - **Login & camera pairing**: свёрнуто по умолчанию; раскройте для входа, выхода и управления устройствами
+  - Кнопка: `Shutdown` (только администратор)
+- **Левая панель**
+  - `Live View`: предпросмотр видео в реальном времени + кнопки быстрого управления
+  - `Monitor Status`: сводка состояния системы + `Logs`: журналы системы
+- **Правая панель**
+  - `Settings`: все поля ввода настраиваемых параметров
+  - `AI Monitoring`: переключатели и конфигурация модуля AI
+  - `Apply / Save / Load`: применение и сохранение конфигурации
 
-> The divider between panels is draggable, allowing adjustment of the display ratio;  
-> Click the `Collapse` button to hide the right-side Settings panel and enlarge the Live View area.  
-> Later, click `Expanding Settings` to reopen the collapsed section.
-
----
-
-#### 4.3.2. Live View Section
-
-The latest frame uploaded from the mobile device enters the PC-side FrameBuffer, and the browser continuously refreshes the display in Live View via `/stream` using MJPEG.
-
-① Display Logic
-
-The video shown in Live View depends on whether CamFlow is uploading frames and whether PC-side Ingest (allowing `/upload` to write into FrameBuffer) is enabled.
-
-- **When Ingest is OFF**: displays `Ingest OFF - enable in dashboard`;
-- **When Ingest is ON but no frame has been received yet**: displays `Waiting for frames...`.
+> Разделитель между панелями перетаскивается, позволяя изменять пропорцию отображения;  
+> Нажмите кнопку `Collapse`, чтобы скрыть правую панель Settings и увеличить область Live View.  
+> Позже нажмите `Expanding Settings`, чтобы снова открыть свёрнутую секцию.
 
 ---
 
-② Core Button Area
+#### 4.3.2. Секция Live View
 
-Below Live View, there are three buttons. All are OFF by default:  
+Последний кадр, загруженный с мобильного устройства, попадает в FrameBuffer на стороне ПК, и браузер непрерывно обновляет отображение в Live View через `/stream` с использованием MJPEG.
+
+① Логика отображения
+
+Видео, показываемое в Live View, зависит от того, загружает ли CamFlow кадры и включён ли ingest на стороне ПК (позволяющий `/upload` записывать в FrameBuffer).
+
+- **Когда Ingest выключен**: отображается `Ingest OFF - enable in dashboard`;
+- **Когда Ingest включён, но кадр ещё не получен**: отображается `Waiting for frames...`.
+
+---
+
+② Область основных кнопок
+
+Под Live View находятся три кнопки. Все выключены по умолчанию:  
 `Enable Ingest`, `Start Recording`, `Snapshot`.
 
 1. **Enable / Disable Ingest**
-   - Function: controls whether the server accepts image uploads from CamFlow;
-   - Feature: when clicking `Disable Ingest`, the preview immediately returns to placeholder state, allowing easy observation of data flow;
-   - Usage: click to toggle `Ingest` ON/OFF.
+   - Функция: контролирует, принимает ли сервер загрузку изображений от CamFlow;
+   - Особенность: при нажатии `Disable Ingest` предпросмотр немедленно возвращается в состояние-заполнитель, что позволяет легко наблюдать поток данных;
+   - Использование: нажимайте, чтобы переключать `Ingest` ON/OFF.
 
 2. **Start / Stop Recording**
-   - Function: controls whether the recording thread writes FrameBuffer data into segmented video files;
-   - Feature: recording and preview functions are independent. Recording only requires `Ingest` to be ON;
-   - Output path structure: `recordings/videos/YYYYMMDD/<cam_name>_YYYYMMDD_HHMMSS.mp4`; XVID/MJPG fallback files use `.avi`;
-   - Usage: click to toggle `Recording` ON/OFF.
+   - Функция: контролирует, записывает ли поток записи данные FrameBuffer в сегментированные видеофайлы;
+   - Особенность: запись и предпросмотр независимы. Для записи требуется только включённый `Ingest`;
+   - Структура пути вывода: `recordings/videos/YYYYMMDD/<cam_name>_YYYYMMDD_HHMMSS.mp4`; резервные файлы XVID/MJPG используют `.avi`;
+   - Использование: нажимайте, чтобы переключать `Recording` ON/OFF.
 
 3. **Snapshot**
-   - Function: saves the current frame as an image.
-   - Output path structure: `recordings/snapshots/YYYYMMDD/snapshot_YYYYMMDD_HHMMSS.jpg`, configurable in Settings;
-   - Usage: click to trigger screenshot.
+   - Функция: сохраняет текущий кадр как изображение.
+   - Структура пути вывода: `recordings/snapshots/YYYYMMDD/snapshot_YYYYMMDD_HHMMSS.jpg`, настраивается в Settings;
+   - Использование: нажмите, чтобы сделать снимок.
 
 ---
 
-#### 4.3.3. Monitor Status Section
+#### 4.3.3. Секция Monitor Status
 
-`Monitor Status` is an area that aggregates system runtime information and refreshes dynamically according to current system settings.
+`Monitor Status` — область, агрегирующая информацию о работе системы и динамически обновляемая в соответствии с текущими настройками системы.
 
-The table below provides a structured explanation of core fields:
+Приведённая ниже таблица даёт структурированное объяснение основных полей:
 
-| Field | Format | Meaning | Usage & Troubleshooting |
+| Поле | Формат | Значение | Использование и устранение неполадок |
 |------|----------|------|----------------|
-| **Ingest** | Boolean (ON / OFF) | Whether camera uploads are being accepted | If OFF, `/upload` will be rejected. If no video appears, check this first |
-| **Recording** | Boolean (ON / OFF) | Whether video recording is currently active | If ON but no file is generated → check `Output Root`, codec, or recording thread |
-| **Last frame age** | Number (seconds) | Time since the last successfully written frame | Should remain at small fractions of a second. If continuously increasing → upload interrupted or rejected |
-| **Upload FPS** | Number (frames/sec) | Estimated upload frame rate | Close to 0 → CamFlow not uploading or Ingest is OFF |
-| **Stream FPS** | Number (frames/sec) | Browser MJPEG refresh rate | Reduce if browser lags; too high increases CPU usage |
-| **JPEG Quality** | Number (0–100) | Preview image compression quality | Higher quality = clearer image but higher load; high quality + high FPS may cause performance pressure |
-| **Record FPS** | Number (frames/sec) | Recording frame rate | Too high increases disk pressure; too low results in choppy video |
-| **Segment Seconds** | Number (seconds) | Video segmentation duration | Reduce if files become too large; too small generates many files |
-| **Recording file** | String (file path) | Current video file being written | If `Recording = ON` but empty → recording thread not functioning properly |
-| **Rec elapsed** | Time string (HH:MM:SS) | Duration of current recording session | If not increasing → recording not actually started |
-| **Seg remaining** | Number (seconds) | Remaining time for current segment | Abnormal jumps → time configuration or segmentation logic error |
-| **Upload counts** | Structured counter fields | Upload result statistics | Increases when Ingest is ON; contains multiple subfields |
+| **Ingest** | Логическое (ON / OFF) | Принимаются ли загрузки с камеры | Если OFF, `/upload` будет отклонён. Если видео не появляется, проверьте это первым |
+| **Recording** | Логическое (ON / OFF) | Активна ли видеозапись сейчас | Если ON, но файл не создаётся → проверьте `Output Root`, кодек или поток записи |
+| **Last frame age** | Число (секунды) | Время с момента последнего успешно записанного кадра | Должно оставаться на малых долях секунды. Если непрерывно растёт → загрузка прервана или отклонена |
+| **Upload FPS** | Число (кадров/сек) | Оценочная частота кадров загрузки | Близко к 0 → CamFlow не загружает или Ingest выключен |
+| **Stream FPS** | Число (кадров/сек) | Частота обновления MJPEG в браузере | Уменьшите, если браузер тормозит; слишком высокое увеличивает нагрузку на ЦП |
+| **JPEG Quality** | Число (0–100) | Качество сжатия изображения предпросмотра | Более высокое качество = более чёткое изображение, но большая нагрузка; высокое качество + высокая FPS могут создать нагрузку на производительность |
+| **Record FPS** | Число (кадров/сек) | Частота кадров записи | Слишком высокое увеличивает давление на диск; слишком низкое даёт рваное видео |
+| **Segment Seconds** | Число (секунды) | Длительность сегментации видео | Уменьшите, если файлы становятся слишком большими; слишком малое создаёт много файлов |
+| **Recording file** | Строка (путь к файлу) | Текущий видеофайл, в который идёт запись | Если `Recording = ON`, но пусто → поток записи работает некорректно |
+| **Rec elapsed** | Строка времени (HH:MM:SS) | Длительность текущей сессии записи | Если не растёт → запись фактически не начата |
+| **Seg remaining** | Число (секунды) | Оставшееся время текущего сегмента | Аномальные скачки → ошибка настройки времени или логики сегментации |
+| **Upload counts** | Структурированные поля-счётчики | Статистика результатов загрузок | Растёт, когда Ingest включён; содержит несколько подполей |
 
 ---
 
-#### Upload counts Field Breakdown:
+#### Разбор поля Upload counts:
 
-| Subfield | Meaning | Normal Trend | Abnormal Explanation |
+| Подполе | Значение | Нормальная тенденция | Объяснение аномалии |
 |--------|------|----------|----------|
-| **200_ok** | Successful upload and write count | Should continuously increase | If not increasing, no valid uploads |
-| **400_missing_image** | Request missing `image` field | Should remain 0 | Client field name error |
-| **400_decode_failed** | Data received but failed to decode | Should remain 0 | Data corruption or non-JPEG content |
-| **503_ingest_disabled** | Rejected uploads due to Ingest OFF | Increases when `Ingest = OFF` | Ingest not enabled |
+| **200_ok** | Число успешных загрузок и записей | Должно непрерывно расти | Если не растёт, нет действительных загрузок |
+| **400_missing_image** | Запрос без поля `image` | Должно оставаться 0 | Ошибка имени поля на клиенте |
+| **400_decode_failed** | Данные получены, но не декодированы | Должно оставаться 0 | Повреждение данных или не-JPEG содержимое |
+| **503_ingest_disabled** | Отклонённые загрузки из-за выключенного Ingest | Растёт, когда `Ingest = OFF` | Ingest не включён |
 
 ---
 
-#### 4.3.4. Logs Section
+#### 4.3.4. Секция Logs
 
-Below `Monitor Status`, there is a collapsible Logs area used to view real-time server runtime logs.
+Под `Monitor Status` есть сворачиваемая область Logs для просмотра журналов работы сервера в реальном времени.
 
-- Collapsed by default; click the `Logs` row to expand;
-- Logs are read from `log/server.log` (generated during project runtime);
-- When the system encounters issues, open the Logs section to inspect runtime information.
+- Свёрнуто по умолчанию; нажмите строку `Logs`, чтобы раскрыть;
+- Журналы читаются из `log/server.log` (создаётся во время работы проекта);
+- Когда система сталкивается с проблемами, откройте секцию Logs, чтобы осмотреть информацию о работе системы.
 
-> Note: Logs only display the most recent 50 entries.  
-> To review earlier logs, open the `log/server.log` file directly to view the complete content.
+> Примечание: журналы показывают только последние 50 записей.  
+> Чтобы просмотреть более ранние журналы, откройте файл `log/server.log` напрямую, чтобы увидеть полное содержимое.
 
 ---
 
-#### 4.3.5. Settings Section
+#### 4.3.5. Секция Settings
 
-The right-side Settings panel contains system parameter input fields and configuration buttons.  
-When modifying system configuration, parameters must first be adjusted in the Settings area and then applied to the system.
+Правая панель Settings содержит поля ввода системных параметров и кнопки конфигурации.  
+При изменении конфигурации системы параметры сначала нужно скорректировать в области Settings, а затем применить к системе.
 
-① Settings Fields
+① Поля Settings
 
-The table below explains configuration options available in the Dashboard.  
-> It is recommended to understand the “purpose” and “recommended range rationale” before modifying parameters to avoid performance or stability issues.
+Приведённая ниже таблица объясняет параметры конфигурации, доступные в Dashboard.  
+> Рекомендуется понять «назначение» и «обоснование рекомендуемого диапазона» перед изменением параметров, чтобы избежать проблем с производительностью или стабильностью.
 
-| Configuration | Format | Purpose | Recommended Range |
+| Конфигурация | Формат | Назначение | Рекомендуемый диапазон |
 |------|----------|------|--------------|
-| **Viewing mode** | Default / Privacy | Controls visitor access | See [viewing modes](#privacy-mode); changing this setting persists configuration even with Autosave off. |
-| **Stream FPS** | Number (frames/sec) | Controls MJPEG refresh rate in browser | Recommended 8–15. Too high increases CPU and bandwidth usage; below 5 causes noticeable lag. |
-| **JPEG Quality** | Number | Controls JPEG compression quality | Recommended 60–80. Too low causes blur; too high significantly increases CPU load at high FPS. |
-| **Record FPS** | Number (frames/sec) | Controls recording frame rate | Recommended 10–15. Too high increases disk pressure and file size; below 8 reduces smoothness. |
-| **Segment Secs** | Number (seconds) | Controls video segmentation duration | Recommended 60–3600. Too large creates huge files; too small creates many fragments. |
-| **Output Root** | String (file path) | Video and snapshot output directory | Recommended default `recordings`; avoid system root directories or unauthorized paths. |
-| **Cam Name** | String (identifier) | Camera identifier written into filenames | Recommended simple identifiers (e.g., `phone1`); avoid spaces or special characters. |
-| **Codec** | String (FourCC) | Video encoding format: `mp4v` / `XVID` / `MJPG` / `avc1` | `mp4v` is the recommended Windows default. The recorder falls back to XVID/MJPG if needed. `avc1` requires an H.264/OpenH264 library compatible with the installed OpenCV build. |
-| **Autosave** | Boolean (true / false) | Whether to automatically write to `config.json` after clicking Apply | Recommended enabled during development; disable during frequent experimentation to avoid overwriting configurations. |
+| **Viewing mode** | Default / Privacy | Контролирует доступ посетителей | См. [режимы просмотра](#privacy-mode); изменение этого параметра сохраняет конфигурацию даже при выключенном Autosave. |
+| **Stream FPS** | Число (кадров/сек) | Контролирует частоту обновления MJPEG в браузере | Рекомендуется 8–15. Слишком высокое увеличивает использование ЦП и пропускной способности; ниже 5 вызывает заметные задержки. |
+| **JPEG Quality** | Число | Контролирует качество сжатия JPEG | Рекомендуется 60–80. Слишком низкое вызывает размытие; слишком высокое значительно увеличивает нагрузку на ЦП при высокой FPS. |
+| **Record FPS** | Число (кадров/сек) | Контролирует частоту кадров записи | Рекомендуется 10–15. Слишком высокое увеличивает давление на диск и размер файла; ниже 8 снижает плавность. |
+| **Segment Secs** | Число (секунды) | Контролирует длительность сегментации видео | Рекомендуется 60–3600. Слишком большое создаёт огромные файлы; слишком малое создаёт много фрагментов. |
+| **Output Root** | Строка (путь к файлу) | Каталог вывода видео и снимков | Рекомендуется значение по умолчанию `recordings`; избегайте системных корневых каталогов или несанкционированных путей. |
+| **Cam Name** | Строка (идентификатор) | Идентификатор камеры, записываемый в имена файлов | Рекомендуются простые идентификаторы (например, `phone1`); избегайте пробелов или специальных символов. |
+| **Codec** | Строка (FourCC) | Формат кодирования видео: `mp4v` / `XVID` / `MJPG` / `avc1` | `mp4v` — рекомендуемый стандарт для Windows. При необходимости recorder использует резервный XVID/MJPG. `avc1` требует библиотеку H.264/OpenH264, совместимую с установленной сборкой OpenCV. |
+| **Autosave** | Логическое (true / false) | Автоматически ли записывать в `config.json` после нажатия Apply | Рекомендуется включать во время разработки; выключать при частых экспериментах, чтобы не перезаписывать конфигурации. |
 
 ---
 
-> Note: Parameter modifications do not take effect automatically.  
-> Changes must be applied using the buttons below.  
-> It is recommended to stop current system tasks before applying new parameters to ensure full effect.
+> Примечание: изменения параметров не применяются автоматически.  
+> Изменения должны быть применены с помощью приведённых ниже кнопок.  
+> Рекомендуется остановить текущие задачи системы перед применением новых параметров, чтобы обеспечить полный эффект.
 
-② AI Monitoring Section
+② Секция AI Monitoring
 
-Under default configuration, the AI module is disabled.  
-To enable it, click the `Enable` button on the right side of the AI Monitoring panel.  
-Once enabled, AI settings and status sections will appear on the Dashboard.
+При конфигурации по умолчанию модуль AI отключён.  
+Чтобы включить его, нажмите кнопку `Enable` в правой части панели AI Monitoring.  
+После включения на Dashboard появятся секции настроек и статуса AI.
 
-For detailed information, refer to [4.4. AI Monitoring Features](#sec44).
+Подробную информацию см. в [4.4. Функции AI Monitoring](#sec44).
 
-③ Application Buttons
+③ Кнопки применения
 
-- Difference between Apply / Save / Load
+- Различие между Apply / Save / Load
 
   - **Apply**
-    - Submits current input parameters to backend `/api/config` and immediately updates runtime configuration.
-    - If parameters are invalid (out of range / wrong type), the backend will reject and return an error message.
+    - Отправляет текущие введённые параметры в backend `/api/config` и немедленно обновляет конфигурацию среды выполнения.
+    - Если параметры недействительны (вне диапазона / неверный тип), backend отклонит их и вернёт сообщение об ошибке.
 
   - **Save**
-    - Writes the current configuration to local file (`app/config/config.json`).
+    - Записывает текущую конфигурацию в локальный файл (`app/config/config.json`).
 
   - **Load**
-    - Loads `config.json` from disk and refreshes the page form.
+    - Загружает `config.json` с диска и обновляет форму страницы.
 
-> - On first system startup, a pre-filled configuration set is used;  
-> - To customize system configuration, modify parameters in the Settings panel and click `Apply`;  
-> - (If `Autosave` is not enabled) click `Save` to persist configuration locally;  
-> - Later, click `Load` to reload saved configuration into the form without re-entering values.
+> - При первом запуске системы используется заранее заполненный набор конфигурации;  
+> - Чтобы настроить конфигурацию системы, измените параметры в панели Settings и нажмите `Apply`;  
+> - (Если `Autosave` не включён) нажмите `Save`, чтобы сохранить конфигурацию локально;  
+> - Позже нажмите `Load`, чтобы снова загрузить сохранённую конфигурацию в форму, не вводя значения заново.
 
 ---
 
 <a id="recording-storage"></a>
 
-##### 4.3.5.1. Recording Retention and Disk Protection
+##### 4.3.5.1. Хранение записей и защита диска
 
-| Setting | Default | Behavior |
+| Настройка | Значение по умолчанию | Поведение |
 | --- | --- | --- |
-| `record_cleanup_enabled` | false | Explicit administrator confirmation enables permanent deletion of registered completed recordings |
-| `record_retention_days` | 7 | Expired recordings are removed first |
-| `record_max_storage_gb` | 20 GiB | Remove oldest completed recordings when over quota |
-| `record_min_free_gb` | 1 GiB | Stop/reject recording when disk space is low; display the reason in Dashboard |
+| `record_cleanup_enabled` | false | Явное подтверждение администратора разрешает безвозвратное удаление зарегистрированных завершённых записей |
+| `record_retention_days` | 7 | Просроченные записи удаляются первыми |
+| `record_max_storage_gb` | 20 GiB | Удалять самые старые завершённые записи при превышении квоты |
+| `record_min_free_gb` | 1 GiB | Останавливать/отклонять запись, когда свободного места мало; отображать причину в Dashboard |
 
-Cleanup only touches completed recordings registered by this version under the current Output Root's `videos` directory. It excludes active segments, snapshots, unregistered historical files and manually placed files, and refuses symlinks or Windows junctions. Deletion bypasses the recycle bin. Unregistered files still consume disk space and need separate management. Periodic quota enforcement is not a hard disk quota; an active segment can temporarily exceed it. Changing the output directory leaves previous directories for manual management.
+Очистка затрагивает только завершённые записи, зарегистрированные этой версией в директории `videos` текущего Output Root. Она исключает активные сегменты, снимки, незарегистрированные исторические файлы и файлы, размещённые вручную, и отказывается обрабатывать symlink или Windows junction. Удаление минует корзину. Незарегистрированные файлы по-прежнему занимают место на диске и требуют отдельного управления. Периодическое применение квоты не является жёсткой квотой диска; активный сегмент может временно её превысить. Изменение выходной директории оставляет предыдущие директории для ручного управления.
 
-Adjust these fields in Settings and click **Apply** as an administrator; enabling cleanup requires confirmation of permanent deletion.
+Измените эти поля в настройках и нажмите **Применить** как администратор; включение очистки требует подтверждения безвозвратного удаления.
 
 ---
 
-#### 4.3.6. Shutdown
+#### 4.3.6. Завершение работы
 
-> ⚠️ This is the “terminate service” button.  
-> The top `Shutdown` button triggers the system shutdown procedure: stop recording, disable ingest, stop the Python service, and attempt to close the page.
+> ⚠️ Это кнопка «остановить сервис».  
+> Верхняя кнопка `Shutdown` запускает процедуру завершения работы системы: остановка записи, отключение Ingest, остановка Python-сервиса и попытка закрыть страницу.
 
 ---
 
 <a id="admin-access"></a>
 
-#### 4.3.7. Administrator Access and Token Recovery
+#### 4.3.7. Доступ администратора и восстановление токена
 
-Expand the top **Login & camera pairing** row and enter the administrator token printed once by the PC on first startup. The row starts collapsed on every page load and also contains logout and device-management controls.
+Разверните верхнюю строку **Вход и спаривание камеры** и введите токен администратора, однократно напечатанный ПК при первом запуске. Строка всегда начинается свёрнутой при каждой загрузке страницы и также содержит элементы выхода и управления устройствами.
 
-The server stores a salted token hash, not the plaintext token. Administrator sessions last 8 hours and use a non-persistent HttpOnly / SameSite cookie. Log out explicitly: some browsers restore session cookies when restoring windows.
+Сервер хранит хеш токена с солью, а не токен в открытом виде. Сессии администратора длятся 8 часов и используют непостоянную HttpOnly / SameSite cookie. Выполняйте выход явно: некоторые браузеры восстанавливают session-cookies при восстановлении окон.
 
-To recover access, run `python server.py --reset-admin-token` locally on the PC. It prints a replacement token and exits; the old token and all administrator sessions become invalid, while paired cameras remain valid. Keep `app/config/auth.sqlite3` private and out of version control. Local filesystem access still needs OS permissions.
+Для восстановления доступа выполните `python server.py --reset-admin-token` локально на ПК. Он печатает заменённый токен и завершается; старый токен и все сессии администратора становятся недействительными, а спаренные камеры остаются действительными. Держите `app/config/auth.sqlite3` в приватности и вне контроля версий. Доступ к локальной файловой системе по-прежнему требует разрешений ОС.
 
 <a id="privacy-mode"></a>
 
-#### 4.3.8. Default and Privacy Viewing Modes
+#### 4.3.8. Режим просмотра по умолчанию и режим конфиденциальности
 
-| Mode / identity | Permission |
+| Режим / роль | Разрешения |
 | --- | --- |
-| Default-mode visitor | Live view and basic status only |
-| Privacy-mode visitor | Login page only; video and status require administrator login |
-| Administrator | Configuration, recording, snapshots, logs, AI events, shutdown and device management |
-| Paired CamFlow | Image upload only, no management permissions |
+| Посетитель в режиме по умолчанию | Только живой просмотр и базовый статус |
+| Посетитель в режиме конфиденциальности | Только страница входа; видео и статус требуют входа администратора |
+| Администратор | Конфигурация, запись, снимки, логи, AI-события, завершение работы и управление устройствами |
+| Спаренная CamFlow | Только загрузка изображений, без прав управления |
 
-Select **Viewing mode** and click **Apply**. Changing the mode saves the current configuration even with Autosave off. Privacy mode stops existing anonymous streams; it cannot recall images already viewed or saved.
+Выберите **Режим просмотра** и нажмите **Применить**. Изменение режима сохраняет текущую конфигурацию даже при выключенном автосохранении. Режим конфиденциальности останавливает существующие анонимные потоки; он не может отозвать уже просмотренные или сохранённые изображения.
 
-Authentication does not encrypt transport. Default HTTP is for trusted LANs, not direct public exposure; configure HTTPS for untrusted networks. Cloud AI sends sampled images to the selected model provider.
+Аутентификация не шифрует транспорт. HTTP по умолчанию предназначен для доверенных локальных сетей, а не для прямой публикации в интернете; настройте HTTPS для недоверенных сетей. Облачный AI отправляет выборочные изображения выбранному Provider модели.
 
 <a id="camera-pairing"></a>
 
-#### 4.3.9. Camera Pairing and Revocation
+#### 4.3.9. Спаривание камер и отзыв
 
-1. Sign in as administrator and click **Add CamFlow**.
-2. Enter the 8-character code in the phone's Settings together with its server address and device name.
-3. Tap **Pair / Re-pair**, then **Save**, and enable **Ingest** in Dashboard.
+1. Войдите как администратор и нажмите **Добавить CamFlow**.
+2. Введите 8-символьный код в настройках телефона вместе с его адресом сервера и именем устройства.
+3. Нажмите **Спаривание / Переспаривание**, затем **Сохранить**, и включите **Ingest** в Dashboard.
 
-Codes are single-use and expire after 5 minutes; generating a new code replaces the previous one. Never enter the administrator token on the phone. Follow the [CamFlow pairing guide](CamFlow_UserGuide.md#camera-pairing) for phone-side operations.
+Коды одноразовые и истекают через 5 минут; генерация нового кода заменяет предыдущий. Никогда не вводите токен администратора на телефоне. Следуйте [руководству по спариванию CamFlow](CamFlow_UserGuide.md#camera-pairing) для операций на стороне телефона.
 
-Android Keystore encrypts each device credential, binds it to its server address and excludes it from backups. The server stores only device-token hashes. Click **Revoke** for an individual camera to invalidate its credential. Changing servers, clearing local credentials or revocation requires pairing again.
+Android Keystore шифрует каждый device credential, привязывает его к адресу сервера и исключает из резервных копий. Сервер хранит только хеши device-token. Нажмите **Отзыв** для отдельной камеры, чтобы сделать её credential недействительным. Изменение серверов, очистка локальных credentials или отзыв требуют повторного спаривания.
 
-Multiple paired phones share one frame buffer; they do not create independent camera feeds. See [upload diagnostics](CamFlow_UserGuide.md#upload-diagnostics) for rejected or stalled uploads.
+Несколько спаренных телефонов разделяют один frame buffer; они не создают независимые потоки камер. См. [диагностику загрузки](CamFlow_UserGuide.md#upload-diagnostics) для отклонённых или зависших загрузок.
 
 ---
 
 <a id="sec44"></a>
 
-### 4.4. AI Monitoring Features (Optional Feature) [⌃](#top)
+### 4.4. Функции AI-мониторинга (опциональная функция) [⌃](#top)
 
-> The AI module is an **optional enhancement module**:  
-> Even without configuring any API Key, the system can fully operate basic functions such as **video upload / live preview / recording / snapshot / logs**.
+> AI-модуль — это **опциональный модуль расширения**:  
+> Даже без настройки какого-либо API Key система может полностью выполнять базовые функции, такие как **загрузка видео / живой просмотр / запись / снимок / логи**.
 
-Sentinel’s AI module adopts an event-driven **layered trigger-based visual cognition architecture**.  
-Instead of performing inference on every frame, the system uses lightweight motion detection, a dual-state machine control mechanism, and structured event management to achieve **lower-cost** long-term intelligent monitoring.
+AI-модуль Sentinel использует событийно-ориентированную **слоистую архитектуру визуального распознавания с триггерным запуском**.  
+Вместо выполнения вывода на каждом кадре система использует лёгкое обнаружение движения, механизм управления автоматом с двумя состояниями и структурированное управление событиями, чтобы достичь **более дешёвого** долгосрочного интеллектуального мониторинга.
 
-The modular design supports pluggable models, structured output contracts, and system decoupling, ensuring scalability, interpretability, and maintainability.
+Модульный дизайн поддерживает подключаемые модели, структурированные контракты вывода и развязку системы, обеспечивая масштабируемость, интерпретируемость и поддерживаемость.
 
 ---
 
-#### AI Module Main Workflow Framework (From Frame to Dashboard)
+#### Основная рабочая структура AI-модуля (от кадра до Dashboard)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                            Data Input Layer                    
-│  CamFlow → POST /upload → FrameBuffer (Latest Frame Cache)  
+│                            Слой ввода данных                    
+│  CamFlow → POST /upload → FrameBuffer (кэш последнего кадра)  
 └──────────────────────────────┬──────────────────────────────────────┘
-                               │
-                               ▼
+                                │
+                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                Lightweight Motion Trigger Layer (Cost Reduction)    
-│  - Compute frame difference ratio                            
-│  - If motion_ratio > threshold                                
-│  - Trigger frequency controlled by Motion Min Interval        
+│           Слой лёгкого триггера движения (снижение стоимости)    
+│  - Вычисление отношения изменения кадра                            
+│  - Если motion_ratio > порог                                
+│  - Частота триггеров контролируется Motion Min Interval        
 └──────────────────────────────┬──────────────────────────────────────┘
-                               │
-                               ▼ If triggered, STATE: SLEEP → OBSERVE
+                                │
+                                ▼ Если триггер, STATE: SLEEP → OBSERVE
 ┌─────────────────────────────────────────────────────────────────────┐
-│                     AI State Machine Control Layer            
+│                     Слой управления AI-состояниями            
 │    STATE ∈ { SLEEP, OBSERVE }                                
 │  SLEEP:                                                       
-│    - Only runs motion trigger                                 
-│    - Does not call model                                      
+│    - Только запускает триггер движения                                 
+│    - Не вызывает модель                                      
 │  OBSERVE:                                                     
-│    - Calls model every AI Interval                            
-│    - Manages dwell timing                                     
-│    - Calculates event_duration                                
+│    - Вызывает модель каждые AI Interval                            
+│    - Управляет таймингом присутствия                                     
+│    - Вычисляет event_duration                                
 └──────────────────────────────┬──────────────────────────────────────┘
-                               │
-                               ▼
+                                │
+                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                      Vision Model Interface Layer              
-│  - Construct Prompt (Role + Scene + Session + Extra)         
-│  - Compress JPEG (AI JPEG Quality)                            
-│  - Call third-party vision model API                          
-│  - Receive JSON output                                        
-│  - Perform Output Contract validation                         
+│                      Слой интерфейса визуальной модели              
+│  - Конструирование Prompt (Role + Scene + Session + Extra)         
+│  - Сжатие JPEG (AI JPEG Quality)                            
+│  - Вызов API сторонней визуальной модели                          
+│  - Получение JSON-вывода                                        
+│  - Выполнение проверки Output Contract                         
 └──────────────────────────────┬──────────────────────────────────────┘
-                               │
-                               ▼
+                                │
+                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                 Event Lifecycle Management Layer              
-│  - dwell ≥ threshold → confirmed                              
-│  - No target ≥ End Grace → end event                          
-│  - Write to ai_events.jsonl                                   
-│  - Update AI runtime status                                   
+│                 Слой управления жизненным циклом события              
+│  - dwell ≥ порог подтверждения присутствия → подтверждено                              
+│  - Нет цели ≥ задержка завершения события → завершить событие                          
+│  - Запись в ai_events.jsonl                                   
+│  - Обновление runtime-статуса AI                                   
 └──────────────────────────────┬──────────────────────────────────────┘
-                               │
-                               ▼
+                                │
+                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                      Visualization & Display Layer            
+│                      Слой визуализации и отображения            
 │  - /api/ai_status                                             
-│  - Display current AI Result                                  
-│  - Display Info: Times, Metrics                               
-│  - Display History List                                       
+│  - Отображение текущего AI-результата                                  
+│  - Отображение Info: времена, метрики                               
+│  - Отображение списка истории                                       
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -1038,80 +1030,80 @@ The modular design supports pluggable models, structured output contracts, and s
 
 <a id="sec45"></a>
 
-### 4.5. Dashboard AI Module Guide [⌃](#top)
+### 4.5. Руководство по AI-модулю Dashboard [⌃](#top)
 
-> When the Dashboard page is first opened, the AI module is disabled by default.  
-> Click the `Enable` button on the right side of the AI Monitoring panel to activate the AI module.
+> При первом открытии страницы Dashboard AI-модуль по умолчанию отключён.  
+> Нажмите кнопку `Enable` на правой стороне панели AI Monitoring, чтобы активировать AI-модуль.
 
-The AI module on the Dashboard consists of two parts:
+AI-модуль на Dashboard состоит из двух частей:
 
-- AI Settings (Configuration Area): determines whether AI is enabled, call frequency, thresholds, etc.;
-- AI Status (Information Area): displays state machine status, health status, and AI monitoring history.
+- AI Settings (область конфигурации): определяет, включён ли AI, частоту вызовов, пороги и т. д.;
+- AI Status (информационная область): отображает состояние автомата состояний, состояние здоровья и историю AI-мониторинга.
 
 ---
 
-#### 4.5.1. AI Settings Fields
+#### 4.5.1. Поля AI Settings
 
-It is recommended to understand the purpose of each parameter before enabling the AI module, in order to control model call sensitivity and reasonably tune for different scenarios.
+Рекомендуется понять назначение каждого параметра перед включением AI-модуля, чтобы контролировать чувствительность вызовов модели и разумно настраивать её для разных сценариев.
 
-| Configuration | Format | Purpose | Recommended Value |
+| Конфигурация | Формат | Назначение | Рекомендуемое значение |
 |--------|----------|------|----------|
-| **Provider** | Select option | Selects the active visual model platform | Ark, OpenAI, Gemini, DashScope, SiliconFlow, or OpenAI-compatible / Local. |
-| **Model ID** | String (model ID) | Specifies the generic visual model ID | Use a vision-capable model ID; Ark can be left empty to fall back to Legacy Ark Model. |
-| **Provider Hint** | Auto hint | Shows the default Base URL, key source, and model guidance for the selected Provider | Updates automatically when the Provider changes to reduce configuration mistakes. |
-| **Base URL** | String (endpoint URL) | Custom third-party / local model service URL | Can be left empty for built-in Providers; usually required for `openai_compatible`. |
-| **Provider API Key** | String (key) | Generic model service credential | Must be obtained from the provider. See [4.6. Third-party Model Integration](#sec46). |
-| **Timeout (sec)** | Number (seconds) | Timeout for one model request | Allowed range: 5–120 seconds; default: 30 seconds. |
-| **Legacy Ark Model** | String (model ID) | Backward-compatible Ark / Volcengine model field | Existing deployments can continue using `doubao-seed-2-0-mini-260215`. |
-| **Legacy Ark API Key** | String (key) | Backward-compatible Ark / Volcengine API Key | Used as an Ark fallback only when the generic Provider API Key is empty. |
-| **OBSERVE Interval (sec)** | Number (seconds) | Minimum interval between model calls in OBSERVE state | Recommended 2–3 seconds. Too small increases token consumption. |
-| **Dwell Threshold (sec)** | Number (seconds) | Duration a target must persist before confirming an event | Recommended 3–5 seconds. Increasing reduces occasional false positives. |
-| **End Grace (sec)** | Number (seconds) | Delay before ending event after target disappears | Recommended 2–3 seconds to avoid interruption due to brief occlusion. |
-| **AI JPEG Quality** | Number (50–95) | JPEG compression quality sent to model | Recommended 75–90. Too high increases bandwidth and encoding cost. |
-| **Motion Threshold (ratio)** | Decimal (ratio) | Frame change ratio threshold for motion detection | Recommended 0.1–0.3. Lower values increase sensitivity; raise if AI triggers too frequently. |
-| **Motion Min Interval (sec)** | Number (seconds) | Minimum time between motion triggers | Recommended 1–3 seconds to prevent excessive triggering. |
-| **Prompt Template (Role)** | Long text (role definition) | Defines model role and output format specification | Recommend explicitly requiring “JSON-only output”. |
-| **Scene Profile (Long-term)** | Long text (long-term context) | Provides fixed environmental background description | Describe camera position, scene type, etc. |
-| **Session Focus (Short-term)** | Long text (temporary focus) | Temporary monitoring objective | Example: “Focus on whether strangers enter the area.” |
-| **Extra Prompt / Rules** | Long text (additional rules) | Additional output format, language, or risk evaluation rules | Can specify output language or restrict fields. |
+| **Provider** | Опция выбора | Выбирает активную платформу визуальной модели | Ark, OpenAI, Gemini, DashScope, SiliconFlow или OpenAI-compatible / Local. |
+| **Model ID** | Строка (Model ID) | Указывает общий Model ID визуальной модели | Используйте Model ID визуальной модели; Ark можно оставить пустым для перехода на Legacy Ark Model. |
+| **Provider Hint** | Автоподсказка | Показывает Base URL по умолчанию, источник ключа и рекомендации по модели для выбранного Provider | Обновляется автоматически при изменении Provider, чтобы уменьшить ошибки конфигурации. |
+| **Base URL** | Строка (endpoint URL) | Пользовательский URL сервиса сторонней / локальной модели | Можно оставить пустым для встроенных Provider; обычно требуется для `openai_compatible`. |
+| **Provider API Key** | Строка (ключ) | Credential общего сервиса модели | Должен быть получен от Provider. См. [4.6. Интеграция сторонних моделей](#sec46). |
+| **Timeout (sec)** | Число (секунды) | Таймаут одного запроса к модели | Допустимый диапазон: 5–120 секунд; по умолчанию: 30 секунд. |
+| **Legacy Ark Model** | Строка (Model ID) | Обратимо поле модели Ark / Volcengine | Существующие развёртывания могут продолжать использовать `doubao-seed-2-0-mini-260215`. |
+| **Legacy Ark API Key** | Строка (ключ) | Обратимый Ark / Volcengine API Key | Используется как резерв Ark только когда общий Provider API Key пуст. |
+| **OBSERVE Interval (sec)** | Число (секунды) | Минимальный интервал между вызовами модели в состоянии OBSERVE | Рекомендуется 2–3 секунды. Слишком маленькое значение увеличивает потребление токенов. |
+| **Dwell Threshold (sec)** | Число (секунды) | Длительность, которую цель должна сохраняться перед подтверждением события | Рекомендуется 3–5 секунд. Увеличение снижает случайные ложные срабатывания. |
+| **End Grace (sec)** | Число (секунды) | Задержка перед завершением события после исчезновения цели | Рекомендуется 2–3 секунды, чтобы избежать прерывания из-за кратковременного перекрытия. |
+| **AI JPEG Quality** | Число (50–95) | Качество сжатия JPEG, отправляемого модели | Рекомендуется 75–90. Слишком высокое значение увеличивает пропускную способность и стоимость кодирования. |
+| **Motion Threshold (ratio)** | Десятичное число (отношение) | Порог отношения изменения кадра для обнаружения движения | Рекомендуется 0.1–0.3. Более низкие значения повышают чувствительность; увеличьте, если AI срабатывает слишком часто. |
+| **Motion Min Interval (sec)** | Число (секунды) | Минимальное время между триггерами движения | Рекомендуется 1–3 секунды, чтобы предотвратить чрезмерные триггеры. |
+| **Prompt Template (Role)** | Длинный текст (определение роли) | Определяет роль модели и спецификацию формата вывода | Рекомендуется явно требовать «вывод только в JSON». |
+| **Scene Profile (Long-term)** | Длинный текст (долгосрочный контекст) | Предоставляет фиксированное описание окружения | Опишите положение камеры, тип сцены и т. д. |
+| **Session Focus (Short-term)** | Длинный текст (временный фокус) | Временная цель мониторинга | Пример: «Фокус на том, входят ли незнакомцы в область». |
+| **Extra Prompt / Rules** | Длинный текст (дополнительные правила) | Дополнительные правила формата вывода, языка или оценки риска | Можно указать язык вывода или ограничить поля. |
 
-> Parameters usually require tuning according to lighting conditions, camera angle, and target types.  
-> After modification, observe 1–2 complete event cycles before evaluating effectiveness.
+> Параметры обычно требуют настройки в соответствии с условиями освещения, углом камеры и типами целей.  
+> После изменения наблюдайте 1–2 полных цикла события перед оценкой эффективности.
 
 ---
 
-① Detailed Explanation of Text-type Parameters (Recommended Reading)
+① Подробное объяснение текстовых параметров (рекомендуется к прочтению)
 
-> The following four fields belong to Prompt engineering parameters and directly affect model output structure and semantic understanding.
+> Следующие четыре поля относятся к параметрам Prompt engineering и напрямую влияют на структуру вывода модели и семантическое понимание.
 
-- Prompt Template (Role): defines the model’s role and output structure.
+- Prompt Template (Role): определяет роль модели и структуру вывода.
 
-Example:
+Пример:
 
 ```
 You are a video surveillance assistant. You will receive a monitoring image and background information. Only output a JSON object including whether a person is present, number of people, activity, risk level, and a brief summary.
 ```
 
-- Scene Profile (Long-term): provides long-term fixed background context to help the model determine what is considered “abnormal”.
+- Scene Profile (Long-term): предоставляет долгосрочный фиксированный фоновый контекст, помогающий модели определять, что считается «ненормальным».
 
-Example:
+Пример:
 
 ```
 Home scenario: the camera faces the living room.
 Office scenario: the camera faces the workspace area. Multiple people during working hours are normal.
 ```
 
-- Session Focus (Short-term): temporary task configuration that can change according to short-term requirements.
+- Session Focus (Short-term): временная конфигурация задачи, которая может меняться в соответствии с краткосрочными требованиями.
 
-Example:
+Пример:
 
 ```
 Currently focus on whether children approach the balcony area.
 ```
 
-- Extra Prompt / Rules: supplementary output and language constraints.
+- Extra Prompt / Rules: дополнительные ограничения вывода и языка.
 
-Example:
+Пример:
 
 ```
 Use Chinese for the summary.
@@ -1120,21 +1112,21 @@ If uncertain, keep has_person=false.
 
 ---
 
-② Output Contract and Automatic Structure Constraint Mechanism
+② Output Contract и механизм автоматического структурного ограничения
 
-To ensure stable parsing of model outputs in the Dashboard, the backend implements an **Output Contract mechanism**.
+Для обеспечения стабильного разбора выводов модели в Dashboard backend реализует **механизм Output Contract**.
 
-> Regardless of how the task is described in the Prompt Template, the model’s final output must conform to the predefined JSON structure required by the system.
+> Независимо от того, как задача описана в Prompt Template, итоговый вывод модели должен соответствовать предопределённой JSON-структуре, требуемой системой.
 
 ---
 
-#### 4.5.2. AI Status Section
+#### 4.5.2. Раздел AI Status
 
-This area visualizes the runtime status of the backend AI state machine in real time.
+Эта область визуализирует runtime-статус backend AI-автомата состояний в реальном времени.
 
-① Status Header
+① Заголовок статуса
 
-Located at the top of the AI Status panel, displaying the current state machine runtime status:
+Расположен в верхней части панели AI Status и отображает текущий runtime-статус автомата состояний:
 
 ```
 ┌────────────────────────┬──────────────────┬─────────────────┬──────────────────────┐
@@ -1142,27 +1134,27 @@ Located at the top of the AI Status panel, displaying the current state machine 
 └────────────────────────┴──────────────────┴─────────────────┴──────────────────────┘
 ```
 
-| Field | Format | Meaning |
+| Поле | Формат | Значение |
 |--------|----------|------|
-| STATE | SLEEP / OBSERVE | Indicates whether AI is currently active |
-| Event | String (evt_xxxxx) | Current active event ID |
-| Dwell | Yes / No | Whether dwell confirmation threshold has been reached |
-| Health | Fine / Error | Whether the most recent model call succeeded |
+| STATE | SLEEP / OBSERVE | Указывает, активен ли AI в текущий момент |
+| Event | Строка (evt_xxxxx) | Текущий активный ID события |
+| Dwell | Yes / No | Достигнут ли порог подтверждения присутствия |
+| Health | Fine / Error | Удался ли последний вызов модели |
 
-- Model Info shows the current Provider, client type, model ID, Base URL, whether the API Key is configured, request timeout, and a `Ready` / `Needs ...` configuration status.
+- Model Info показывает текущий Provider, тип клиента, Model ID, Base URL, настроен ли API Key, таймаут запроса и статус конфигурации `Ready` / `Needs ...`.
 
-- State Machine Description
+- Описание автомата состояний
 
-🔹 SLEEP: only runs traditional vision algorithms; does not call the vision model; low resource consumption.
+🔹 SLEEP: только запускает традиционные визуальные алгоритмы; не вызывает визуальную модель; низкое потребление ресурсов.
 
-🔹 OBSERVE: periodically calls the vision model, analyzes structured fields, and performs event recording.
+🔹 OBSERVE: периодически вызывает визуальную модель, анализирует структурированные поля и выполняет запись событий.
 
 ---
 
-② Last AI Result
+② Последний AI-результат
 
-> To stabilize output structure, the system enforces an Output Contract mechanism.  
-> The model must output a JSON object containing at least the following fields:
+> Для стабилизации структуры вывода система применяет механизм Output Contract.  
+> Модель должна вывести JSON-объект, содержащий как минимум следующие поля:
 
 ```
 {
@@ -1175,30 +1167,30 @@ Located at the top of the AI Status panel, displaying the current state machine 
 }
 ```
 
-After structured extraction, the Dashboard presents a human-readable format (example):
+После структурированного извлечения Dashboard представляет формат, читаемый человеком (пример):
 
 ```
 Person: No | Count: 0 | Activity: unknown | Risk: info | Conf: 99%
 Summary: This indoor CCTV scene contains no people...
 ```
 
-| Field | JSON Key | Format | Description |
+| Поле | JSON Key | Формат | Описание |
 |--------|----------|------|------|
-| Person | has_person | Boolean (Yes / No) | Whether a person is detected |
-| Count | person_count | Number | Number of people |
-| Activity | activity | String | Behavior description |
-| Risk | risk_level | info / warn / critical | Risk level |
-| Conf | confidence | 0–100% | Model confidence |
-| Summary | summary | String | Natural language summary |
+| Person | has_person | Boolean (Yes / No) | Обнаружен ли человек |
+| Count | person_count | Число | Количество людей |
+| Activity | activity | Строка | Описание поведения |
+| Risk | risk_level | info / warn / critical | Уровень риска |
+| Conf | confidence | 0–100% | Уверенность модели |
+| Summary | summary | Строка | Резюме на естественном языке |
 
-The system includes Output Contract safeguards.  
-If the model response is incomplete, it will be processed to ensure the Dashboard always receives valid output.
+Система включает защитные механизмы Output Contract.  
+Если ответ модели неполон, он будет обработан, чтобы Dashboard всегда получал корректный вывод.
 
 ---
 
-③ Time Information (Times)
+③ Информация о времени (Times)
 
-Calculates runtime timing information for the event monitoring module (example):
+Вычисляет информацию о тайминге runtime для модуля мониторинга событий (пример):
 
 ```
 Last trigger: 2026-02-24 01:48:37 (2m ago)
@@ -1206,177 +1198,177 @@ Last AI call: 2026-02-24 01:51:05 (6s ago)
 Event start:  2026-02-24 01:48:37 (2m ago)
 ```
 
-| Field | Meaning |
+| Поле | Значение |
 |--------|----------|
-| Last trigger | Most recent motion trigger time |
-| Last AI call | Most recent model call time |
-| Event start | Start time of current event |
+| Last trigger | Время последнего триггера движения |
+| Last AI call | Время последнего вызова модели |
+| Event start | Время начала текущего события |
 
 ---
 
-④ Event Metrics (Metrics) (Example)
+④ Метрики события (Metrics) (пример)
 
 ```
 Person present (acc): 115.0 s
 Event duration: 153.9 s
 ```
 
-| Metric | Meaning |
+| Метрика | Значение |
 |--------|----------|
-| Person present (acc) | Accumulated time a person was confirmed present during event |
-| Event duration | Total duration of the current event |
+| Person present (acc) | Накопленное время, в течение которого присутствие человека подтверждалось во время события |
+| Event duration | Полная длительность текущего события |
 
-Note: Only after dwell_confirmed (confirmed persistent presence) does the system begin accumulating effective person presence time.
-
----
-
-⑤ Raw JSON Output
-
-Below Metrics, there is a collapsible Raw JSON section used to view the latest original JSON output from the model.
-
-- Collapsed by default; click `Raw JSON` to expand.
-
-Useful for debugging Prompt configuration and checking field completeness.
+Примечание: только после dwell_confirmed (подтверждённого устойчивого присутствия) система начинает накапливать эффективное время присутствия человека.
 
 ---
 
-⑥ History List
+⑤ Необработанный JSON-вывод
 
-When the system runs for the first time, this section is empty.  
-After an event ends, it is written into `log/ai_events.jsonl` and displayed in chronological order on the page (example):
+Ниже Metrics находится сворачиваемая секция Raw JSON, используемая для просмотра последнего исходного JSON-вывода модели.
+
+- Свёрнута по умолчанию; нажмите `Raw JSON`, чтобы развернуть.
+
+Полезно для отладки конфигурации Prompt и проверки полноты полей.
+
+---
+
+⑥ Список истории
+
+Когда система запускается впервые, эта секция пуста.  
+После завершения события оно записывается в `log/ai_events.jsonl` и отображается на странице в хронологическом порядке (пример):
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│ 2026-02-24 01:51:03   AI   🔴 critical                    
-│ Person: Yes | Count: 1 | Activity: lingering              
-│ Risk Level: critical | Confidence: 99%                    
-│ Summary: A single person is lying prone...                
+│ 2026-02-24 01:51:03   AI   🔴 критический                  │
+│ Человек: Да | Кол-во: 1 | Активность: задерживается       │
+│ Уровень риска: critical | Уверенность: 99%                │
+│ Резюме: один человек лежит неподвижно...                  │
 └────────────────────────────────────────────────────────────┘
 ┌────────────────────────────────────────────────────────────┐
-│ 2026-02-24 01:50:48   AI   🟢 info                        
-│ Person: Yes | Count: 1 | Activity: passing                
-│ Risk Level: info | Confidence: 98%                        
-│ Summary: One person is walking through the indoor space…  
+│ 2026-02-24 01:50:48   AI   🟢 info                        │
+│ Человек: Да | Кол-во: 1 | Активность: проходит            │
+│ Уровень риска: info | Уверенность: 98%                    │
+│ Резюме: один человек проходит через закрытое пространство…│
 └────────────────────────────────────────────────────────────┘
-                            ...
-                            ...
-                            ...
+                             ...
+                             ...
+                             ...
 ```
 
-> Note: The History List only displays the most recent 20 records.  
-> To review earlier entries, open `log/ai_events.jsonl` directly to view the complete content.
+> Примечание: список истории отображает только последние 20 записей.  
+> Чтобы просмотреть более ранние записи, откройте `log/ai_events.jsonl` напрямую, чтобы увидеть полное содержимое.
 
 ---
 
 <a id="sec46"></a>
 
-### 4.6. Third-party Model Integration [⌃](#top)
+### 4.6. Интеграция сторонних моделей [⌃](#top)
 
-Sentinel's AI module now uses a switchable visual model Provider architecture. You can switch to OpenAI, Gemini, DashScope, SiliconFlow, or other third-party / local visual model services that expose an OpenAI-compatible API through configuration.
+AI-модуль Sentinel теперь использует переключаемую архитектуру Provider визуальных моделей. Вы можете переключиться на OpenAI, Gemini, DashScope, SiliconFlow или другие сторонние / локальные сервисы визуальных моделей, которые предоставляют OpenAI-compatible API через конфигурацию.
 
-> Model switching can be completed through the Dashboard configuration panel, `app/config/config.json`, environment variables, or code defaults. The Dashboard can edit Provider / Model / Base URL / API Key / Timeout and display the currently effective model information.
+> Переключение модели может быть выполнено через панель конфигурации Dashboard, `app/config/config.json`, переменные окружения или значения по умолчанию в коде. Dashboard может редактировать Provider / Model / Base URL / API Key / Timeout и отображать информацию о текущей действующей модели.
 
 ---
 
-#### 4.6.1. Module Structure
+#### 4.6.1. Структура модуля
 
-The model replacement capability is implemented by the following files:
+Возможность замены модели реализована следующими файлами:
 
-| File | Purpose |
+| Файл | Назначение |
 |------|---------|
-| `app/ai/vision_client.py` | Unified visual model client entry point. Handles Provider resolution, client creation, and OpenAI-compatible requests. |
-| `app/ai/ai_ark.py` | Existing Ark visual model client, kept for backward compatibility. |
-| `app/ai/ai_monitor_worker.py` | AI monitoring worker. Creates the current model client through `create_vision_client()`. |
-| `app/config/config_store.py` | Adds and validates general model configuration fields. |
-| `app/web/webapp.py` | Adds sanitized `model_info` to `/api/ai/status`. |
-| `app/web/templates/dashboard.html` | Adds Provider configuration fields to AI Settings and the Model Info block to the AI Status area. |
-| `app/web/static/dashboard.js` | Loads and submits Provider configuration, then renders the current model information and configuration completeness state. |
+| `app/ai/vision_client.py` | Единая точка входа клиента визуальной модели. Обрабатывает разрешение Provider, создание клиента и OpenAI-compatible запросы. |
+| `app/ai/ai_ark.py` | Существующий клиент визуальной модели Ark, сохранённый для обратной совместимости. |
+| `app/ai/ai_monitor_worker.py` | Worker AI-мониторинга. Создаёт текущий клиент модели через `create_vision_client()`. |
+| `app/config/config_store.py` | Добавляет и проверяет общие поля конфигурации модели. |
+| `app/web/webapp.py` | Добавляет очищенный `model_info` в `/api/ai/status`. |
+| `app/web/templates/dashboard.html` | Добавляет поля конфигурации Provider в AI Settings и блок Model Info в область AI Status. |
+| `app/web/static/dashboard.js` | Загружает и отправляет конфигурацию Provider, затем отображает информацию о текущей модели и состояние полноты конфигурации. |
 
-The AI model call chain is:
+Цепочка вызовов AI-модели:
 
 ```text
-Config source (Dashboard / config.json / env) -> ConfigStore -> resolve_provider_settings() -> create_vision_client()
+Источник конфигурации (Dashboard / config.json / env) -> ConfigStore -> resolve_provider_settings() -> create_vision_client()
                                                               |- ArkVisionClient
                                                               `- OpenAICompatibleVisionClient
-Visual frame FrameBuffer -> analyze_frame(frame) -> JSON result -> AI EventStore / Dashboard
+Кадр визуального потока FrameBuffer -> analyze_frame(frame) -> JSON result -> AI EventStore / Dashboard
 ```
 
-The AI worker only depends on the unified `analyze_frame()` method, so adding more providers later does not require major changes to the state machine.
+Worker AI зависит только от единого метода `analyze_frame()`, поэтому добавление дополнительных Provider позже не требует серьёзных изменений автомата состояний.
 
 ---
 
-#### 4.6.2. Supported Providers
+#### 4.6.2. Поддерживаемые Provider
 
-Built-in Providers currently include:
+Встроенные Provider в настоящее время включают:
 
-| Provider | Type | Default Base URL | Description |
+| Provider | Тип | Base URL по умолчанию | Описание |
 |----------|------|------------------|-------------|
-| `ark` | Native Ark client | `https://ark.cn-beijing.volces.com/api/v3` | Keeps the existing Volcengine Ark integration. |
-| `openai` | OpenAI-compatible | `https://api.openai.com/v1` | For OpenAI Chat Completions vision models. |
-| `gemini` | OpenAI-compatible | `https://generativelanguage.googleapis.com/v1beta/openai` | For Gemini's OpenAI-compatible interface. |
-| `dashscope` | OpenAI-compatible | `https://dashscope.aliyuncs.com/compatible-mode/v1` | For Alibaba Cloud Model Studio / Qwen compatible mode. |
-| `siliconflow` | OpenAI-compatible | `https://api.siliconflow.cn/v1` | For SiliconFlow compatible mode. |
-| `openai_compatible` | OpenAI-compatible | None | For custom compatible APIs or local model gateways. |
+| `ark` | Нативный клиент Ark | `https://ark.cn-beijing.volces.com/api/v3` | Сохраняет существующую интеграцию Volcengine Ark. |
+| `openai` | OpenAI-compatible | `https://api.openai.com/v1` | Для визуальных моделей OpenAI Chat Completions. |
+| `gemini` | OpenAI-compatible | `https://generativelanguage.googleapis.com/v1beta/openai` | Для OpenAI-compatible интерфейса Gemini. |
+| `dashscope` | OpenAI-compatible | `https://dashscope.aliyuncs.com/compatible-mode/v1` | Для Alibaba Cloud Model Studio / Qwen compatible mode. |
+| `siliconflow` | OpenAI-compatible | `https://api.siliconflow.cn/v1` | Для SiliconFlow compatible mode. |
+| `openai_compatible` | OpenAI-compatible | Отсутствует | Для пользовательских compatible API или локальных шлюзов моделей. |
 
-> Whether image input is supported depends on the selected model itself. Make sure `ai_model` points to a vision-capable model.
+> Поддержка входных изображений зависит от самой выбранной модели. Убедитесь, что `ai_model` указывает на модель, способную работать с изображениями.
 
 ---
 
-#### 4.6.3. Configuration Fields
+#### 4.6.3. Поля конфигурации
 
-The following general fields were added:
+Были добавлены следующие общие поля:
 
-| Field | Type | Default | Description |
+| Поле | Тип | Значение по умолчанию | Описание |
 |-------|------|---------|-------------|
-| `ai_provider` | string | `ark` | Current model provider. |
-| `ai_model` | string | empty | General model ID. If Provider is Ark and this field is empty, the system falls back to `ark_model`. |
-| `ai_base_url` | string | empty | Custom model service base URL. Some built-in Providers have default Base URLs. |
-| `ai_api_key` | string | empty | General model API Key. If empty, the system tries environment variables. |
-| `ai_request_timeout_sec` | integer | `30` | Model request timeout, allowed range 5 to 120 seconds. |
+| `ai_provider` | string | `ark` | Текущий Provider модели. |
+| `ai_model` | string | пусто | Общий Model ID. Если Provider — Ark и это поле пусто, система переходит на `ark_model`. |
+| `ai_base_url` | string | пусто | Пользовательский Base URL сервиса модели. Некоторые встроенные Provider имеют Base URL по умолчанию. |
+| `ai_api_key` | string | пусто | API Key общей модели. Если пусто, система пробует переменные окружения. |
+| `ai_request_timeout_sec` | integer | `30` | Таймаут запроса к модели, допустимый диапазон 5–120 секунд. |
 
-For backward compatibility, these Ark fields are still supported:
+Для обратной совместимости эти поля Ark по-прежнему поддерживаются:
 
-| Field | Description |
+| Поле | Описание |
 |-------|-------------|
-| `ark_model` | Ark / Volcengine model ID. |
-| `ark_api_key` | Ark / Volcengine API Key. |
+| `ark_model` | Model ID Ark / Volcengine. |
+| `ark_api_key` | API Key Ark / Volcengine. |
 
-When `ai_provider = "ark"`, model selection priority is:
+Когда `ai_provider = "ark"`, приоритет выбора модели:
 
 ```text
-AI_MODEL environment variable
+Переменная окружения AI_MODEL
   > ai_model
   > ark_model
 ```
 
-API Key priority is:
+Приоритет API Key:
 
 ```text
 AI_API_KEY environment variable
-  > ai_api_key
-  > ARK_API_KEY environment variable
-  > ark_api_key
+   > ai_api_key
+   > ARK_API_KEY environment variable
+   > ark_api_key
 ```
 
 ---
 
-#### 4.6.4. Environment Variables
+#### 4.6.4. Переменные среды
 
-Environment variables can temporarily override configuration files, which is useful for local tests or deployments.
+Переменные среды могут временно переопределять файлы конфигурации, что полезно для локальных тестов или развёртывания.
 
-General environment variables:
+Общие переменные среды:
 
-| Environment Variable | Description |
-|----------------------|-------------|
-| `AI_PROVIDER` | Overrides `ai_provider`. |
-| `AI_MODEL` | Overrides `ai_model`. |
-| `AI_BASE_URL` | Overrides `ai_base_url`. |
-| `AI_API_KEY` | Overrides `ai_api_key`. |
+| Переменная среды | Описание |
+|------------------|----------|
+| `AI_PROVIDER` | Переопределяет `ai_provider`. |
+| `AI_MODEL` | Переопределяет `ai_model`. |
+| `AI_BASE_URL` | Переопределяет `ai_base_url`. |
+| `AI_API_KEY` | Переопределяет `ai_api_key`. |
 
-Provider-specific environment variables:
+Переменные среды для конкретных провайдеров:
 
-| Provider | Environment Variables |
-|----------|-----------------------|
+| Провайдер | Переменные среды |
+|-----------|------------------|
 | `ark` | `ARK_API_KEY` |
 | `openai` | `OPENAI_API_KEY` |
 | `gemini` | `GEMINI_API_KEY` / `GOOGLE_API_KEY` |
@@ -1385,9 +1377,9 @@ Provider-specific environment variables:
 
 ---
 
-#### 4.6.5. Use the Default Ark / Volcengine Model
+#### 4.6.5. Использование модели Ark / Volcengine по умолчанию
 
-To keep using the original Volcengine Ark model, keep the default Provider:
+Чтобы продолжить использовать исходную модель Volcengine Ark, сохраните провайдер по умолчанию:
 
 ```json
 {
@@ -1397,24 +1389,24 @@ To keep using the original Volcengine Ark model, keep the default Provider:
 }
 ```
 
-You can also use environment variables:
+Можно также использовать переменные среды:
 
 ```powershell
 $env:AI_PROVIDER = "ark"
 $env:ARK_API_KEY = "YOUR_ARK_API_KEY"
 ```
 
-This is suitable when:
+Это подходит, когда:
 
-- you want to keep using the existing Volcengine Ark model;
-- you do not want to change the existing Dashboard workflow;
-- you need backward compatibility with older configuration files.
+- вы хотите продолжить использовать существующую модель Volcengine Ark;
+- вы не хотите менять существующий рабочий процесс Dashboard;
+- вам нужна обратная совместимость со старыми файлами конфигурации.
 
 ---
 
-#### 4.6.6. Use an OpenAI Vision Model
+#### 4.6.6. Использование модели OpenAI Vision
 
-Configuration example:
+Пример конфигурации:
 
 ```json
 {
@@ -1424,7 +1416,7 @@ Configuration example:
 }
 ```
 
-Environment variable example:
+Пример переменной среды:
 
 ```powershell
 $env:AI_PROVIDER = "openai"
@@ -1432,7 +1424,7 @@ $env:AI_MODEL = "gpt-4o-mini"
 $env:OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"
 ```
 
-The system automatically uses:
+Система автоматически использует:
 
 ```text
 https://api.openai.com/v1/chat/completions
@@ -1440,9 +1432,9 @@ https://api.openai.com/v1/chat/completions
 
 ---
 
-#### 4.6.7. Use Gemini OpenAI-compatible API
+#### 4.6.7. Использование OpenAI-совместимого API Gemini
 
-Configuration example:
+Пример конфигурации:
 
 ```json
 {
@@ -1452,7 +1444,7 @@ Configuration example:
 }
 ```
 
-Environment variable example:
+Пример переменной среды:
 
 ```powershell
 $env:AI_PROVIDER = "gemini"
@@ -1460,7 +1452,7 @@ $env:AI_MODEL = "gemini-2.5-flash"
 $env:GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
 ```
 
-The system automatically uses:
+Система автоматически использует:
 
 ```text
 https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
@@ -1468,9 +1460,9 @@ https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
 
 ---
 
-#### 4.6.8. Use DashScope / Qwen Compatible Mode
+#### 4.6.8. Использование совместимого режима DashScope / Qwen
 
-Configuration example:
+Пример конфигурации:
 
 ```json
 {
@@ -1480,7 +1472,7 @@ Configuration example:
 }
 ```
 
-Environment variable example:
+Пример переменной среды:
 
 ```powershell
 $env:AI_PROVIDER = "dashscope"
@@ -1488,7 +1480,7 @@ $env:AI_MODEL = "qwen-vl-plus"
 $env:DASHSCOPE_API_KEY = "YOUR_DASHSCOPE_API_KEY"
 ```
 
-The system automatically uses:
+Система автоматически использует:
 
 ```text
 https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
@@ -1496,9 +1488,9 @@ https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
 
 ---
 
-#### 4.6.9. Use a Custom OpenAI-compatible Service
+#### 4.6.9. Использование пользовательского OpenAI-совместимого сервиса
 
-For a third-party relay service, local model gateway, or self-hosted compatible service, use:
+Для стороннего сервис-ретранслятора, локального шлюза моделей или самостоятельно размещённого совместимого сервиса используйте:
 
 ```json
 {
@@ -1509,13 +1501,13 @@ For a third-party relay service, local model gateway, or self-hosted compatible 
 }
 ```
 
-The final request URL is automatically resolved to:
+Итоговый URL запроса автоматически разрешается в:
 
 ```text
 http://127.0.0.1:9000/v1/chat/completions
 ```
 
-If `ai_base_url` already points to the full endpoint:
+Если `ai_base_url` уже указывает на полный endpoint:
 
 ```json
 {
@@ -1523,15 +1515,15 @@ If `ai_base_url` already points to the full endpoint:
 }
 ```
 
-The system uses that endpoint directly and does not append the path again.
+Система использует этот endpoint напрямую и не добавляет путь повторно.
 
 ---
 
-#### 4.6.10. Current Model Info in Dashboard
+#### 4.6.10. Текущая информация о модели в Dashboard
 
-The AI Status area in Dashboard now includes a `Model Info` block showing the effective backend model settings.
+Область AI Status в Dashboard теперь включает блок `Model Info`, показывающий действующие настройки модельного бэкенда.
 
-Example:
+Пример:
 
 ```text
 Status:   Ready
@@ -1543,34 +1535,34 @@ API Key:  configured
 Timeout:  30s
 ```
 
-Field description:
+Описание полей:
 
-| Item | Description |
-|------|-------------|
-| `Status` | Configuration completeness state, usually `Ready` or `Needs model / API key / base URL`. |
-| `Provider` | Current model platform. |
-| `Client` | Actual backend client type. |
-| `Model` | Current model ID. |
-| `Base URL` | Current request base URL. |
-| `API Key` | Shows only whether a key is configured. The real key is never returned. |
-| `Timeout` | Request timeout. |
+| Элемент | Описание |
+|---------|----------|
+| `Status` | Состояние полноты конфигурации, обычно `Ready` или `Needs model / API key / base URL`. |
+| `Provider` | Текущая модельная платформа. |
+| `Client` | Фактический тип клиентского кода бэкенда. |
+| `Model` | Текущий идентификатор модели. |
+| `Base URL` | Текущий базовый URL запросов. |
+| `API Key` | Показывает только то, настроен ли ключ. Реальный ключ никогда не возвращается. |
+| `Timeout` | Таймаут запроса. |
 
-If the API Key is missing, Dashboard shows:
+Если API Key отсутствует, Dashboard показывает:
 
 ```text
 Status: Needs API key
 API Key: missing
 ```
 
-In this state, AI model calls will not work, but basic video upload, preview, recording, and snapshot functions are not affected.
+В этом состоянии вызовы AI-модели работать не будут, но базовые функции загрузки видео, предпросмотра, записи и снимков не затрагиваются.
 
 ---
 
-#### 4.6.11. Model Output Format
+#### 4.6.11. Формат вывода модели
 
-Regardless of the Provider, model output must be parseable as one JSON object.
+Независимо от провайдера вывод модели должен быть разбираемым как один JSON-объект.
 
-The current system expects these fields:
+Текущая система ожидает эти поля:
 
 ```json
 {
@@ -1583,18 +1575,18 @@ The current system expects these fields:
 }
 ```
 
-Field description:
+Описание полей:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `has_person` | boolean | Whether a person appears in the frame. |
-| `person_count` | number or null | Number of people. |
-| `activity` | string | Activity state, such as `passing` / `standing` / `lingering` / `unknown`. |
-| `risk_level` | string | Suggested values: `info` / `warn` / `critical`. |
-| `summary` | string | Short description. |
-| `confidence` | number | Confidence score from 0 to 1. |
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `has_person` | boolean | Присутствует ли человек в кадре. |
+| `person_count` | number или null | Количество людей. |
+| `activity` | string | Состояние активности, например `passing` / `standing` / `lingering` / `unknown`. |
+| `risk_level` | string | Предлагаемые значения: `info` / `warn` / `critical`. |
+| `summary` | string | Краткое описание. |
+| `confidence` | number | Оценка достоверности от 0 до 1. |
 
-If some fields are missing, the system tries to fill defaults. For stable behavior, it is still recommended to require the model to output only JSON in the prompt:
+Если некоторые поля отсутствуют, система пытается заполнить значения по умолчанию. Для стабильного поведения по-прежнему рекомендуется требовать от модели выводить только JSON в промпте:
 
 ```text
 Only output one JSON object. Do not output markdown or extra explanations.
@@ -1602,133 +1594,133 @@ Only output one JSON object. Do not output markdown or extra explanations.
 
 ---
 
-#### 4.6.12. Verification and Tests
+#### 4.6.12. Проверка и тесты
 
-Automated tests have been added for this module, covering:
+Для этого модуля добавлены автоматизированные тесты, охватывающие:
 
-- Provider configuration resolution;
-- Ark legacy field compatibility;
-- Base URL resolution to `/chat/completions`;
-- OpenAI-compatible response parsing;
-- sanitized model information output;
-- Dashboard Provider configuration fields and Model Info container rendering;
-- `/api/config` generic Provider updates taking effect in `/api/ai/status`;
-- a complete request chain against a local fake OpenAI-compatible vision service.
-- image upload enablement, decode failures, and the 8 MB limit;
-- recorder codec-open failures, automatic fallback, and reuse of the working codec;
-- configuration logs not exposing real API keys;
-- Android server-address normalization and invalid-address rejection.
-- version consistency across the Dashboard, version API, Gradle, and both READMEs.
+- разрешение конфигурации провайдера;
+- совместимость устаревших полей Ark;
+- разрешение Base URL в `/chat/completions`;
+- разбор OpenAI-совместимых ответов;
+- вывод очищенной информации о модели;
+- поля конфигурации провайдера в Dashboard и отрисовку контейнера Model Info;
+- влияние обобщённых обновлений провайдера через `/api/config` на `/api/ai/status`;
+- полную цепочку запроса против локального поддельного OpenAI-совместимого vision-сервиса.
+- включение загрузки изображений, сбои декодирования и ограничение 8 МБ;
+- сбои открытия кодека у recorder, автоматический запасной вариант и повторное использование рабочего кодека;
+- отсутствие реальных API Key в логах конфигурации;
+- нормализацию серверного адреса в Android и отклонение некорректных адресов.
+- согласованность версий в Dashboard, version API, Gradle и обоих README.
 
-Run tests:
+Запуск тестов:
 
 ```powershell
 python -m pytest -q
 ```
 
-Current verification result:
+Текущий результат проверки:
 
 ```text
 69 passed
 ```
 
-Run Android unit tests with:
+Запуск модульных тестов Android:
 
 ```powershell
 cd PhoneCamSender
 .\gradlew.bat testDebugUnitTest
 ```
 
-The local fake model service test verifies that:
+Тест локального поддельного модельного сервиса проверяет, что:
 
-- the request path is `/v1/chat/completions`;
-- `Authorization: Bearer ...` is sent;
-- the request body contains the correct `model`;
-- the image is sent as `data:image/jpeg;base64,...`;
-- the model JSON output can be parsed and normalized by the system.
+- путь запроса — `/v1/chat/completions`;
+- отправляется `Authorization: Bearer ...`;
+- тело запроса содержит корректный `model`;
+- изображение отправляется как `data:image/jpeg;base64,...`;
+- JSON-вывод модели может быть разобран и нормализован системой.
 
 ---
 <a id="sec5"></a>
 
-## 5. Version Information & Notes [⌃](#top)
+## 5. Информация о версии и примечания [⌃](#top)
 
 <a id="sec51"></a>
 
-### 5.1. System Version [⌃](#top)
+### 5.1. Версия системы [⌃](#top)
 
-The Sentinel system consists of **PC-side service program + Web Dashboard + Android CamFlow client**.  
-The current version information is as follows:
+Система Sentinel состоит из **программы сервиса на стороне ПК + Web Dashboard + Android-клиента CamFlow**.  
+Текущая информация о версиях:
 
-- **Sentinel (PC + Dashboard) Version**: v1.1.4
-- **CamFlow (Android source) Version**: v1.1.4
-- **Bundled CamFlow APK Version**: v1.1.4 (keystore-signed)
-- **Documentation Version**: v1.1.4
-- **Last Updated**: 2026-09-27
+- **Версия Sentinel (PC + Dashboard)**: v1.1.4
+- **Версия CamFlow (исходный код Android)**: v1.1.4
+- **Версия поставляемого в комплекте APK CamFlow**: v1.1.4 (подписан keystore)
+- **Версия документации**: v1.1.4
+- **Последнее обновление**: 2026-09-27
 
-All runtime versions are defined once in the root `version.properties`. The PC loads it through `app/version.py` for the Dashboard footer, startup output, and `/api/version`; the Android Gradle build and settings page read the same file instead of keeping separate hardcoded versions. The file also records the current APK path and SHA-256, and automated tests verify that the package matches both READMEs.
+Все исполняемые версии определяются один раз в корневом `version.properties`. ПК загружает его через `app/version.py` для футера Dashboard, вывода при запуске и `/api/version`; сборка Android Gradle и страница настроек читают тот же файл вместо отдельных жёстко заданных версий. Файл также записывает текущий путь APK и SHA-256, а автоматизированные тесты проверяют, что пакет совпадает в обоих README.
 
 ---
 
 <a id="sec52"></a>
 
-### 5.2. Test Environment [⌃](#top)
+### 5.2. Тестовая среда [⌃](#top)
 
-All 69 Python tests and 31 Android unit tests passed. CI also passed Python 3.9 / 3.12 on Windows / Linux and Android unit tests plus APK builds. Coverage includes permissions, CSRF, pairing/session expiry, device revocation, recording retention/low disk, video read/write, and AI state transitions/key rotation.
+Все 69 тестов на Python и 31 модульный тест Android прошли. CI также прошёл на Python 3.9 / 3.12 в Windows / Linux, а также модульные тесты Android и сборки APK. Покрытие включает разрешения, CSRF, спаривание/истечение сессий, отзыв устройства, хранение записей/нехватку дискового пространства, чтение и запись видео, а также переходы состояний AI и ротацию ключей.
 
-CamFlow build 9 completed a basic real-device retest. Keystore instrumentation tests were compiled but have not run on a device. Background operation is implemented as a foreground service with a partial wake lock (see [background operation](CamFlow_UserGuide.md#background-operation)); sustained background upload has not been accepted on every device model, because Doze and vendor battery managers can still kill the process. For the clarification of the earlier upload report, see [network quality and troubleshooting](#network-quality).
+Сборка CamFlow 9 завершила базовое повторное тестирование на реальном устройстве. Инструментальные тесты keystore были скомпилированы, но не запускались на устройстве. Фоновая работа реализована как foreground-сервис с partial wake lock (см. [фоновая работа](CamFlow_UserGuide.md#background-operation)); устойчивая фоновая загрузка не была подтверждена на каждой модели устройства, потому что Doze и вендорские менеджеры батареи по-прежнему могут завершить процесс. Уточнение к ранее опубликованному отчёту о загрузке см. в [качество сети и устранение неполадок](#network-quality).
 
-The following device environments are historical records, not a complete test matrix for every release:
+Перечисленные ниже окружения устройств — исторические записи, а не полная тестовая матрица для каждого релиза:
 
-- PC Side (Server + Dashboard)
-  - **Operating System**: Windows 10 / Windows 11
-  - **Python Version**: Python 3.9+
-  - **Main Dependencies**: Flask, OpenCV, NumPy, volcenginesdkarkruntime
-  - **Network Environment**: Same local area network (LAN / same Wi-Fi)
+- Сторона ПК (Server + Dashboard)
+  - **Операционная система**: Windows 10 / Windows 11
+  - **Версия Python**: Python 3.9+
+  - **Основные зависимости**: Flask, OpenCV, NumPy, volcenginesdkarkruntime
+  - **Сетевое окружение**: Одна локальная сеть (LAN / тот же Wi-Fi)
 
-- Android Side (CamFlow)
-  - **System Version**: Android 8.0+
-  - **Test Device**: nova 8 SE Vitality Edition (HarmonyOS 3.0.0)
-  - **Network Environment**: Same Wi-Fi / same LAN as PC
-  - **Required Permission**: Camera (requested at first launch)
+- Сторона Android (CamFlow)
+  - **Версия системы**: Android 8.0+
+  - **Тестовое устройство**: nova 8 SE Vitality Edition (HarmonyOS 3.0.0)
+  - **Сетевое окружение**: Тот же Wi-Fi / та же LAN, что и у ПК
+  - **Требуемое разрешение**: Камера (запрашивается при первом запуске)
 
 ---
 
 <a id="sec53"></a>
 
-### 5.3. Roadmap [⌃](#top)
+### 5.3. Дорожная карта [⌃](#top)
 
-Possible future improvements include:
+Возможные будущие улучшения включают:
 
-- **Security Mechanisms**
-  - HTTPS deployment and separate viewer accounts (administrator authentication and device pairing ship in v1.1.4)
+- **Механизмы безопасности**
+  - Развёртывание HTTPS и отдельные учётные записи просмотрщика (аутентификация администратора и спаривание устройств появились в v1.1.4)
 
-- **Transmission Performance**
-  - Replace some HTTP polling or MJPEG mechanisms with WebSocket / WebRTC (reduce latency and resource consumption)
-  - Adaptive frame rate / resolution control (dynamic tuning based on network and CPU conditions)
+- **Производительность передачи**
+  - Заменить часть механизмов HTTP-опроса или MJPEG на WebSocket / WebRTC (снижение задержки и потребления ресурсов)
+  - Адаптивный контроль частоты кадров / разрешения (динамическая настройка в зависимости от состояния сети и CPU)
 
-- **AI Integration**
-  - Expand pluggable model interfaces (OpenAI / local vision models / other platforms)
-  - More refined event aggregation and rule engines (reduce false positives / false negatives)
+- **Интеграция AI**
+  - Расширение подключаемых интерфейсов моделей (OpenAI / локальные vision-модели / другие платформы)
+  - Более тонкая агрегация событий и движки правил (снижение ложных срабатываний / ложных пропусков)
 
 ---
 
 <a id="sec54"></a>
 
-### 5.4. Usage & License [⌃](#top)
+### 5.4. Использование и лицензия [⌃](#top)
 
-Sentinel is released under the **MIT License**.
+Sentinel выпущен под **MIT License**.
 
-Copyright © 2026 Suzuran0y
+Copyright © 2026 EmitterLight
 
-- This project is intended for **learning, research, and technical validation** purposes and is a prototype system.
-- If deploying the current version in a real production or commercial environment, you must implement additional measures:
-  - Deployment-specific access controls beyond the built-in authentication
-  - Transmission encryption
-  - Log desensitization and privacy compliance policies
-  - Stability and resource limitation mechanisms
+- Этот проект предназначен для **обучения, исследований и технической проверки** и является прототипной системой.
+- При развёртывании текущей версии в реальной производственной или коммерческой среде необходимо реализовать дополнительные меры:
+  - специфичные для развёртывания механизмы контроля доступа сверх встроенной аутентификации
+  - шифрование передачи
+  - политики обезличивания логов и соответствия требованиям конфиденциальности
+  - механизмы стабильности и ограничения ресурсов
 
-> Note: CamFlow involves image data capture and transmission.  
-> Ensure compliance with local laws and obtain appropriate authorization before use.
+> Примечание: CamFlow включает сбор и передачу данных изображений.  
+> Перед использованием убедитесь в соответствии местным законам и получите надлежащее разрешение.
 
 ---
 
@@ -1736,58 +1728,10 @@ Copyright © 2026 Suzuran0y
 <a id="known-issues"></a>
 <a id="network-quality"></a>
 
-### 5.5. Network Quality and Troubleshooting [⌃](#top)
+### 5.5. Качество сети и устранение неполадок [⌃](#top)
 
-The connection/response timeouts and prolonged web-image stalls reported during Sentinel v1.1.4 / CamFlow v1.1.2 testing were confirmed by the maintainer to have been caused by poor Wi-Fi signal in the test environment. This report is no longer listed as an unresolved software defect; no upload-code change was needed for this clarification.
+Таймауты соединения/ответа и длительные зависания веб-изображений, сообщавшиеся во время тестирования Sentinel v1.1.4 / CamFlow v1.1.2, были подтверждены сопровождающим как вызванные плохим сигналом Wi-Fi в тестовой среде. Этот отчёт больше не указывается как нерешённый программный дефект; для этого уточнения изменение кода загрузки не требовалось.
 
-Keep the phone and PC on a stable, trusted LAN. If timeouts or slow refresh occur, check Wi-Fi signal and connection quality first, then use [CamFlow upload diagnostics](CamFlow_UserGuide.md#upload-diagnostics) to check pairing, Ingest and request phases. Other occurrences still need diagnosis; a timeout alone does not identify its cause. Share only relevant diagnostic lines, never tokens or configuration files.
-
----
-
-<a id="CR"></a>
-
-**Community Recognition ⭐**
-
-<p align="center">
-
-<table align="center">
-<tr>
-
-<td align="center" width="50%">
-
-<a href="https://github.com/ruanyf/weekly">
-  <img src="https://github.com/ruanyf.png" width="115"/>
-</a>
-
-<br>
-
-<b>ruanyf</b><br>
-<sub><a href="https://github.com/ruanyf/weekly/blob/master/docs/issue-388.md">Weekly #388</a></sub>
-
-</td>
-
-<td align="center" width="50%">
-
-<a href="https://space.bilibili.com/67079745">
-  <img src="https://i0.hdslb.com/bfs/face/8a70069e1dc9ab89c1d688c2cefd3596864315ea.jpg" width="115"/>
-</a>
-
-<br>
-
-<b>xuanli199</b><br>
-<sub><a href="https://www.bilibili.com/video/BV1srwxzMEdn/">Tech Review #93</a></sub>
-
-</td>
-
-</tr>
-</table>
-
-</p>
+Держите телефон и ПК в стабильной, доверенной LAN. Если возникают таймауты или медленное обновление, сначала проверьте сигнал Wi-Fi и качество соединения, затем используйте [диагностику загрузки CamFlow](CamFlow_UserGuide.md#upload-diagnostics) для проверки фаз спаривания, Ingest и запроса. Другие случаи по-прежнему требуют диагностики; сам по себе таймаут не определяет свою причину. Публикуйте только релевантные строки диагностики, никогда — токены или файлы конфигурации.
 
 ---
-
-<a id="stars"></a>
-
-### Star History [⌃](#top)
-
-[![Star History Chart](https://api.star-history.com/svg?repos=suzuran0y/CCTV-Smartphone-AI-Monitoring&type=Date)](https://star-history.com/#suzuran0y/CCTV-Smartphone-AI-Monitoring&Date)

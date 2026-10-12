@@ -17,8 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_runtime_versions_match_android_build_and_readmes():
     gradle = (ROOT / "PhoneCamSender" / "app" / "build.gradle.kts").read_text(encoding="utf-8")
-    readme_cn = (ROOT / "README_CN.md").read_text(encoding="utf-8")
-    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
     assert 'rootProject.file("../version.properties")' in gradle
     assert "versionName = camflowVersion" in gradle
@@ -33,7 +32,7 @@ def test_runtime_versions_match_android_build_and_readmes():
     assert apk_path.is_file()
     assert f"v{CAMFLOW_SOURCE_VERSION}" in apk_path.name
     assert hashlib.sha256(apk_path.read_bytes()).hexdigest().upper() == CAMFLOW_APK_SHA256
-    for readme in (readme_cn, readme_en):
+    for readme in (readme,):
         assert f"v{SENTINEL_VERSION}" in readme
         assert f"v{CAMFLOW_SOURCE_VERSION}" in readme
         assert CAMFLOW_APK_PATH in readme
